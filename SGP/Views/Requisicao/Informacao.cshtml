@@ -1,0 +1,156 @@
+﻿@model RequisicaoModel
+
+
+@{
+    ViewData["Title"] = "Gravar / alterar";
+}
+
+@{
+    var vId = 0;
+    var vDescricao = string.Empty;
+    var vTipo = string.Empty;
+    var vData = string.Empty;
+    var vNomeUsuario = string.Empty;
+    var vDataFinal = string.Empty;
+    var vStatus = string.Empty;
+    var vOrigem = string.Empty;
+    var vDestino = string.Empty;
+
+    try
+    {
+        vId = Convert.ToInt32(@ViewBag.Registro.Id);
+        vDescricao = @ViewBag.Registro.Descricao;
+        vTipo = @ViewBag.Registro.Tipo.ToString();
+        vData = Convert.ToDateTime(@ViewBag.Registro.Data).ToString("yyyy-MM-dd");
+        vNomeUsuario = @ViewBag.Registro.NomeUsuario.ToString();
+        vDataFinal = Convert.ToDateTime(@ViewBag.Registro.DataFinal).ToString("yyyy-MM-dd");
+        vStatus = @ViewBag.Registro.Status.ToString();
+        vOrigem = @ViewBag.Registro.Origem.ToString();
+        vDestino = @ViewBag.Registro.Destino.ToString();
+    }
+    catch { }
+}
+
+
+<h2>Informação de atendimento</h2>
+<br />
+
+<div style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
+    <form asp-controller="Requisicao" asp-action="Informacao">
+        <input type="hidden" asp-for="Id" value="@vId" />
+
+
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label>Data inicial:</label>
+                <br />
+                <input type="date" class="form-control" asp-for="Data" value="@vData">
+                <span asp-validation-for="Data" class="text-danger"></span>
+
+            </div>
+            <div class="col-md-3 mb-4">
+                <label>Data final:</label>
+                <br />
+                <input type="date" class="form-control" asp-for="DataFinal" value="@vDataFinal">
+                <span asp-validation-for="Data" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Responsável:</label>
+            <select asp-for="NomeUsuario" class="form-control" style="width: 180px" >
+                @{
+                    foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
+                    {
+                        <option value="@item.Nome.ToString()">@item.Nome.ToString()</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Tipo:</label>
+            @{
+                if (vTipo == "B")
+                {
+                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="B" checked>Backload</label></div>
+                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="T" unchecked>Transbordo</label></div>
+                }
+                else
+                {
+                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="B" checked>Backload</label></div>
+                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="T" unchecked>Transbordo</label></div>
+                }
+            }
+        </div>
+
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label>Origem:</label>
+                <br />
+                <input type="text" class="form-control" asp-for="Origem" value="@vOrigem">             
+            </div>
+            <div class="col-md-3 mb-4">
+                <label>Destino:</label>
+                <br />
+                <input type="text" class="form-control" asp-for="Destino" value="@vDestino">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Descição:</label>
+            @Html.TextArea("Descricao", vDescricao, new { @class = "form-control" })
+            <span asp-validation-for="Descricao" class="text-danger"></span>
+        </div>
+
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Encaminhar</legend>
+            <div class="row">
+                <div class="form-group col-md-4 mb-3">
+                    <label>Etapa:</label>
+                    <select asp-for="Status" class="form-control" style="width: 180px">
+                        <option value="Solicitado">Soliciatação</option>
+                        <option value="Liberado para programação">Liberar para programação</option>
+                        <option value="Em coleta">Coletar</option>
+                        <option value="Em processamento">Processar</option>
+                        <option value="Cancelado">Cancelar</option>
+                        <option value="Programado">Programar</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4 mb-3">
+                    <label>Usuário:</label>
+                    <select asp-for="NomeUsuario" class="form-control" style="width: 180px">
+                        @{
+                            foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
+                            {
+                                <option value="@item.Nome.ToString()">@item.Nome.ToString()</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+
+
+
+        <button type="submit" class="btn btn-block btn-success ">Gravar</button>
+
+    </form>
+</div>
+
+<style>
+
+    fieldset.scheduler-border {
+        border: 1px groove #ddd !important;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 0 0 1.5em 0 !important;
+        -webkit-box-shadow: 0px 0px 0px 0px #000;
+        box-shadow: 0px 0px 0px 0px #000;
+    }
+
+    legend.scheduler-border {
+        width: inherit; /* Or auto */
+        padding: 0 10px; /* To give a bit of padding on the left and right */
+        border-bottom: none;
+    }
+</style>

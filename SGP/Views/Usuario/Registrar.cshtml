@@ -1,0 +1,62 @@
+﻿@model UsuarioModel
+
+@{
+    Layout = "../Shared/_LayoutLogin.cshtml";
+}
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+<div class="container" style="background-color: white; border-radius: 10px; padding:20px; width:500px;">
+    <h3>Criar uma nova conta</h3>
+    <h5>É rápido e fácil.</h5>
+    <br />
+    <form asp-controller="Usuario" asp-action="Registrar">
+
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" class="form-control" asp-for="Nome">
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="nome">CPF:</label>
+            <input type="text" class="form-control" asp-for="Cpf" onkeypress="$(this).mask('000.000.000-00');">
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="nome">RG:</label>
+            <input type="text" class="form-control" asp-for="Rg">
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="data_nascimenro">Nascimento:</label>
+            <input type="date" class="form-control" asp-for="Data_Nascimento">
+            <span asp-validation-for="Data_Nascimento" class="text-danger"></span>
+        </div>
+
+        <div class="form-group"  col-md-4>
+            <label for="telefone">Telefone:</label>
+            <input type="text" class="form-control" asp-for="Telefone" onkeypress="$(this).mask('(00) 0000-00009')">
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
+
+
+        <div class="form-group">
+            <label for="email">E-mail:</label>
+            <input type="email" class="form-control" asp-for="Email">
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="pwd">Senha:</label>
+            <input type="password" class="form-control" asp-for="Senha">
+            <span asp-validation-for="Senha" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-block btn-success ">Cadastrar</button>
+        <button type="button" class="btn btn-block btn-primary" onclick="javascript:window.location.href='../Usuario/Login'">Entrar</button>
+    </form>
+</div>
