@@ -6343,11 +6343,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\TCC\\SGP\\SGP\\SGP.csproj",
+      "projectUniqueName": "C:\\Users\\Tiago Santos\\SGP\\SGP\\SGP.csproj",
       "projectName": "SGP",
-      "projectPath": "C:\\TCC\\SGP\\SGP\\SGP.csproj",
+      "projectPath": "C:\\Users\\Tiago Santos\\SGP\\SGP\\SGP.csproj",
       "packagesPath": "C:\\Users\\Tiago Santos\\.nuget\\packages\\",
-      "outputPath": "C:\\TCC\\SGP\\SGP\\obj\\",
+      "outputPath": "C:\\Users\\Tiago Santos\\SGP\\SGP\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

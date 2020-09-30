@@ -109,10 +109,10 @@ namespace SGP.Models
 
         public RequisicaoModel CarregarRegistro(int? id)
         {
-            var sql = @"SELECT R.ID, R.DATA, U.NOME AS USUARIO, R.STATUS, R.DESCRICAO, R.TIPO, R.ORIGEM, R.DESTINO
+            var sql = @"SELECT R.ID, R.DATA_INCLUSAO, U.NOME AS USUARIO, R.STATUS, R.DESCRICAO, R.TIPO, R.ORIGEM, R.DESTINO
                         FROM REQUISICAO_REQ  AS R INNER JOIN USUARIO_USO U 
                         ON R.USUARIO_ID = U.ID "
-                      + $"AND T.ID = '{id}'";
+                      + $"AND R.ID = '{id}'";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -123,7 +123,7 @@ namespace SGP.Models
                 Descricao = dt.Rows[0]["DESCRICAO"] != null ? dt.Rows[0]["DESCRICAO"].ToString() : string.Empty,
                 Tipo = dt.Rows[0]["TIPO"] != null ? dt.Rows[0]["TIPO"].ToString() : string.Empty,
                 NomeUsuario = dt.Rows[0]["USUARIO"] != null ? dt.Rows[0]["USUARIO"].ToString() : string.Empty,
-                Data = dt.Rows[0]["DATA"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
+                Data = dt.Rows[0]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA_INCLUSAO"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
                 Status = dt.Rows[0]["STATUS"] != null ? dt.Rows[0]["STATUS"].ToString() : string.Empty,
                 Origem = dt.Rows[0]["ORIGEM"] != null ? dt.Rows[0]["ORIGEM"].ToString() : string.Empty,
                 Destino = dt.Rows[0]["DESTINO"] != null ? dt.Rows[0]["DESTINO"].ToString() : string.Empty

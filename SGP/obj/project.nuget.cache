@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xs2Vq/5StI+9jFjpQ9SMRp3BFMwwbzqzPzai5/fnGIw4BwpOvlU5hRBZmq71hZmUMY1Fla2kVOhD3M19h8y6OQ==",
+  "dgSpecHash": "4hFNiq1K4mCSguWqIC38Gut7gVn7mRlKaxz18RZFVn3mVYq/KQKqCPOfLSuUdddy49IKLz5OM9hTXtFQ/OnTqA==",
   "success": true,
-  "projectFilePath": "C:\\TCC\\SGP\\SGP\\SGP.csproj",
+  "projectFilePath": "C:\\Users\\Tiago Santos\\SGP\\SGP\\SGP.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tiago Santos\\.nuget\\packages\\bouncycastle.netcore\\1.8.3\\bouncycastle.netcore.1.8.3.nupkg.sha512",
     "C:\\Users\\Tiago Santos\\.nuget\\packages\\google.protobuf\\3.6.1\\google.protobuf.3.6.1.nupkg.sha512",

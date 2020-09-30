@@ -61,7 +61,7 @@ namespace SGP.Models
 
         public void GravarUsuario()
         {
-            string sql = $"INSERT INTO USUARIO_USO (NOME, EMAIL, SENHA, CPF, RG, TELEFONE, DATA_NASCIMENTO, FUNCAO) VALUES('{Nome}', '{Email}', '{Senha}', '{Cpf}', '{Rg}', '{Telefone}', '{Data_Nascimento}', '{Data_Nascimento}')";
+            string sql = $"INSERT INTO USUARIO_USO (NOME, EMAIL, SENHA, CPF, RG, TELEFONE, DATA_NASCIMENTO, FUNCAO) VALUES('{Nome}', '{Email}', '{Senha}', '{Cpf}', '{Rg}', '{Telefone}', '{Data_Nascimento}', '{Funcao}')";
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
         }

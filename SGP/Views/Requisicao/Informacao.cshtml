@@ -10,8 +10,8 @@
     var vDescricao = string.Empty;
     var vTipo = string.Empty;
     var vData = string.Empty;
+    var vData_final = string.Empty;
     var vNomeUsuario = string.Empty;
-    var vDataFinal = string.Empty;
     var vStatus = string.Empty;
     var vOrigem = string.Empty;
     var vDestino = string.Empty;
@@ -23,7 +23,6 @@
         vTipo = @ViewBag.Registro.Tipo.ToString();
         vData = Convert.ToDateTime(@ViewBag.Registro.Data).ToString("yyyy-MM-dd");
         vNomeUsuario = @ViewBag.Registro.NomeUsuario.ToString();
-        vDataFinal = Convert.ToDateTime(@ViewBag.Registro.DataFinal).ToString("yyyy-MM-dd");
         vStatus = @ViewBag.Registro.Status.ToString();
         vOrigem = @ViewBag.Registro.Origem.ToString();
         vDestino = @ViewBag.Registro.Destino.ToString();
@@ -39,26 +38,16 @@
     <form asp-controller="Requisicao" asp-action="Informacao">
         <input type="hidden" asp-for="Id" value="@vId" />
 
-
-        <div class="row">
-            <div class="col-md-3 mb-3">
-                <label>Data inicial:</label>
-                <br />
-                <input type="date" class="form-control" asp-for="Data" value="@vData">
-                <span asp-validation-for="Data" class="text-danger"></span>
-
-            </div>
-            <div class="col-md-3 mb-4">
-                <label>Data final:</label>
-                <br />
-                <input type="date" class="form-control" asp-for="DataFinal" value="@vDataFinal">
-                <span asp-validation-for="Data" class="text-danger"></span>
-            </div>
+        <div class="mb-3">
+            <label>Data de abertura:</label>
+            <br />
+            <input type="date" class="form-control" asp-for="Data" value="@vData">
+            <span asp-validation-for="Data" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label>Responsável:</label>
-            <select asp-for="NomeUsuario" class="form-control" style="width: 180px" >
+            <select asp-for="NomeUsuario" class="form-control" style="width: 180px">
                 @{
                     foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
                     {
@@ -78,8 +67,8 @@
                 }
                 else
                 {
-                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="B" checked>Backload</label></div>
-                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="T" unchecked>Transbordo</label></div>
+                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="B" unchecked>Backload</label></div>
+                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="T" checked>Transbordo</label></div>
                 }
             }
         </div>
@@ -88,7 +77,7 @@
             <div class="col-md-3 mb-3">
                 <label>Origem:</label>
                 <br />
-                <input type="text" class="form-control" asp-for="Origem" value="@vOrigem">             
+                <input type="text" class="form-control" asp-for="Origem" value="@vOrigem">
             </div>
             <div class="col-md-3 mb-4">
                 <label>Destino:</label>
@@ -131,8 +120,6 @@
             </div>
         </fieldset>
 
-
-
         <button type="submit" class="btn btn-block btn-success ">Gravar</button>
 
     </form>
@@ -149,8 +136,8 @@
     }
 
     legend.scheduler-border {
-        width: inherit; /* Or auto */
-        padding: 0 10px; /* To give a bit of padding on the left and right */
+        width: inherit; 
+        padding: 0 10px; 
         border-bottom: none;
     }
 </style>
