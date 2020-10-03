@@ -2,109 +2,105 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="row" style="padding:50px; width:2000px; padding-left: 150px">
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+<body onload="User()">
 
-    <div>
-        <a href="../Usuario/Registrar">
-            <div class="col-lg-4 text-left">
-                <img src="~/images/user-icon.png" width="100" />
-                <h3 style="font:menu">Registrar usuário</h3>
-            </div>
-        </a>
+    <div class="row" style="padding:50px; width:2000px; padding-left: 150px">
+
+        <div>
+            <a href="../Usuario/Registrar">
+                <div class="col-lg-4 text-left">
+                    <img src="~/images/user-icon.png" width="100" />
+                    <h3 style="font:menu">Usuário</h3>
+                </div>
+            </a>
+        </div>
+
+        <div style="padding-left: 40px">
+            <a href="../Estacao/Registrar">
+                <div class="col-lg-4 text-center">
+                    <img src="~/images/plataforma-icon.png" width="100" />
+                    <h3 style="font:menu">Estação</h3>
+                </div>
+            </a>
+        </div>
+
+        <div style="padding-left: 40px">
+            <a href="../Equipamento/Registrar">
+                <div class="col-lg-4 text-center">
+                    <img src="~/images/equipamento-icon.png" width="100" />
+                    <h3 style="font:menu">Equipamento</h3>
+                </div>
+            </a>
+        </div>
+
+        <div style="padding-left: 40px">
+            <a href="../Embarcacao/Registrar">
+                <div class="col-lg-4 text-left">
+                    <img src="~/images/navio-icon.png" width="100" />
+                    <h3 style="font:menu">Embarcação</h3>
+                </div>
+            </a>
+        </div>
+
     </div>
 
-    <div style="padding-left: 40px">
-        <a href="../Requisicao/Informacao">
-            <div class="col-lg-4 text-center">
-                <img src="~/images/requisicao-icon.png" width="100" />
-                <h3 style="font:menu">Informação de atendimento</h3>
-            </div>
-        </a>
+    <br />
+    <br />
+    <br />
+
+    <div class="row" style="padding:40px; width:2000px; padding-left: 150px">
+
+        <div style="padding-left: 40px">
+            <a href="../Requisicao/Informacao">
+                <div class="col-lg-4 text-center">
+                    <img src="~/images/requisicao-icon.png" width="100" />
+                    <h3 style="font:menu">Informação de atendimento</h3>
+                </div>
+            </a>
+        </div>
+
+        <div style="padding-left: 40px">
+            <a href="../Requisicao/Atendimentos">
+                <div class="col-lg-4 text-center">
+                    <img src="~/images/search-icon.png" width="100" />
+                    <h3 style="font:menu">Atendimentos pendentes</h3>
+                </div>
+            </a>
+        </div>
+
+        <div>
+            <a href="../Requisicao/Relatorio">
+                <div class="col-lg-4 text-center">
+                    <img src="~/images/localizacao-icon.png" width="100" />
+                    <h3 style="font:menu">Gráficos</h3>
+                </div>
+            </a>
+        </div>
+
+        <div style="padding-left: 40px">
+            <a href="../Requisicao/Index">
+                <div class="col-lg-4 text-left">
+                    <img src="~/images/dashboard-icon.png" width="100" />
+                    <h3 style="font:menu">Dashboard</h3>
+                </div>
+            </a>
+        </div>
+
     </div>
+</body>
 
-    <div style="padding-left: 40px">
-        <a href="../Requisicao/Atendimentos">
-            <div class="col-lg-4 text-center">
-                <img src="~/images/search-icon.png" width="100" />
-                <h3 style="font:menu">Atendimentos pendentes</h3>
-            </div>
-        </a>
-    </div>
+<script>
 
-    <div style="padding-left: 40px">
-        <a href="../Equipamento/Registrar">
-            <div class="col-lg-4 text-center">
-                <img src="~/images/equipamento-icon.png" width="100" />
-                <h3 style="font:menu">Equipamento</h3>
-            </div>
-        </a>
-    </div>
+function User() {
 
-    <div style="padding-left: 40px">
-        <a href="../Requisicao/Index">
-            <div class="col-lg-4 text-left">
-                <img src="~/images/navio-icon.png" width="100" />
-                <h3 style="font:menu">Unidade marítima</h3>
-            </div>
-        </a>
-    </div>
+    var funcao = '@HttpContextAccessor.HttpContext.Session.GetString("FuncaoUsuario")';
 
+        if (funcao == '0') {
+            var menuCadastro = document.getElementById("menuCadastro");
+            menuCadastro.style.display = "inline";
+        }
+    }
 
-
-
-
-</div>
-
-<br />
-<br />
-<br />
-
-<div class="row" style="padding:40px; width:2000px; padding-left: 150px">
-
-    <div>
-        <a href="../Requisicao/Relatorio">
-            <div class="col-lg-4 text-center">
-                <img src="~/images/localizacao-icon.png" width="100" />
-                <h3 style="font:menu">Gráficos</h3>
-            </div>
-        </a>
-    </div>
-
-    <div style="padding-left: 40px">
-        <a href="../Porto/Index">
-            <div class="col-lg-4 text-center">
-                <img src="~/images/estacao-icon.png" width="100" />
-                <h3 style="font:menu">Estação</h3>
-            </div>
-        </a>
-    </div>
-
-    <div style="padding-left: 40px">
-        <a href="../Requisicao/Index">
-            <div class="col-lg-4 text-left">
-                <img src="~/images/dashboard-icon.png" width="100" />
-                <h3 style="font:menu">Dashboard</h3>
-            </div>
-        </a>
-    </div>
-
-    <div style="padding-left: 40px">
-        <a href="../Armazem/Index">
-            <div class="col-lg-4 text-center">
-                <img src="~/images/transporte-icon.png" width="100" />
-                <h3 style="font:menu">Transporte</h3>
-            </div>
-        </a>
-    </div>
-
-    <div style="padding-left: 40px">
-        <a href="../Armazem/Index">
-            <div class="col-lg-4 text-center">
-                <img src="~/images/maquina-icon.png" width="100" />
-                <h3 style="font:menu">Máquina</h3>
-            </div>
-        </a>
-    </div>
-
-</div>
-
+</script>
