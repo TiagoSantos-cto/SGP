@@ -154,7 +154,7 @@ namespace SGP.Models
 
         public void Excluir(int id)
         {
-            string sql = $"DELETE FROM Requisicao WHERE ID = {id}";
+            string sql = $"DELETE FROM REQUISICAO_REQ WHERE ID = {id}";
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
         }

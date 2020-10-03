@@ -1,0 +1,79 @@
+﻿@model EquipamentoModel
+
+@{
+    ViewData["Title"] = "Equipamento";
+}
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+@{
+    var vId = 0;
+    var vDescricao = string.Empty;
+    var vTipo = string.Empty;
+
+    try
+    {
+        vId = Convert.ToInt32(@ViewBag.Registro.Id);
+        vDescricao = @ViewBag.Registro.Descricao;
+        vTipo = @ViewBag.Registro.Tipo.ToString();
+    }
+    catch { }
+}
+
+<h2>Cadastro de equipamento</h2>
+<br />
+
+<div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
+    <form asp-controller="Equipamento" asp-action="Registrar" class="needs-validation" novalidate>
+
+        <div class="mb-3">
+            <label for="Id">Código do item</label>
+            <input type="text" class="form-control" asp-for="Id" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="Descricao">Descrição do item</label>
+            <input type="text" class="form-control" asp-for="Descricao" required>
+            <div class="invalid-feedback">
+                O campo Descrição é obrigatório.
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label>Tipo:</label>
+            @{
+                if (vTipo == "Disponível")
+                {
+                    <div class="radio"><label><input type="radio" asp-for="Status" value="Disponível" checked>Disponível</label></div>
+                    <div class="radio"><label><input type="radio" asp-for="Status" value="Indisponivel" unchecked>Indisponivel</label></div>
+                }
+                else
+                {
+                    <div class="radio"><label><input type="radio" asp-for="Status" value="Disponível" unchecked>Disponível</label></div>
+                    <div class="radio"><label><input type="radio" asp-for="Status" value="Indisponivel" checked>Indisponivel</label></div>
+                }
+            }
+        </div>
+
+        <div class="mb-3">
+            <label for="Estacao">Terminal de origem:</label>
+            <select class="custom-select d-block w-100" id="Estacao" required>
+                <option value="Estacao">Selecionar...</option>
+
+                <option>Porto 01 teste</option>
+                <option>Unidade 02 teste</option>
+
+            </select>
+            <div class="invalid-feedback">
+                Selecione uma estação de origem do item.
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-block btn-success ">Cadastrar</button>
+
+    </form>
+</div>
+
+

@@ -746,3 +746,5 @@ C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\staticwebassets\SGP.Static
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.dll
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.pdb
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.genruntimeconfig.cache
+C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Equipamento\Registrar.cshtml.g.cs
+C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Equipamento\Sucesso.cshtml.g.cs
