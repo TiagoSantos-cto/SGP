@@ -30,7 +30,7 @@ namespace SGP.Models
             }
             else
             {
-                sql = $"UPDATE  ESTACAO_EST SET DESCRICAO = '{Descricao}',  TIPO = '{Tipo} WHERE ID = '{Id}'";
+                sql = $"UPDATE  ESTACAO_EST SET DESCRICAO = '{Descricao}',  TIPO = {Tipo} WHERE ID = '{Id}'";
             }
 
             var dal = new DAL();
@@ -48,7 +48,7 @@ namespace SGP.Models
         {
             var lista = new List<EstacaoModel>();
 
-            var sql = $"SELECT ID, DESCRICAO, STATUS, ESTACAO FROM ESTACAO_EST";
+            var sql = $"SELECT ID, DESCRICAO, TIPO FROM ESTACAO_EST";
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -58,7 +58,7 @@ namespace SGP.Models
                 {
                     Id = Convert.ToInt32(dt.Rows[i]["ID"].ToString()),
                     Descricao = dt.Rows[i]["DESCRICAO"].ToString(),  
-                    Tipo = dt.Rows[i]["STATUS"].ToString()
+                    Tipo = dt.Rows[i]["TIPO"].ToString()
                 };
 
                 lista.Add(item);

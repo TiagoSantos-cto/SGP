@@ -29,12 +29,12 @@
 
         <div class="mb-3">
             <label for="Id">Código do item</label>
-            <input type="text" class="form-control" asp-for="Id" required>
+            <input type="text" class="form-control" asp-for="Id" value="@vId" required>
         </div>
 
         <div class="mb-3">
             <label for="Descricao">Descrição do item</label>
-            <input type="text" class="form-control" asp-for="Descricao" required>
+            <input type="text" class="form-control" asp-for="Descricao" value="@vDescricao" required>
             <div class="invalid-feedback">
                 O campo Descrição é obrigatório.
             </div>
@@ -60,11 +60,12 @@
         <div class="mb-3">
             <label for="Estacao">Terminal de origem:</label>
             <select class="custom-select d-block w-100" id="Estacao" required>
-                <option value="Estacao">Selecionar...</option>
-
-                <option>Porto 01 teste</option>
-                <option>Unidade 02 teste</option>
-
+                @{
+                    foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                    {
+                        <option value="@item.Descricao.ToString()">@item.Descricao.ToString()</option>
+                    }
+                }
             </select>
             <div class="invalid-feedback">
                 Selecione uma estação de origem do item.

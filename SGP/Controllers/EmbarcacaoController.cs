@@ -4,27 +4,24 @@ using SGP.Models;
 
 namespace SGP.Controllers
 {
-    public class EquipamentoController : Controller
+    public class EmbarcacaoController : Controller
     {
         IHttpContextAccessor HttpContextAccessor;
-        public EquipamentoController(IHttpContextAccessor httpContextAccessor) { HttpContextAccessor = httpContextAccessor; }
+        public EmbarcacaoController(IHttpContextAccessor httpContextAccessor) { HttpContextAccessor = httpContextAccessor; }
 
        
         [HttpGet]
         public IActionResult Registrar()
         {
-            var estacao = new EstacaoModel(HttpContextAccessor);
-            ViewBag.ListaEstacao = estacao.ListaEstacao();
-
             return View();
         }
 
         [HttpPost]
-        public IActionResult Registrar(EquipamentoModel Equipamento)
+        public IActionResult Registrar(EmbarcacaoModel Embarcacao)
         {
             if (ModelState.IsValid)
             {
-                Equipamento.GravarEquipamento();
+                Embarcacao.GravarEmbarcacao();
                 return RedirectToAction("Sucesso");
             }
 
@@ -34,8 +31,8 @@ namespace SGP.Controllers
         [HttpGet]
         public IActionResult Excluir(int id)
         {
-            var equipamento = new EquipamentoModel(HttpContextAccessor);
-            equipamento.ExcluirEquipamento(id);
+            var Embarcacao = new EmbarcacaoModel(HttpContextAccessor);
+            Embarcacao.ExcluirEmbarcacao(id);
             return RedirectToAction("Index");
         }
 
