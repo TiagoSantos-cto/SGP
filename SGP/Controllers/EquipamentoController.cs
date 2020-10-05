@@ -28,6 +28,9 @@ namespace SGP.Controllers
                 return RedirectToAction("Sucesso");
             }
 
+            var estacao = new EstacaoModel(HttpContextAccessor);
+            ViewBag.ListaEstacao = estacao.ListaEstacao();
+           
             return View();
         }
 

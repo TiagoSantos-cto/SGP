@@ -75,7 +75,7 @@ namespace SGP.Models
 
         public bool Existe(string id)
         {
-            var sql = $"SELECT ID CATEGORIA FROM EMBARCACAO_EMB WHERE ID = '{id}'";
+            var sql = $"SELECT ID FROM EMBARCACAO_EMB WHERE ID = '{id}'";
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 

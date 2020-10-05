@@ -7,7 +7,7 @@ namespace SGP.Models
 {
     public class EquipamentoModel
     {
-        public int  Id { get; set; }
+        public string  Id { get; set; }
         public string Descricao { get; set; }
         public string Status { get; set; }
         public int Estacao { get; set; }
@@ -24,7 +24,7 @@ namespace SGP.Models
         {
             string sql;
 
-            if (Id == 0)
+            if (!Existe(Id))
             {
                 sql = $"INSERT INTO EQUIPAMENTO_EQP (ID, DESCRICAO, STATUS, ESTACAO_ID) VALUES ('{Id}','{Descricao}', '{Status}', '{Estacao}')";
             }
@@ -56,7 +56,7 @@ namespace SGP.Models
             {
                 var item = new EquipamentoModel
                 {
-                    Id = Convert.ToInt32(dt.Rows[i]["ID"].ToString()),
+                    Id = dt.Rows[i]["ID"].ToString(),
                     Descricao = dt.Rows[i]["DESCRICAO"].ToString(),  
                     Status = dt.Rows[i]["STATUS"].ToString(),
                     Estacao = Convert.ToInt32(dt.Rows[i]["ESTACAO"].ToString())
@@ -66,6 +66,15 @@ namespace SGP.Models
             }
 
             return lista;
+        }
+
+        public bool Existe(string id)
+        {
+            var sql = $"SELECT ID FROM EQUIPAMENTO_EQP WHERE ID = '{id}'";
+            var dal = new DAL();
+            var dt = dal.RetDataTable(sql);
+
+            return dt.Rows.Count > 0;
         }
     }
 }
