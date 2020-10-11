@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SGP.Util;
 using System;
 using System.Collections.Generic;
+
 
 namespace SGP.Models
 {
@@ -11,6 +13,11 @@ namespace SGP.Models
         public string Descricao { get; set; }
         public string Status { get; set; }
         public int Estacao { get; set; }
+        public IFormFile Imagem { get; set; }
+        public string ImagemPath { get; set; }
+
+
+
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
         public EquipamentoModel(){}
@@ -26,11 +33,11 @@ namespace SGP.Models
 
             if (!Existe(Id))
             {
-                sql = $"INSERT INTO EQUIPAMENTO_EQP (ID, DESCRICAO, STATUS, ESTACAO_ID) VALUES ('{Id}','{Descricao}', '{Status}', '{Estacao}')";
+                sql = $"INSERT INTO EQUIPAMENTO_EQP (ID, DESCRICAO, STATUS, ESTACAO_ID, IMAGEM_PATH) VALUES ('{Id}','{Descricao}', '{Status}', '{Estacao}', '{ImagemPath}')";
             }
             else
             {
-                sql = $"UPDATE  EQUIPAMENTO_EQP SET DESCRICAO = '{Descricao}',  STATUS = '{Status}', ESTACAO_ID = '{Estacao}' WHERE ID = '{Id}'";
+                sql = $"UPDATE EQUIPAMENTO_EQP SET DESCRICAO = '{Descricao}',  STATUS = '{Status}', ESTACAO_ID = '{Estacao}', IMAGEM_PATH = '{ImagemPath}' WHERE ID = '{Id}'";
             }
 
             var dal = new DAL();

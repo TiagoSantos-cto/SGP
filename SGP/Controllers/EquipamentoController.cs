@@ -1,15 +1,18 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SGP.Models;
+using System.IO;
 
 namespace SGP.Controllers
 {
     public class EquipamentoController : Controller
     {
         IHttpContextAccessor HttpContextAccessor;
-        public EquipamentoController(IHttpContextAccessor httpContextAccessor) { HttpContextAccessor = httpContextAccessor; }
+        public EquipamentoController(IHttpContextAccessor httpContextAccessor, IWebHostEnvironment environment) { HttpContextAccessor = httpContextAccessor; this.environment = environment; }
 
-       
+        private readonly IWebHostEnvironment environment;
+
         [HttpGet]
         public IActionResult Registrar()
         {
@@ -20,11 +23,12 @@ namespace SGP.Controllers
         }
 
         [HttpPost]
-        public IActionResult Registrar(EquipamentoModel Equipamento)
+        public IActionResult Registrar(EquipamentoModel equipamento)
         {
             if (ModelState.IsValid)
             {
-                Equipamento.GravarEquipamento();
+                GravarImagem(equipamento);
+                equipamento.GravarEquipamento();
                 return RedirectToAction("Sucesso");
             }
 
@@ -32,6 +36,18 @@ namespace SGP.Controllers
             ViewBag.ListaEstacao = estacao.ListaEstacao();
            
             return View();
+        }
+
+        private void GravarImagem(EquipamentoModel equipamento)
+        {
+            if (equipamento.Imagem != null)
+            {             
+                var imageName = Path.GetFileName(equipamento.Imagem.FileName);
+                var imagePath = Path.Combine(environment.WebRootPath + "/upload/", imageName) ;
+                using var fileStream = new FileStream(imagePath, FileMode.Create, FileAccess.Write);
+                equipamento.Imagem.CopyTo(fileStream);
+                equipamento.ImagemPath = "~/upload/" + imageName;
+            }
         }
 
         [HttpGet]
