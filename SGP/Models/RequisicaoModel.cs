@@ -143,9 +143,9 @@ namespace SGP.Models
             }
             else
             {
-                sql = $"UPDATE  REQUISICAO_REQ SET DATA = '{Convert.ToDateTime(Data):yyyy/MM/dd}', " +
+                sql = $"UPDATE  REQUISICAO_REQ SET DATA_INCLUSAO = '{Convert.ToDateTime(Data):yyyy/MM/dd}', " +
                       $"DESCRICAO = '{Descricao}',  TIPO = '{Tipo}', STATUS = '{Status}', ORIGEM ='{Origem}'," +
-                      $"DESTINO = '{Destino}', USUARIO_ALTERACAO ='{IdUsuarioLogado()}', DATA_ALTERACAO = '{DateTime.Now}' WHERE ID = '{Id}'";
+                      $"DESTINO = '{Destino}', USUARIO_ALTERACAO ='{IdUsuarioLogado()}', DATA_ALTERACAO = '{Convert.ToDateTime(DateTime.Now):yyyy/MM/dd}' WHERE ID = '{Id}'";
             }
 
             var dal = new DAL();

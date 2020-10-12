@@ -19,12 +19,22 @@
     catch { }
 }
 
-<h2>Cadastro de Estação</h2>
+
+<div class="row text-left" style="padding-left: 30px;">
+    <div>
+        <h2>Estação</h2>
+        <h6>Cadastro de estação de trabalho</h6>
+    </div>
+    <div style="padding-left: 30px;">
+        <img src="~/images/plataforma-icon.png" width="63" height="63" />
+    </div>
+</div>
 <br />
+
 
 <div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
     <form asp-controller="Estacao" asp-action="Registrar" class="needs-validation" novalidate>
-      
+
         <div class="mb-3">
             <label for="Descricao">Descrição da estação:</label>
             <input type="text" class="form-control" asp-for="Descricao" required>

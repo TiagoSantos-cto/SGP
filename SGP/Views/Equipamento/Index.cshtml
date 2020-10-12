@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Equipamentos - ";
+}
+
+<div class="row text-left" style="padding-left: 30px;">
+    <div>
+        <h2>Equipamentos</h2>
+        <h6>Todos os equipamentos cadastrados:</h6>
+    </div>
+    <div style="padding-left: 30px;">
+        <img src="~/images/equipamento-icon.png" width="63" height="63" />
+    </div>
+</div>
+<br />
+
+<div style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th> </th>
+                <th>Código</th>
+                <th>Descrição</th>
+                <th>Status</th>
+                <th>Estação</th>
+                <th>Quantidade</th>
+                <th> </th>
+            </tr>
+        </thead>
+
+        @{
+            foreach (var item in (List<EquipamentoModel>)ViewBag.ListaEquipamento)
+            {
+                <tbody>
+                    <tr>
+                        <td><button type="button" class=" btn btn-primary" onclick="Editar('@item.Id.ToString()')">Atualizar</button></td>
+                        <td>@item.Id.ToString()</td>
+                        <td>@item.Descricao.ToString()</td>
+                        <td id="status">@item.Status.ToString()</td>
+                        <td>@item.Estacao.ToString()</td>
+                        <td>@item.Quantidade.ToString()</td>
+                        <td><img src="@item.ImagemPath.ToString()" width="50" height="25"/></td>
+                    </tr>
+                </tbody>
+            }
+        }
+
+    </table>
+</div>
+<br />
+
+<button type="button" class="btn btn-block btn-success" onclick="Registrar()">Novo equipamento</button>
+
+
+<script>
+    function Registrar() {
+        window.location.href = "../Equipamento/Registrar";
+    }
+
+    function Editar(id) {
+        window.location.href = "../Equipamento/Registrar/" + id;
+    }
+</script>
+
+
+

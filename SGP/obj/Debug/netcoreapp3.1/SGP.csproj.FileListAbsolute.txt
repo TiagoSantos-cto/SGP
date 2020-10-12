@@ -752,3 +752,4 @@ C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Estacao\Regist
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Estacao\Sucesso.cshtml.g.cs
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Embarcacao\Registrar.cshtml.g.cs
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Embarcacao\Sucesso.cshtml.g.cs
+C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Equipamento\Index.cshtml.g.cs

@@ -7,22 +7,32 @@
 @{
     var vId = string.Empty;
     var vDescricao = string.Empty;
-    var vTipo = string.Empty;
+    var vStatus = string.Empty;
     var vEstacao = string.Empty;
     var vImagemPath = string.Empty;
+    var vQuantidade = string.Empty;
 
     try
     {
-        vId = @ViewBag.Registro.Id;
-        vDescricao = @ViewBag.Registro.Descricao;
-        vTipo = @ViewBag.Registro.Tipo.ToString();
+        vId = @ViewBag.Registro.Id.ToString();
+        vDescricao = @ViewBag.Registro.Descricao.ToString();
+        vStatus = @ViewBag.Registro.Status.ToString();
         vEstacao = @ViewBag.Registro.Estacao.ToString();
         vImagemPath = @ViewBag.Registro.ImagemPath.ToString();
+        vQuantidade = @ViewBag.Registro.Quantidade.ToString();
     }
     catch { }
 }
 
-<h2>Cadastro de equipamento</h2>
+<div class="row text-left" style="padding-left: 30px;">
+    <div>
+        <h2>Equipamento</h2>
+        <h6>Cadastro de equipamento</h6>
+    </div>
+    <div style="padding-left: 30px;">
+        <img src="~/images/equipamento-icon.png" width="63" height="63" />
+    </div>
+</div>
 <br />
 
 <div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
@@ -38,27 +48,40 @@
 
         <div class="mb-3">
             <label>Descrição do item</label>
-            <input type="text" class="form-control" asp-for="Descricao" required>
+            <input type="text" class="form-control" asp-for="Descricao "value="@vDescricao" required>
             <div class="invalid-feedback">
                 O campo Descrição é obrigatório.
             </div>
         </div>
 
-        <div class="form-group">
-            <label>Tipo:</label>
-            @{
-                if (vTipo == "Disponível")
-                {
-                    <div class="radio"><label><input type="radio" asp-for="Status" value="Disponível" checked>Disponível</label></div>
-                    <div class="radio"><label><input type="radio" asp-for="Status" value="Indisponivel" unchecked>Indisponivel</label></div>
+        <div class="row" style="padding-left: 20px;">
+
+            <div class="form-group">
+                <label>Status:</label>
+                @{
+
+                    if (vStatus == "Disponível")
+                    {
+
+                        <div class="radio" id="radio1"><label><input type="radio" asp-for="Status" value="Disponível" checked onclick="desabilitar()">Disponível</label></div>
+                        <div class="radio" id="radio2"><label><input type="radio" asp-for="Status" value="Indisponivel" unchecked onclick="desabilitar()">Indisponivel</label></div>
+                    }
+                    else
+                    {
+                        <div class="radio" id="radio3"><label><input type="radio" asp-for="Status" value="Disponível" unchecked onclick="desabilitar()">Disponível</label></div>
+                        <div class="radio" id="radio4"><label><input type="radio" asp-for="Status" value="Indisponivel" checked onclick="desabilitar()">Indisponivel</label></div>
+                    }
                 }
-                else
-                {
-                    <div class="radio"><label><input type="radio" asp-for="Status" value="Disponível" unchecked>Disponível</label></div>
-                    <div class="radio"><label><input type="radio" asp-for="Status" value="Indisponivel" checked>Indisponivel</label></div>
-                }
-            }
+            </div>
+
+            <div style="padding-left: 50px;">
+                <label>Quantidade:</label>
+                <input id="qtd" type="number" class="form-control" asp-for="Quantidade" value="@vQuantidade">
+            </div>
+
         </div>
+
+
 
         <div class="row">
             <div class="form-group col-md-6 mb-3">
@@ -119,6 +142,25 @@
 
         reader.readAsDataURL(file);
     }
+
+    function desabilitar() {
+
+        var radio1 = document.getElementById('radio1');
+        var radio2 = document.getElementById('radio2');
+        var radio3 = document.getElementById('radio3');
+        var radio4 = document.getElementById('radio4');
+        var qtd = document.getElementById('qtd');
+
+        if (radio1.checked == true || radio3.checked == true) {
+            qtd.disabled = false;
+        }
+
+        if (radio2.checked == true || radio4.checked == true) {
+            qtd.disabled = true;
+        }
+    }
+
+
 </script>
 
 <style>

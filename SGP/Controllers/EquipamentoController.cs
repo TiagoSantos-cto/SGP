@@ -13,9 +13,22 @@ namespace SGP.Controllers
 
         private readonly IWebHostEnvironment environment;
 
-        [HttpGet]
-        public IActionResult Registrar()
+        public IActionResult Index()
         {
+            var equipamento = new EquipamentoModel(HttpContextAccessor);
+            ViewBag.ListaEquipamento = equipamento.ListaEquipamento();
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Registrar(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                var equipamento = new EquipamentoModel(HttpContextAccessor);
+                ViewBag.Registro = equipamento.CarregarRegistro(id);
+            }
+
             var estacao = new EstacaoModel(HttpContextAccessor);
             ViewBag.ListaEstacao = estacao.ListaEstacao();
 
@@ -46,7 +59,7 @@ namespace SGP.Controllers
                 var imagePath = Path.Combine(environment.WebRootPath + "/upload/", imageName) ;
                 using var fileStream = new FileStream(imagePath, FileMode.Create, FileAccess.Write);
                 equipamento.Imagem.CopyTo(fileStream);
-                equipamento.ImagemPath = "~/upload/" + imageName;
+                equipamento.ImagemPath = "/upload/" + imageName;
             }
         }
 
