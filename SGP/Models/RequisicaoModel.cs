@@ -8,6 +8,16 @@ namespace SGP.Models
 {
     public class RequisicaoModel
     {
+        public enum StatusRequisicao
+        {
+            Solicitado,
+            Liberado,
+            EmColeta,
+            EmProcessamento,
+            Cancelado,
+            Programado
+        }
+
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O campo data é obrigatório.")]
@@ -28,10 +38,15 @@ namespace SGP.Models
 
         public string Destino { get; set; }
 
+        public IList<ItemRequisicaoModel> ItensRequisicao { get; set; }
+
 
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
-        public RequisicaoModel() { }
+        public RequisicaoModel() 
+        {
+            ItensRequisicao = new List<ItemRequisicaoModel>();
+        }
 
         public RequisicaoModel(IHttpContextAccessor httpContextAccessor)
         {
@@ -48,7 +63,7 @@ namespace SGP.Models
             var lista = new List<RequisicaoModel>();
 
             var filtro = string.Empty;
-           
+
             if ((Data != null) && (DataFinal != null))
             {
                 filtro += $"AND R.DATA_INCLUSAO >='{Convert.ToDateTime(Data):yyyy/MM/dd}' AND R.DATA_INCLUSAO <= '{Convert.ToDateTime(DataFinal):yyyy/MM/dd}'";
@@ -61,7 +76,7 @@ namespace SGP.Models
                     filtro += $" AND R.STATUS = '{Status}'";
                 }
             }
-          
+
             if (Tipo != null)
             {
                 if (Tipo != "A")
@@ -76,14 +91,14 @@ namespace SGP.Models
                 {
                     filtro += $" AND U.NOME = '{NomeUsuario}'";
                 }
-            }     
+            }
 
             var sql = @"SELECT R.ID, R.DATA_INCLUSAO AS DATA, U.NOME AS USUARIO, R.STATUS, R.DESCRICAO, R.TIPO, R.ORIGEM, R.DESTINO
                         FROM REQUISICAO_REQ  AS R INNER JOIN USUARIO_USO U 
                         ON R.USUARIO_ID = U.ID "
                         + $" WHERE 1 = 1  {filtro} ORDER BY R.DATA_INCLUSAO DESC LIMIT 10 ";
-           
-           
+
+
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -95,7 +110,7 @@ namespace SGP.Models
                     Descricao = dt.Rows[i]["DESCRICAO"] != null ? dt.Rows[i]["DESCRICAO"].ToString() : string.Empty,
                     Tipo = dt.Rows[i]["TIPO"] != null ? dt.Rows[i]["TIPO"].ToString() : string.Empty,
                     NomeUsuario = dt.Rows[i]["USUARIO"] != null ? dt.Rows[i]["USUARIO"].ToString() : string.Empty,
-                    Data = dt.Rows[i]["DATA"] != null ? Convert.ToDateTime(dt.Rows[i]["DATA"].ToString()).ToString("dd/MM/yyyy") : string.Empty,   
+                    Data = dt.Rows[i]["DATA"] != null ? Convert.ToDateTime(dt.Rows[i]["DATA"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
                     Status = dt.Rows[i]["STATUS"] != null ? dt.Rows[i]["STATUS"].ToString() : string.Empty,
                     Origem = dt.Rows[i]["ORIGEM"] != null ? dt.Rows[i]["ORIGEM"].ToString() : string.Empty,
                     Destino = dt.Rows[i]["DESTINO"] != null ? dt.Rows[i]["DESTINO"].ToString() : string.Empty
@@ -134,7 +149,8 @@ namespace SGP.Models
 
         public void Gravar()
         {
-            string sql;
+            string sql;          
+            var dal = new DAL();
 
             if (Id == 0)
             {
@@ -148,8 +164,26 @@ namespace SGP.Models
                       $"DESTINO = '{Destino}', USUARIO_ALTERACAO ='{IdUsuarioLogado()}', DATA_ALTERACAO = '{Convert.ToDateTime(DateTime.Now):yyyy/MM/dd}' WHERE ID = '{Id}'";
             }
 
-            var dal = new DAL();
+            GravarLista();
+
             dal.ExecutarComandoSQL(sql);
+        }
+
+        private void GravarLista()
+        {
+            string sqlListaItens;
+            string deletaLista;
+
+            var dal = new DAL();
+
+            deletaLista = $"DELETE FROM ITEMREQUISICAO_ITR WHERE REQUISICAO_ID = '{Id}'";
+            dal.ExecutarComandoSQL(deletaLista);
+
+            foreach (var item in ItensRequisicao)
+            {
+                sqlListaItens = $"INSERT INTO ITEMREQUISICAO_ITR (EQUIPAMETO_ID, REQUISICAO_ID, QUANTIDADE) VALUES ('{item.CodigoEquipamento}','{item.CodigoRequisicao}','{item.Quantidade}')";
+                dal.ExecutarComandoSQL(sqlListaItens);
+            }
         }
 
         public void Excluir(int id)
@@ -157,6 +191,28 @@ namespace SGP.Models
             string sql = $"DELETE FROM REQUISICAO_REQ WHERE ID = {id}";
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
+        }
+
+
+        public IList<EquipamentoModel> ListaItem()
+        {
+            var equipamentoModel = new EquipamentoModel();
+            var lista = equipamentoModel.ListaEquipamento();
+    
+            return lista;
+        }
+
+        public IList<ItemRequisicaoModel> CarregarItens(string idEquipamento, int Quantidade)
+        {       
+            var item = new ItemRequisicaoModel
+            {
+                CodigoRequisicao = Id,
+                CodigoEquipamento = idEquipamento,
+                Quantidade = Quantidade
+            };
+
+            ItensRequisicao.Add(item);
+            return ItensRequisicao;
         }
     }
 }

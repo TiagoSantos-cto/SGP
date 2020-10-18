@@ -35,8 +35,8 @@ namespace SGP.Controllers
         {
             if (id != null)
             {
-                var transacao = new RequisicaoModel(HttpContextAccessor);
-                ViewBag.Registro = transacao.CarregarRegistro(id);
+                var requisicao = new RequisicaoModel(HttpContextAccessor);
+                ViewBag.Registro = requisicao.CarregarRegistro(id);
             }
 
             var usuario = new UsuarioModel(HttpContextAccessor);
@@ -65,5 +65,35 @@ namespace SGP.Controllers
            
             return View();
         }
+
+        [HttpGet]
+        public IActionResult ListaItens()
+        {
+            var entity = new RequisicaoModel
+            {
+                HttpContextAccessor = HttpContextAccessor
+            };
+
+            ViewBag.ListaItem = entity.ListaItem();
+            
+            return PartialView();
+        }
+
+
+        [HttpPost]
+        public IActionResult ListaItens(string id, int quantidade)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                var requisicao = new RequisicaoModel(HttpContextAccessor);
+                ViewBag.CarregarItens = requisicao.CarregarItens(id, quantidade);
+            }
+
+            var usuario = new UsuarioModel(HttpContextAccessor);
+            ViewBag.ListaUsuario = usuario.ListaUsuario();
+
+            return View();
+        }
+
     }
 }

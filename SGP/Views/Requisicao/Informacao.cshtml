@@ -1,6 +1,5 @@
 ﻿@model RequisicaoModel
 
-
 @{
     ViewData["Title"] = "Gravar / alterar";
 }
@@ -29,6 +28,9 @@
     }
     catch { }
 }
+
+
+
 
 <div class="row text-left" style="padding-left: 30px;">
     <div>
@@ -92,6 +94,30 @@
             </div>
         </div>
 
+        <div class="form-group" style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Equipamentos solicitados</th>
+                    </tr>
+                    <tr><td><button type="button" class="btn btn-success btnAdd">Adicionar item</button></td></tr>
+                </thead>
+                @*@{
+                    foreach (var item in (List<ItemRequisicaoModel>)ViewBag.CarregarItens)
+                    {
+                        <tbody>
+                            <tr><td><button type="button" class="btn btn-success btnAdd">Adicionar item</button></td></tr>
+                            <tr>
+                                <td>@item.CodigoEquipamento.ToString()</td>
+                                <td>@item.Quantidade.ToString()</td>
+                                <td><button type="button" class=" btn btn-danger">Remover</button></td>
+                            </tr>
+                        </tbody>
+                    } }*@
+            </table>
+        </div>
+
+
         <div class="form-group">
             <label>Descição:</label>
             @Html.TextArea("Descricao", vDescricao, new { @class = "form-control" })
@@ -131,6 +157,62 @@
     </form>
 </div>
 
+
+@* MODAL ITENS *@
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4"></div>
+        <div class="modal fade" id="myModal">
+            <div class="modal-dialog  modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <div class="row text-left" style="padding-left: 30px;">
+                            <div>
+                                <h1 class="modal-title" id="myModal-label">Adicionar itens</h1>
+                            </div>
+                            <div style="padding-left: 30px;">
+                                <img src="~/images/maquina-icon.png" width="63" height="63" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row" id="conteudoModal"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" id="btnCancelar" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+
+
+
+</div>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"></script>
+
+<div class="modal fade" id="myModal" role="dialog" data-url="@Url.Action("ListaItens", "Requisicao")"></div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('.btnAdd').click(function () {
+
+            $("#conteudoModal").load("/Requisicao/ListaItens/",
+                function () {
+                    $("#myModal").modal("show");
+                });
+        });
+    });
+</script>
+
+
 <style>
 
     fieldset.scheduler-border {
@@ -146,4 +228,9 @@
         padding: 0 10px;
         border-bottom: none;
     }
+
+    .modal-lg {
+        max-width: 30%;
+    }
+  
 </style>

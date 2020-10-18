@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Embarcações de apoio";
+}
+
+<div class="row text-left" style="padding-left: 30px;">
+    <div>
+        <h2>Embarcações de apoio</h2>
+        <h6>Todas os embarcações cadastradas:</h6>
+    </div>
+    <div style="padding-left: 30px;">
+        <img src="~/images/navio-icon.png" width="63" height="63" />
+    </div>
+</div>
+<br />
+
+<div style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th> </th>
+                <th>Nome</th>
+                <th>Catedoria</th>
+                <th>Capacidade máxima (t)</th>
+            </tr>
+        </thead>
+
+        @{
+            foreach (var item in (List<EmbarcacaoModel>)ViewBag.ListaEmbarcacao)
+            {
+                <tbody>
+                    <tr>
+                        <td><button type="button" class=" btn btn-primary" onclick="Editar('@item.Id.ToString()')">Atualizar</button></td>
+                        <td>@item.Nome.ToString()</td>
+                        <td><strong>@item.Categoria.ToString()</strong></td>
+                        <td>@item.Capacidade.ToString()t</td>
+                    </tr>
+                </tbody>
+            }
+        }
+    </table>
+</div>
+<br />
+
+<button type="button" class="btn btn-block btn-success" onclick="Registrar()">Novo equipamento</button>
+
+
+<script>
+    function Registrar() {
+        window.location.href = "../Embarcacao/Registrar";
+    }
+
+    function Editar(id) {
+        window.location.href = "../Embarcacao/Registrar/" + id;
+    }
+</script>
+
+
+

@@ -753,3 +753,5 @@ C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Estacao\Sucess
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Embarcacao\Registrar.cshtml.g.cs
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Embarcacao\Sucesso.cshtml.g.cs
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Equipamento\Index.cshtml.g.cs
+C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Embarcacao\Index.cshtml.g.cs
+C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Requisicao\ListaItens.cshtml.g.cs

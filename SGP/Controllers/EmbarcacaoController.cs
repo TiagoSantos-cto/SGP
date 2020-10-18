@@ -9,7 +9,13 @@ namespace SGP.Controllers
         IHttpContextAccessor HttpContextAccessor;
         public EmbarcacaoController(IHttpContextAccessor httpContextAccessor) { HttpContextAccessor = httpContextAccessor; }
 
-       
+        public IActionResult Index()
+        {
+            var embarcacao = new EmbarcacaoModel(HttpContextAccessor);
+            ViewBag.Listaembarcacao = embarcacao.ListaEmbarcacao();
+            return View();
+        }
+
         [HttpGet]
         public IActionResult Registrar()
         {
