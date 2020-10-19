@@ -17,13 +17,13 @@
                 if (@item.Status.ToString() != "Indisponível")
                 {
                     <tbody>
-                                <tr>
-                                    <td>@item.Descricao.ToString()</td>
-                                    <td><img src="@item.ImagemPath.ToString()" width="50" height="50" /></td>
-                                    <td class="text-center">@item.Quantidade.ToString()</td>
-                                    <td class="text-center"><input type="number" id="qtd" style="width:60px"></td>
-                                    <td><button type="button" class=" btn btn-primary" onclick="Add('@item.Id.ToString()')">Adicionar</button></td>
-                                </tr>
+                        <tr>
+                            <td>@item.Descricao.ToString()</td>
+                            <td><img src="@item.ImagemPath.ToString()" width="50" height="50" /></td>
+                            <td class="text-center">@item.Quantidade.ToString()</td>
+                            <td class="text-center"><input type="number" id="qtd" style="width:60px"></td>
+                            <td><button type="submit" class=" btn btn-primary" onclick="Add(@item.Id.ToString(), @item.Descricao.ToString())">Adicionar</button></td>
+                        </tr>
                     </tbody>
                 }
             }
@@ -31,13 +31,19 @@
     </table>
 </div>
 
-
-
-
 <script>
-    function Add(id) {
+    function Add(id, desc) {
+
+        var tabela = document.getElementById('TabelaItens');
+        var numeroLinhas = tabela.rows.length;
+        var linha = tabela.insertRow(numeroLinhas);
+        var celula1 = linha.insertCell(0);
+        var celula2 = linha.insertCell(1);
         var qtd = document.getElementById('qtd');
-        window.location.href = "../Requisicao/ListaItens/" + id&qtd;
+
+        celula1.innerHTML = id + " - " + desc + "Quantidade solicitada: " + qtd;
+        celula2.innerHTML = "<button onclick='removeLinha(this)'>Remover</button>";
+
         window.close();
     }
 </script>

@@ -86,7 +86,7 @@ namespace SGP.Controllers
             if (string.IsNullOrEmpty(id))
             {
                 var requisicao = new RequisicaoModel(HttpContextAccessor);
-                ViewBag.CarregarItens = requisicao.CarregarItens(id, quantidade);
+                ViewBag.ListaItens = requisicao.ListaItens(id, quantidade);
             }
 
             var usuario = new UsuarioModel(HttpContextAccessor);

@@ -202,7 +202,7 @@ namespace SGP.Models
             return lista;
         }
 
-        public IList<ItemRequisicaoModel> CarregarItens(string idEquipamento, int Quantidade)
+        public IList<ItemRequisicaoModel> ListaItens(string idEquipamento, int Quantidade)
         {       
             var item = new ItemRequisicaoModel
             {

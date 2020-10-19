@@ -91,32 +91,27 @@
                 <label>Destino:</label>
                 <br />
                 <input type="text" class="form-control" asp-for="Destino" value="@vDestino">
+            </div>         
+        </div>
+
+
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Equipamentos solicitados</legend>
+
+            <div class="form-group" style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
+                <table class="table table-bordered" id="TabelaItens">                  
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
 
-        <div class="form-group" style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Equipamentos solicitados</th>
-                    </tr>
-                    <tr><td><button type="button" class="btn btn-success btnAdd">Adicionar item</button></td></tr>
-                </thead>
-                @*@{
-                    foreach (var item in (List<ItemRequisicaoModel>)ViewBag.CarregarItens)
-                    {
-                        <tbody>
-                            <tr><td><button type="button" class="btn btn-success btnAdd">Adicionar item</button></td></tr>
-                            <tr>
-                                <td>@item.CodigoEquipamento.ToString()</td>
-                                <td>@item.Quantidade.ToString()</td>
-                                <td><button type="button" class=" btn btn-danger">Remover</button></td>
-                            </tr>
-                        </tbody>
-                    } }*@
-            </table>
-        </div>
+            <button type="button" class="btn btn-primary btnAdd">Adicionar item</button>
 
+        </fieldset>
 
         <div class="form-group">
             <label>Descição:</label>
@@ -189,10 +184,6 @@
             </div>
         </div>
     </div>
-   
-
-
-
 </div>
 
 <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"></script>
@@ -210,8 +201,15 @@
                 });
         });
     });
-</script>
 
+
+    // funcao remove uma linha da tabela
+    function removeLinha(linha) {
+        var i = linha.parentNode.parentNode.rowIndex;
+        document.getElementById('TabelaItens').deleteRow(i);
+    }
+
+</script>
 
 <style>
 
@@ -232,5 +230,4 @@
     .modal-lg {
         max-width: 30%;
     }
-  
 </style>
