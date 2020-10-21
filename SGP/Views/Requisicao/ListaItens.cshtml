@@ -1,4 +1,6 @@
 ﻿
+
+
 <div style="background-color: ghostwhite; border-radius: 10px; padding:20px; width:800px">
     <table class="table table-striped">
         <thead>
@@ -22,7 +24,7 @@
                             <td><img src="@item.ImagemPath.ToString()" width="50" height="50" /></td>
                             <td class="text-center">@item.Quantidade.ToString()</td>
                             <td class="text-center"><input type="number" id="qtd" style="width:60px"></td>
-                            <td><button type="submit" class=" btn btn-primary" onclick="Add(@item.Id.ToString(), @item.Descricao.ToString())">Adicionar</button></td>
+                            <td><button type="submit" class=" btn btn-primary" onclick="Add(@item.Id.ToString())">Adicionar</button></td>
                         </tr>
                     </tbody>
                 }
@@ -31,19 +33,7 @@
     </table>
 </div>
 
+
 <script>
-    function Add(id, desc) {
-
-        var tabela = document.getElementById('TabelaItens');
-        var numeroLinhas = tabela.rows.length;
-        var linha = tabela.insertRow(numeroLinhas);
-        var celula1 = linha.insertCell(0);
-        var celula2 = linha.insertCell(1);
-        var qtd = document.getElementById('qtd');
-
-        celula1.innerHTML = id + " - " + desc + "Quantidade solicitada: " + qtd;
-        celula2.innerHTML = "<button onclick='removeLinha(this)'>Remover</button>";
-
-        window.close();
-    }
+    
 </script>

@@ -14,6 +14,9 @@ namespace SGP.Controllers
         {
             var requisicoes = new RequisicaoModel(HttpContextAccessor);
             ViewBag.ListaRequisicao = requisicoes.ListaRequisicao();
+            
+            ViewBag.ListaItem = requisicoes.ListaItem(); //teste
+            
             return View();
         }
 
@@ -33,14 +36,17 @@ namespace SGP.Controllers
         [HttpGet]
         public IActionResult Informacao(int? id)
         {
+            var requisicao = new RequisicaoModel(HttpContextAccessor);
             if (id != null)
             {
-                var requisicao = new RequisicaoModel(HttpContextAccessor);
+                //var requisicao = new RequisicaoModel(HttpContextAccessor);
                 ViewBag.Registro = requisicao.CarregarRegistro(id);
             }
 
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
+
+            ViewBag.ListaItem = requisicao.ListaItem(); //teste
 
             return View();
         }
@@ -62,7 +68,9 @@ namespace SGP.Controllers
            
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
-           
+
+            ViewBag.ListaItem = entity.ListaItem(); //teste
+
             return View();
         }
 

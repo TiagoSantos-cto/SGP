@@ -91,7 +91,7 @@
                 <label>Destino:</label>
                 <br />
                 <input type="text" class="form-control" asp-for="Destino" value="@vDestino">
-            </div>         
+            </div>
         </div>
 
 
@@ -99,17 +99,25 @@
             <legend class="scheduler-border">Equipamentos solicitados</legend>
 
             <div class="form-group" style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
-                <table class="table table-bordered" id="TabelaItens">                  
-                    <tbody>
+                <table class="table table-bordered" id="TabelaItens">
+                    <thead>
                         <tr>
-                            <td></td>
-                            <td></td>
+                            <th>Item</th>
+                            <th>Quantidade solicitada</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>                          
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <button type="button" class="btn btn-primary btnAdd">Adicionar item</button>
+            <!-- Botão para acionar modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado">
+                Adicionar item 
+            </button>
 
         </fieldset>
 
@@ -153,57 +161,86 @@
 </div>
 
 
-@* MODAL ITENS *@
-
-<div class="container">
-    <div class="row">
-        <div class="col-sm-4"></div>
-        <div class="modal fade" id="myModal">
-            <div class="modal-dialog  modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-
-                        <div class="row text-left" style="padding-left: 30px;">
-                            <div>
-                                <h1 class="modal-title" id="myModal-label">Adicionar itens</h1>
-                            </div>
-                            <div style="padding-left: 30px;">
-                                <img src="~/images/maquina-icon.png" width="63" height="63" />
-                            </div>
-                        </div>
+<!-- Modal -->
+<div class="modal fade" id="ExemploModalCentralizado" tabindex="-1" role="dialog" aria-labelledby="TituloModalCentralizado" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            
+                <div class="row text-center" style="padding-left: 30px;">
+                    <div>
+                        <h3 class="modal-title" id="myModal-label">Adicionar itens</h3>
                     </div>
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                            <div class="row" id="conteudoModal"></div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-danger" id="btnCancelar" data-dismiss="modal">Cancelar</button>
+                    <div style="padding-left: 30px;">
+                        <img src="~/images/maquina-icon.png" width="43" height="43" />
                     </div>
                 </div>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="background-color: ghostwhite; border-radius: 10px; padding:20px; width:800px">
+                
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Descrição</th>
+                            <th> </th>
+                            <th>Estoque</th>
+                            <th>Quantidade</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    @{
+                        foreach (var item in (List<EquipamentoModel>)ViewBag.ListaItem)
+                        {
+                            if (@item.Status.ToString() != "Indisponível")
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td>@item.Descricao.ToString()</td>
+                                        <td><img src="@item.ImagemPath.ToString()" width="50" height="50" /></td>
+                                        <td class="text-center">@item.Quantidade.ToString()</td>
+                                        <td class="text-center"><input type="number" id="qtd" style="width:60px"></td>
+                                        <td><button type="submit" class=" btn btn-success" onclick="Add('@item.Id.ToString()')">Adicionar</button></td>
+                                    </tr>
+                                </tbody>
+                            }
+                        }
+                    }
+                </table>
+            </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"></script>
-
-<div class="modal fade" id="myModal" role="dialog" data-url="@Url.Action("ListaItens", "Requisicao")"></div>
-
 <script type="text/javascript">
 
-    $(document).ready(function () {
-        $('.btnAdd').click(function () {
+    function Add(id) {
 
-            $("#conteudoModal").load("/Requisicao/ListaItens/",
-                function () {
-                    $("#myModal").modal("show");
-                });
-        });
-    });
+        var tabela = document.getElementById('TabelaItens');
+        var numeroLinhas = tabela.rows.length;
+        var linha = tabela.insertRow(numeroLinhas);
 
+        var celula1 = linha.insertCell(0);
+        var celula2 = linha.insertCell(1);
+        var celula3 = linha.insertCell(2);
 
-    // funcao remove uma linha da tabela
+        var qtd = document.getElementById('qtd');
+
+        celula1.innerHTML =  id;
+        celula2.innerHTML =  qtd.value;
+        celula3.innerHTML = "<button id ='remover' onclick='removeLinha(this)'>Remover</button>";
+
+        window.close();
+    } 
+
     function removeLinha(linha) {
         var i = linha.parentNode.parentNode.rowIndex;
         document.getElementById('TabelaItens').deleteRow(i);
@@ -228,6 +265,20 @@
     }
 
     .modal-lg {
-        max-width: 30%;
+        max-width: 44%;
     }
+
+    #remover {
+        background-color: royalblue;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        margin: 6px 4px;
+        padding: 10px 24px;
+        cursor: pointer;
+        -webkit-transition-duration: 0.4s;
+        transition-duration: 0.4s;
+    }
+
 </style>
