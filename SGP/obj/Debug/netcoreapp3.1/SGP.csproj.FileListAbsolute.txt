@@ -715,9 +715,6 @@ C:\Users\Tiago Santos\SGP\SGP\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstanda
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.csprojAssemblyReference.cache
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.AssemblyInfoInputs.cache
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.AssemblyInfo.cs
-C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.csproj.CoreCompileInputs.cache
-C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.RazorAssemblyInfo.cache
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.RazorAssemblyInfo.cs
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.TagHelpers.input.cache
@@ -754,3 +751,11 @@ C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Embarcacao\Reg
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Embarcacao\Sucesso.cshtml.g.cs
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Equipamento\Index.cshtml.g.cs
 C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Embarcacao\Index.cshtml.g.cs
+C:\Users\Tiago Santos\SGP\SGP\bin\Debug\netcoreapp3.1\PdfSharpCore.dll
+C:\Users\Tiago Santos\SGP\SGP\bin\Debug\netcoreapp3.1\SixLabors.Fonts.dll
+C:\Users\Tiago Santos\SGP\SGP\bin\Debug\netcoreapp3.1\SixLabors.ImageSharp.dll
+C:\Users\Tiago Santos\SGP\SGP\bin\Debug\netcoreapp3.1\de\PdfSharpCore.resources.dll
+C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.csproj.CoreCompileInputs.cache
+C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Tiago Santos\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Relatorio\Historico.cshtml.g.cs

@@ -69,7 +69,7 @@ namespace SGP.Controllers
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
 
-            ViewBag.ListaItem = entity.ListaItem(); //teste
+            ViewBag.ListaItem = entity.ListaItem(); 
 
             return View();
         }

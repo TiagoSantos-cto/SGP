@@ -48,6 +48,10 @@
             "MySql.Data": {
               "target": "Package",
               "version": "[8.0.21, )"
+            },
+            "PdfSharpCore": {
+              "target": "Package",
+              "version": "[1.2.11, )"
             }
           },
           "imports": [
