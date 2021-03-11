@@ -66,14 +66,14 @@ namespace SGP.Models
 
             if ((Data != null) && (DataFinal != null))
             {
-                filtro += $"AND R.DATA_INCLUSAO >='{Convert.ToDateTime(Data):yyyy/MM/dd}' AND R.DATA_INCLUSAO <= '{Convert.ToDateTime(DataFinal):yyyy/MM/dd}'";
+                filtro += $"AND R.DataInclusao >='{Convert.ToDateTime(Data):yyyy/MM/dd}' AND R.DataInclusao <= '{Convert.ToDateTime(DataFinal):yyyy/MM/dd}'";
             }
 
             if (Status != null)
             {
                 if (Status != "Todos")
                 {
-                    filtro += $" AND R.STATUS = '{Status}'";
+                    filtro += $" AND R.Status = '{Status}'";
                 }
             }
 
@@ -81,7 +81,7 @@ namespace SGP.Models
             {
                 if (Tipo != "A")
                 {
-                    filtro += $" AND R.TIPO = '{Tipo}'";
+                    filtro += $" AND R.Tipo = '{Tipo}'";
                 }
             }
 
@@ -89,14 +89,16 @@ namespace SGP.Models
             {
                 if (!string.IsNullOrEmpty(NomeUsuario))
                 {
-                    filtro += $" AND U.NOME = '{NomeUsuario}'";
+                    filtro += $" AND U.Nome = '{NomeUsuario}'";
                 }
             }
 
-            var sql = @"SELECT R.ID, R.DATA_INCLUSAO AS DATA, U.NOME AS USUARIO, R.STATUS, R.DESCRICAO, R.TIPO, R.ORIGEM, R.DESTINO
-                        FROM REQUISICAO_REQ  AS R INNER JOIN USUARIO_USO U 
-                        ON R.USUARIO_ID = U.ID "
-                        + $" WHERE 1 = 1  {filtro} ORDER BY R.DATA_INCLUSAO DESC LIMIT 10 ";
+            var sql = $@"SELECT R.IdRequisicao as ID, R.DataInclusao as DATA, P.Nome as USUARIO, R.Status as STATUS, R.Descricao as DESCRICAO, R.Tipo as TIPO, R.Origem as ORIGEM, R.Destino as DESTINO
+                        FROM Requisicao R, Funcionario F, Pessoa P
+                        WHERE R.Id_Funcionario = F.IdFuncionario
+                        AND P.IdPessoa = F.Id_Pessoa
+                        {filtro} 
+                        ORDER BY DATA DESC LIMIT 10";
 
 
             var dal = new DAL();
@@ -124,11 +126,12 @@ namespace SGP.Models
 
         public RequisicaoModel CarregarRegistro(int? id)
         {
-            var sql = @"SELECT R.ID, R.DATA_INCLUSAO, U.NOME AS USUARIO, R.STATUS, R.DESCRICAO, R.TIPO, R.ORIGEM, R.DESTINO
-                        FROM REQUISICAO_REQ  AS R INNER JOIN USUARIO_USO U 
-                        ON R.USUARIO_ID = U.ID "
-                      + $"AND R.ID = '{id}'";
-
+            var sql = $@"SELECT R.IdRequisicao as ID, R.DataInclusao as DATA, P.Nome as USUARIO, R.Status as STATUS, R.Descricao as DESCRICAO, R.Tipo as TIPO, R.Origem as ORIGEM, R.Destino as DESTINO
+                        FROM Requisicao R, Funcionario F, Pessoa P
+                        WHERE R.Id_Funcionario = F.IdFuncionario
+                        AND P.IdPessoa = F.Id_Pessoa 
+                        AND R.IdRequisicao = '{id}'";     
+            
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -154,14 +157,14 @@ namespace SGP.Models
 
             if (Id == 0)
             {
-                sql = "INSERT INTO REQUISICAO_REQ (DESCRICAO, DATA, TIPO, STATUS, ORIGEM, DESTINO, USUARIO_ID, USUARIO_ALTERACAO, DATA_ALTERACAO) VALUES " +
-                    $" ('{Convert.ToDateTime(Data):yyyy/MM/dd}', '{Tipo}', '{Descricao}', '{Tipo}' ,'{Status}', '{Origem}', '{Destino}', '{IdUsuarioLogado()}', '', '')";
+                sql = "INSERT INTO Requisicao (IdFuncionario, Descricao, Tipo, Origem, Status, Destino, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao) VALUES " +
+                    $" ('{IdUsuarioLogado()}', '{Descricao}', '{Tipo}' ,'{Origem}', '{Status}', '{Destino}','{Convert.ToDateTime(Data):yyyy/MM/dd}', '{IdUsuarioLogado()}', '', '')";
             }
             else
             {
-                sql = $"UPDATE  REQUISICAO_REQ SET DATA_INCLUSAO = '{Convert.ToDateTime(Data):yyyy/MM/dd}', " +
+                sql = $"UPDATE  Requisicao SET DataAlteracao = '{Convert.ToDateTime(Data):yyyy/MM/dd}', " +
                       $"DESCRICAO = '{Descricao}',  TIPO = '{Tipo}', STATUS = '{Status}', ORIGEM ='{Origem}'," +
-                      $"DESTINO = '{Destino}', USUARIO_ALTERACAO ='{IdUsuarioLogado()}', DATA_ALTERACAO = '{Convert.ToDateTime(DateTime.Now):yyyy/MM/dd}' WHERE ID = '{Id}'";
+                      $"DESTINO = '{Destino}', USUARIO_ALTERACAO ='{IdUsuarioLogado()}', WHERE IdRequisicao = '{Id}'";
             }
 
             GravarLista();
@@ -176,19 +179,19 @@ namespace SGP.Models
 
             var dal = new DAL();
 
-            deletaLista = $"DELETE FROM ITEMREQUISICAO_ITR WHERE REQUISICAO_ID = '{Id}'";
+            deletaLista = $"DELETE FROM Requsicao_item WHERE IdRequisicao = '{Id}'";
             dal.ExecutarComandoSQL(deletaLista);
 
             foreach (var item in ItensRequisicao)
             {
-                sqlListaItens = $"INSERT INTO ITEMREQUISICAO_ITR (EQUIPAMETO_ID, REQUISICAO_ID, QUANTIDADE) VALUES ('{item.CodigoEquipamento}','{item.CodigoRequisicao}','{item.Quantidade}')";
+                sqlListaItens = $"INSERT INTO Requsicao_item (IdItemRequisicao, IdRequisicao, Quantidade) VALUES ('{item.CodigoEquipamento}','{item.CodigoRequisicao}','{item.Quantidade}')";
                 dal.ExecutarComandoSQL(sqlListaItens);
             }
         }
 
         public void Excluir(int id)
         {
-            string sql = $"DELETE FROM REQUISICAO_REQ WHERE ID = {id}";
+            string sql = $"DELETE FROM Requisicao WHERE IdRequisicao = {id}";
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
         }

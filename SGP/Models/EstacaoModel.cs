@@ -26,11 +26,11 @@ namespace SGP.Models
 
             if (Id == 0)
             {
-                sql = $"INSERT INTO ESTACAO_EST  (DESCRICAO, TIPO) VALUES ('{Descricao}', {Tipo})";
+                sql = $"insert into EstacaoTrabalho (Nome, Tipo) values ('{Descricao}', {Tipo})";
             }
             else
             {
-                sql = $"UPDATE  ESTACAO_EST SET DESCRICAO = '{Descricao}',  TIPO = {Tipo} WHERE ID = '{Id}'";
+                sql = $"update EstacaoTrabalho SET Nome = '{Descricao}',  Tipo = {Tipo} where IdEstacao = '{Id}'";
             }
 
             var dal = new DAL();
@@ -39,7 +39,7 @@ namespace SGP.Models
 
         public void ExcluirEstacao(int id)
         {
-            string sql = $"DELETE FROM ESTACAO_EST WHERE ID = {id}";
+            string sql = $"delete from EstacaoTrabalho where IdEstacao = {id}";
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
         }
@@ -48,7 +48,7 @@ namespace SGP.Models
         {
             var lista = new List<EstacaoModel>();
 
-            var sql = $"SELECT ID, DESCRICAO, TIPO FROM ESTACAO_EST";
+            var sql = $"select IdEstacao, Nome, Tipo from EstacaoTrabalho";
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -56,9 +56,9 @@ namespace SGP.Models
             {
                 var item = new EstacaoModel
                 {
-                    Id = Convert.ToInt32(dt.Rows[i]["ID"].ToString()),
-                    Descricao = dt.Rows[i]["DESCRICAO"].ToString(),  
-                    Tipo = dt.Rows[i]["TIPO"].ToString()
+                    Id = Convert.ToInt32(dt.Rows[i]["IdEstacao"].ToString()),
+                    Descricao = dt.Rows[i]["Nome"].ToString(),  
+                    Tipo = dt.Rows[i]["Tipo"].ToString()
                 };
 
                 lista.Add(item);

@@ -23,66 +23,36 @@
     <form asp-controller="Usuario" asp-action="Registrar" class="needs-validation" novalidate>
 
         <div class="mb-3">
-            <label for="Nome">Nome no sistema</label>
-            <input type="text" class="form-control" asp-for="Nome" required>
-            <div class="invalid-feedback">
-                O campo nome é obrigatório.
-            </div>
+            <label>Funcionário:</label>
+            <select asp-for="IdFuncionario" class="form-control" style="width: 300px">
+                <option>Selecionar...</option>
+                @{
+                    foreach (var item in (List<UsuarioModel>)ViewBag.ListaFuncionario)
+                    {
+
+                        <option value="@item.IdFuncionario.ToString()" onclick="CarregarTela(@item.IdFuncionario.ToString())">@item.IdFuncionario.ToString() - @item.Nome.ToString()</option>
+                    }
+                }
+            </select>
         </div>
 
         <div class="mb-3">
-            <label for="email">Email <span class="text-muted" /></label>
-            <input type="email" class="form-control" asp-for="Email" placeholder="nome@exemplo.com">
+            <label for="email">Email: <span class="text-muted" /></label>
+            <input type="email" class="form-control" asp-for="Email" placeholder="nome@exemplo.com" id="email">
             <div class="invalid-feedback">
                 O campo email é obrigatório.
             </div>
         </div>
-        <div class="mb-3">
-            <label for="Cpf">CPF</label>
-            <input type="text" class="form-control" asp-for="Cpf" onkeypress="$(this).mask('000.000.000-00');" placeholder="000.000.000-00" required>
-            <div class="invalid-feedback">
-                O campo CPF é obrigatório.
-            </div>
-        </div>
-        <div class="mb-3">
-            <label for="Rg">RG <span class="text-muted">(Opcional)</span></label>
-            <input type="text" class="form-control" asp-for="Rg">
-        </div>
-        <div class="mb-3">
-            <label for="data_nascimenro">Nascimento:<span class="text-muted" /></label>
-            <input type="date" class="form-control" asp-for="Data_Nascimento">
-        </div>
-        <div class="mb-3">
-            <label for="Telefone">Telefone</label>
-            <input type="text" class="form-control" asp-for="Telefone" onkeypress="$(this).mask('(00) 0000-00009')" placeholder="(00) 0000-0000" required>
-            <div class="invalid-feedback">
-                O campo telefone é obrigatório.
-            </div>
-        </div>
 
         <div class="mb-3">
-            <label for="pwd">Senha<span class="text-muted" /></label>
-            <input type="password" class="form-control" asp-for="Senha">
+            <label for="pwd">Senha:<span class="text-muted" /></label>
+            <input type="password" class="form-control" asp-for="Senha" id="senha">
         </div>
 
         <div class="row">
-            <div class="col-md-5 mb-3">
-                <label for="country">Terminal de trabalho:</label>
-                <select class="custom-select d-block w-100" id="country" required>
-                    <option value=" ">Selecionar...</option>
-
-                    <option>Porto 01 teste</option>
-                    <option>Unidade 02 teste</option>
-
-                </select>
-                <div class="invalid-feedback">
-                    Selecione uma estação de trabalho.
-                </div>
-            </div>
-
             <div class="col-md-4 mb-3">
-                <label for="funcao">Função no sistema</label>
-                <select class="custom-select d-block w-100" id="state" asp-for="Funcao" required>
+                <label for="funcao">Perfil de acesso:</label>
+                <select class="custom-select d-block w-100" asp-for="PerfilAcesso" id="perfilAcesso" required >
                     <option>Selecionar...</option>
                     <option value="0">Administrador</option>
                     <option value="1">Usuário</option>
@@ -91,11 +61,25 @@
                     Selecione a função no sistema.
                 </div>
             </div>
-        </div>
+            
+            <div class="col-md-4 mb-3">
+                <label for="inativo">Inativo:</label>
+                <input asp-for="Inativo" type="checkbox" id="inativo"/>
+            </div>
 
+        </div>
+  
         <button type="submit" class="btn btn-block btn-success ">Cadastrar</button>
 
     </form>
 </div>
+
+<script>
+    function CarregarTela(IdFuncionario) {
+
+       // window.location.href = "../Usuario/ObterUsuario/" + IdFuncionario;
+
+    }
+</script>
 
 

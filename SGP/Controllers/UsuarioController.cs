@@ -6,6 +6,10 @@ namespace SGP.Controllers
 {
     public class UsuarioController : Controller
     {
+        IHttpContextAccessor HttpContextAccessor;
+
+        public UsuarioController(IHttpContextAccessor httpContextAccessor) { HttpContextAccessor = httpContextAccessor; }
+
         [HttpGet]
         public IActionResult Login(int? id)
         {
@@ -26,7 +30,7 @@ namespace SGP.Controllers
             {
                 HttpContext.Session.SetString("IdUsuarioLogado", usuario.Id.ToString());
                 HttpContext.Session.SetString("NomeUsuarioLogado", usuario.Nome);
-                HttpContext.Session.SetString("FuncaoUsuario", usuario.Funcao.ToString());
+                HttpContext.Session.SetString("PerfilAcesso", usuario.PerfilAcesso.ToString());
                 return RedirectToAction("Index", "Home"); 
             }
             else
@@ -51,6 +55,9 @@ namespace SGP.Controllers
         [HttpGet]
         public IActionResult Registrar()
         {
+            var entity = new UsuarioModel(HttpContextAccessor);
+            ViewBag.ListaFuncionario = entity.ListaFuncionario();
+
             return View();
         }
 
@@ -58,5 +65,15 @@ namespace SGP.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public IActionResult ObterUsuario(string IdFuncionario)
+        {
+            var usuario = new UsuarioModel(HttpContextAccessor);
+            usuario.ObterUsuario(IdFuncionario);
+              
+            return View();
+        }
+
     }
 }

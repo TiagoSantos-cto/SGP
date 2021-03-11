@@ -95,9 +95,9 @@
 
 function User() {
 
-    var funcao = '@HttpContextAccessor.HttpContext.Session.GetString("FuncaoUsuario")';
+    var perfilAcesso = '@HttpContextAccessor.HttpContext.Session.GetString("PerfilAcesso")';
 
-        if (funcao == '0') {
+    if (perfilAcesso == '1') {
             var menuCadastro = document.getElementById("menuCadastro");
             menuCadastro.style.display = "inline";
         }

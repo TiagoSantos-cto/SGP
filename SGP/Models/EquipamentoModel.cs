@@ -34,11 +34,11 @@ namespace SGP.Models
 
             if (!Existe(Id))
             {
-                sql = $"INSERT INTO EQUIPAMENTO_EQP (ID, DESCRICAO, STATUS, ESTACAO_ID, QUANTIDADE, IMAGEM_PATH) VALUES ('{Id}','{Descricao}', '{Status}', '{Estacao}', '{ImagemPath}')";
+                sql = $"insert into Equipamento (IdEquipamento, Tipo, Descricao, Preco, Status, Quantidade, Estacao, ImagemPath) values ('{Id}','DEFAULT', '{Descricao}', '0.00', {Quantidade}, '{Status}', '{Estacao}', '{ImagemPath}')";
             }
             else
             {
-                sql = $"UPDATE EQUIPAMENTO_EQP SET DESCRICAO = '{Descricao}',  STATUS = '{Status}', ESTACAO_ID = '{Estacao}', QUANTIDADE = '{Quantidade}', IMAGEM_PATH = '{ImagemPath}' WHERE ID = '{Id}'";
+                sql = $"update Equipamento SET Descricao = '{Descricao}',  Status = '{Status}', Estacao = '{Estacao}', Quantidade = '{Quantidade}', ImagemPath = '{ImagemPath}' where IdEquipamento = '{Id}'";
             }
 
             var dal = new DAL();
@@ -47,25 +47,25 @@ namespace SGP.Models
 
         public void ExcluirEquipamento(int id)
         {
-            string sql = $"DELETE FROM EQUIPAMENTO_EQP WHERE ID = {id}";
+            string sql = $"delete from Equipamento where IdEquipamento = {id}";
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
         }
 
         public EquipamentoModel CarregarRegistro(string id)
         {
-            var sql = $"SELECT ID, DESCRICAO, ESTACAO_ID, STATUS, QUANTIDADE, IMAGEM_PATH FROM EQUIPAMENTO_EQP WHERE ID = '{id}'";
+            var sql = $"select IdEquipamento, Descricao, Status, Quantidade, Estacao, ImagemPath from Equipamento WHERE IdEquipamento = '{id}'";
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
             var entity = new EquipamentoModel
             {
-                Id = dt.Rows[0]["ID"] != null ? dt.Rows[0]["ID"].ToString() : string.Empty,
-                Descricao = dt.Rows[0]["DESCRICAO"] != null ? dt.Rows[0]["DESCRICAO"].ToString() : string.Empty,
-                Estacao = dt.Rows[0]["ESTACAO_ID"] != null ? Convert.ToInt32(dt.Rows[0]["ESTACAO_ID"].ToString()) : 0,
-                Status = dt.Rows[0]["STATUS"] != null ? dt.Rows[0]["STATUS"].ToString() : string.Empty,
-                Quantidade = dt.Rows[0]["QUANTIDADE"] != null ? Convert.ToInt32(dt.Rows[0]["QUANTIDADE"].ToString()) : 0,
-                ImagemPath = dt.Rows[0]["IMAGEM_PATH"] != null ? dt.Rows[0]["IMAGEM_PATH"].ToString() : string.Empty,
+                Id = dt.Rows[0]["IdEquipamento"] != null ? dt.Rows[0]["IdEquipamento"].ToString() : string.Empty,
+                Descricao = dt.Rows[0]["Descricao"] != null ? dt.Rows[0]["Descricao"].ToString() : string.Empty,
+                Estacao = dt.Rows[0]["Estacao"] != null ? Convert.ToInt32(dt.Rows[0]["Estacao"].ToString()) : 0,
+                Status = dt.Rows[0]["Status"] != null ? dt.Rows[0]["Status"].ToString() : string.Empty,
+                Quantidade = dt.Rows[0]["Quantidade"] != null ? Convert.ToInt32(dt.Rows[0]["Quantidade"].ToString()) : 0,
+                ImagemPath = dt.Rows[0]["ImagemPath"] != null ? dt.Rows[0]["ImagemPath"].ToString() : string.Empty,
             };
             return entity;
         }
@@ -74,7 +74,7 @@ namespace SGP.Models
         {
             var lista = new List<EquipamentoModel>();
 
-            var sql = $"SELECT ID, DESCRICAO, ESTACAO_ID, STATUS, QUANTIDADE, IMAGEM_PATH FROM EQUIPAMENTO_EQP";
+            var sql = $"select IdEquipamento, Descricao, Status, Quantidade, Estacao, ImagemPath from Equipamento";
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -82,12 +82,12 @@ namespace SGP.Models
             {
                 var item = new EquipamentoModel
                 {
-                    Id = dt.Rows[i]["ID"].ToString(),
-                    Descricao = dt.Rows[i]["DESCRICAO"].ToString(),  
-                    Status = dt.Rows[i]["STATUS"].ToString(),
-                    Estacao = Convert.ToInt32(dt.Rows[i]["ESTACAO_ID"].ToString()),
-                    Quantidade = Convert.ToInt32(dt.Rows[i]["QUANTIDADE"].ToString()),
-                    ImagemPath = dt.Rows[i]["IMAGEM_PATH"].ToString()
+                    Id = dt.Rows[i]["IdEquipamento"].ToString(),
+                    Descricao = dt.Rows[i]["Descricao"].ToString(),  
+                    Status = dt.Rows[i]["Status"].ToString(),
+                    Estacao = Convert.ToInt32(dt.Rows[i]["Estacao"].ToString()),
+                    Quantidade = Convert.ToInt32(dt.Rows[i]["Quantidade"].ToString()),
+                    ImagemPath = dt.Rows[i]["ImagemPath"].ToString()
                 };
 
                 lista.Add(item);
@@ -97,7 +97,7 @@ namespace SGP.Models
 
         public bool Existe(string id)
         {
-            var sql = $"SELECT ID FROM EQUIPAMENTO_EQP WHERE ID = '{id}'";
+            var sql = $"select IdEquipamento from Equipamento where IdEquipamento = '{id}'";
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 

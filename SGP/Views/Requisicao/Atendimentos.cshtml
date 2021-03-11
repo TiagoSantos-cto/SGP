@@ -48,12 +48,21 @@
             <div class="form-group col-md-6 mb-3">
                 <label>Usuário:</label>
                 <select asp-for="NomeUsuario" class="form-control" style="width: 180px">
+
+                    @using Microsoft.AspNetCore.Http;
+                    @inject IHttpContextAccessor HttpContextAccessor
+                    <option>@HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado")</option>
+
                     @{
                         foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
                         {
-                            <option value="@item.Nome.ToString()">@item.Nome.ToString()</option>
+                            if (@item.Nome.ToString() != @HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado"))
+                            {
+                                <option value="@item.Nome.ToString()">@item.Nome.ToString()</option>
+                            }
                         }
                     }
+
                 </select>
             </div>
         </div>
