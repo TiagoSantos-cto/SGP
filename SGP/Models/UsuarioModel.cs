@@ -13,7 +13,6 @@ namespace SGP.Models
         [Required(ErrorMessage = "O campo funcionário é obrigatório!")]
         public int IdFuncionario { get; set; }
 
-        [Required(ErrorMessage = "O campo nome é obrigatório!")]
         public string Nome { get; set; }
 
         [Required(ErrorMessage = "O campo e-mail é obrigatório!")]
@@ -25,8 +24,6 @@ namespace SGP.Models
         public string Senha { get; set; }
 
         public int PerfilAcesso { get; set; }
-
-        public bool Inativo { get; set; }
 
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
@@ -63,15 +60,27 @@ namespace SGP.Models
 
         public void GravarUsuario()
         {
-            string sql = $"INSERT INTO Usuario (Email, Senha, PerfilAcesso, Inativo, IdFuncionario) VALUES('{Email}','{Senha}','{PerfilAcesso}', '{Inativo}','{IdFuncionario}')";
+            string sql;
+
+            if (Id == 0)
+            {
+                sql = $"INSERT INTO Usuario (Email, Senha, PerfilAcesso, Inativo, Id_Funcionario) VALUES('{Email}','{Senha}','{PerfilAcesso}', '0','{IdFuncionario}')";
+            }
+            else
+            {
+                sql = $"UPDATE  Usuario SET Email = '{Email}',  Senha = '{Senha}', PerfilAcesso = '{PerfilAcesso}' WHERE Id_Funcionario = '{Id}'";
+            }
+
+
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
         }
 
-        public UsuarioModel ObterUsuario(string IdFuncionario)
+        public UsuarioModel ObterUsuario(int? IdFuncionario)
         {
 
-            var sql = $@"SELECT DISTINCT U.IdUsuario as IdUsuario, U.Email as Email, U.Senha as Senha, U.PerfilAcesso, U.Inativo as Inativo as PerfilAcesso 
+            var sql = $@"SELECT DISTINCT U.IdUsuario as IdUsuario, U.Email as Email, U.Senha as Senha, 
+                          U.PerfilAcesso as PerfilAcesso, U.Inativo as Inativo,  U.Id_Funcionario as IdFuncionario, P.Nome as Nome
                             FROM Usuario U, Pessoa P, Funcionario F
                               WHERE U.Id_Funcionario = F.IdFuncionario
                               AND   F.Id_Pessoa      = P.IdPessoa
@@ -82,21 +91,24 @@ namespace SGP.Models
 
             var usuario = new UsuarioModel
             {
-                Id = Convert.ToInt32(dt.Rows[0]["IdUsuario"].ToString()),
-                Email = dt.Rows[0]["Email"].ToString(),
-                Senha = dt.Rows[0]["Senha"].ToString(),
-                PerfilAcesso = Convert.ToInt32(dt.Rows[0]["PerfilAcesso"].ToString()),
-                Inativo = Convert.ToBoolean(dt.Rows[0]["Inativo"].ToString())
+                Id = dt.Rows[0]["IdUsuario"] != null ? Convert.ToInt32(dt.Rows[0]["IdUsuario"].ToString()) : 0,
+                IdFuncionario = dt.Rows[0]["IdFuncionario"] != null ? Convert.ToInt32(dt.Rows[0]["IdFuncionario"].ToString()) : 0,
+                Nome  = dt.Rows[0]["Nome"] != null ? dt.Rows[0]["Nome"].ToString() : string.Empty,
+                Email = dt.Rows[0]["Email"] != null ? dt.Rows[0]["Email"].ToString() : string.Empty,
+                Senha = dt.Rows[0]["Senha"] != null ? dt.Rows[0]["Senha"].ToString() : string.Empty,
+                PerfilAcesso = dt.Rows[0]["PerfilAcesso"] != null ? Convert.ToInt32(dt.Rows[0]["PerfilAcesso"].ToString()) : 0,                      
             };
 
             return usuario;
         }
 
+       
+
         public List<UsuarioModel> ListaUsuario()
         {
             var lista = new List<UsuarioModel>();
 
-            var sql = $@"SELECT DISTINCT U.IdUsuario as IdUsuario, P.Nome as NomeUsuario, U.PerfilAcesso as PerfilAcesso 
+            var sql = $@"SELECT DISTINCT U.IdUsuario as IdUsuario, P.Nome as NomeUsuario, U.PerfilAcesso as PerfilAcesso, U.Id_Funcionario as IdFuncionario
                             FROM Usuario U, Pessoa P, Funcionario F
                               WHERE U.Id_Funcionario = F.IdFuncionario
                               AND   F.Id_Pessoa      = P.IdPessoa";
@@ -108,9 +120,10 @@ namespace SGP.Models
             {
                 var item = new UsuarioModel
                 {
-                    Id = Convert.ToInt32(dt.Rows[i]["IdUsuario"].ToString()),
-                    Nome = dt.Rows[i]["NomeUsuario"].ToString(),
-                    PerfilAcesso = Convert.ToInt32(dt.Rows[i]["PerfilAcesso"].ToString())
+                    Id = dt.Rows[i]["IdUsuario"] != null ? Convert.ToInt32(dt.Rows[i]["IdUsuario"].ToString()) : 0,
+                    IdFuncionario = dt.Rows[i]["IdFuncionario"] != null ? Convert.ToInt32(dt.Rows[i]["IdFuncionario"].ToString()) : 0,
+                    Nome = dt.Rows[i]["NomeUsuario"] != null ? dt.Rows[i]["NomeUsuario"].ToString() : string.Empty,
+                    PerfilAcesso = dt.Rows[i]["PerfilAcesso"] != null ? Convert.ToInt32(dt.Rows[i]["PerfilAcesso"].ToString()) : 0
                 };
 
                 lista.Add(item);
@@ -142,6 +155,13 @@ namespace SGP.Models
             }
 
             return lista;
+        }
+
+        public void Excluir(int id)
+        {
+            string sql = $"DELETE FROM USUARIO WHERE IdUsuario = {id}";
+            var dal = new DAL();
+            dal.ExecutarComandoSQL(sql);
         }
     }
 }

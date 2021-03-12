@@ -1135,7 +1135,6 @@ C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razo
 C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_LayoutLogin.cshtml.g.cs
 C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
 C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Usuario\Login.cshtml.g.cs
-C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Usuario\Registrar.cshtml.g.cs
 C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Usuario\Sucesso.cshtml.g.cs
 C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\_ViewImports.cshtml.g.cs
 C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\_ViewStart.cshtml.g.cs
@@ -1146,3 +1145,5 @@ C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.
 C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.dll
 C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.pdb
 C:\Users\Tiago\Source\Repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.genruntimeconfig.cache
+C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Usuario\Index.cshtml.g.cs
+C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Usuario\NovoUsuario.cshtml.g.cs

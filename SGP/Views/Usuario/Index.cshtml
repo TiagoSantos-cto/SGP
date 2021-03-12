@@ -1,0 +1,60 @@
+﻿@model UsuarioModel
+
+@{
+    ViewData["Title"] = "Usuário";
+}
+
+<h2>Usuários cadastrados</h2>
+<p>Usuários cadastrados no sistema</p>
+<br />
+
+<div style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th> </th>
+                <th> </th>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Perfil de acesso</th>
+            </tr>
+        </thead>
+
+        @{
+            foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
+            {
+                <tbody>
+                    <tr>
+                        <td><button type="button" class=" btn btn-danger" onclick="ExcluirUsuario(@item.Id.ToString())">Excluir usuário</button></td>
+                        <td><button type="button" class=" btn btn-primary" onclick="EditarPlanoConta(@item.IdFuncionario.ToString())">Atualizar</button></td>
+                        <td>@item.Id.ToString()</td>
+                        <td>@item.Nome.ToString()</td>
+                        <td>@item.PerfilAcesso.ToString().Replace("1", "Administrador").Replace("0", "Usuário")</td>
+                    </tr>
+                </tbody>
+            }
+        }
+
+    </table>
+</div>
+<br />
+
+<button type="button" class="btn btn-block btn-info" onclick="NovoUsuario()">Cadastrar novo usuário</button>
+
+<script>
+    function NovoUsuario() {
+        window.location.href = "../Usuario/NovoUsuario";
+    }
+
+    function ExcluirUsuario(id) {
+        window.location.href = "../Usuario/ExcluirUsuario/" + id;
+    }
+
+    function EditarPlanoConta(id) {
+        window.location.href = "../Usuario/NovoUsuario/" + id;
+    }
+
+</script>
+
+
+

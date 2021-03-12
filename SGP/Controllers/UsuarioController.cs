@@ -31,49 +31,71 @@ namespace SGP.Controllers
                 HttpContext.Session.SetString("IdUsuarioLogado", usuario.Id.ToString());
                 HttpContext.Session.SetString("NomeUsuarioLogado", usuario.Nome);
                 HttpContext.Session.SetString("PerfilAcesso", usuario.PerfilAcesso.ToString());
-                return RedirectToAction("Index", "Home"); 
+                return RedirectToAction("Index", "Home");
             }
             else
             {
                 TempData["ERRO_LOGIN"] = "E-mail ou Senha incorreta.";
                 return RedirectToAction("Login");
             }
+        }   
+
+        [HttpPost]
+        public IActionResult ObterUsuario(int? IdFuncionario)
+        {
+            if (IdFuncionario != null)
+            {
+                var usuario = new UsuarioModel(HttpContextAccessor);
+                ViewBag.UsuarioBanco = usuario.ObterUsuario(IdFuncionario);
+            }
+
+            return View();
+        }
+
+        public IActionResult Index()
+        {
+            var usuario = new UsuarioModel(HttpContextAccessor);
+            ViewBag.ListaUsuario = usuario.ListaUsuario();
+            return View();
         }
 
         [HttpPost]
-        public IActionResult Registrar(UsuarioModel usuario)
+        public IActionResult NovoUsuario(UsuarioModel NovoUsuario)
         {
             if (ModelState.IsValid)
             {
-                usuario.GravarUsuario();
-                return RedirectToAction("Sucesso");
+                NovoUsuario.HttpContextAccessor = HttpContextAccessor;
+                NovoUsuario.GravarUsuario();
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult NovoUsuario(int? id)
+        {
+            var entity = new UsuarioModel(HttpContextAccessor);
+            ViewBag.ListaFuncionario = entity.ListaFuncionario();
+
+            if (id != null)
+            {        
+                ViewBag.UsuarioBanco = entity.ObterUsuario(id);
             }
 
             return View();
         }
 
         [HttpGet]
-        public IActionResult Registrar()
+        public IActionResult ExcluirUsuario(int id)
         {
-            var entity = new UsuarioModel(HttpContextAccessor);
-            ViewBag.ListaFuncionario = entity.ListaFuncionario();
-
-            return View();
+            var conta = new UsuarioModel(HttpContextAccessor);
+            conta.Excluir(id);
+            return RedirectToAction("Index");
         }
 
         public IActionResult Sucesso()
         {
             return View();
         }
-
-        [HttpPost]
-        public IActionResult ObterUsuario(string IdFuncionario)
-        {
-            var usuario = new UsuarioModel(HttpContextAccessor);
-            usuario.ObterUsuario(IdFuncionario);
-              
-            return View();
-        }
-
     }
 }
