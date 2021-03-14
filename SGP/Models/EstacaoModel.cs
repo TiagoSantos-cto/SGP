@@ -8,8 +8,8 @@ namespace SGP.Models
     public class EstacaoModel
     {
         public int  Id { get; set; }
-        public string Descricao { get; set; }
-        public string Tipo { get; set; }
+        public string Nome { get; set; }
+        public int Tipo { get; set; }
  
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
@@ -22,19 +22,42 @@ namespace SGP.Models
 
         public void GravarEstacao()
         {
-            string sql;
-
-            if (Id == 0)
+            Id = GerarSequencial(); 
+            
+            string sqlEstacao = $"insert into EstacaoTrabalho (IdEstacao, Tipo) values ('{Id}', '{Tipo}')";
+           
+            string sqlTipo;
+            
+            if (Tipo == 0)
             {
-                sql = $"insert into EstacaoTrabalho (Nome, Tipo) values ('{Descricao}', {Tipo})";
+                sqlTipo = $"INSERT INTO Armazem (Nome, Id_Estacao) VALUES ('{Nome}', '{Id}')";
             }
             else
             {
-                sql = $"update EstacaoTrabalho SET Nome = '{Descricao}',  Tipo = {Tipo} where IdEstacao = '{Id}'";
+                sqlTipo = $"INSERT INTO UnidadeMaritima (Nome, Id_Estacao) VALUES ('{Nome}', '{Id}')";
             }
-
+ 
             var dal = new DAL();
-            dal.ExecutarComandoSQL(sql);
+            dal.ExecutarComandoSQL(sqlEstacao);
+            dal.ExecutarComandoSQL(sqlTipo);
+        }
+
+        private int GerarSequencial()
+        {
+            var estacoes = ListaEstacao();
+            
+            var listaID = new List<int>();
+            
+            foreach (var item in estacoes)
+            {
+                listaID.Add(item.Id);
+            };
+
+            listaID.Sort();
+
+            var sequencial = listaID[listaID.Count - 1];
+
+            return sequencial+1;                 
         }
 
         public void ExcluirEstacao(int id)
@@ -48,17 +71,34 @@ namespace SGP.Models
         {
             var lista = new List<EstacaoModel>();
 
-            var sql = $"select IdEstacao, Nome, Tipo from EstacaoTrabalho";
+            var sqlArmazem = $"select E.IdEstacao as ID, E.Tipo as TIPO, A.Nome as NOME from EstacaoTrabalho E, Armazem A where E.IdEstacao = A.Id_Estacao order by E.IdEstacao";
+            var sqlUnidadeMaritima = $"select E.IdEstacao as ID, E.Tipo as TIPO, U.Nome as NOME from EstacaoTrabalho E, UnidadeMaritima U where E.IdEstacao = U.Id_Estacao order by E.IdEstacao;";
+            
             var dal = new DAL();
-            var dt = dal.RetDataTable(sql);
-
-            for (int i = 0; i < dt.Rows.Count; i++)
+            
+            var dtArmazem = dal.RetDataTable(sqlArmazem);
+            
+            for (int i = 0; i < dtArmazem.Rows.Count; i++)
             {
                 var item = new EstacaoModel
                 {
-                    Id = Convert.ToInt32(dt.Rows[i]["IdEstacao"].ToString()),
-                    Descricao = dt.Rows[i]["Nome"].ToString(),  
-                    Tipo = dt.Rows[i]["Tipo"].ToString()
+                    Id = Convert.ToInt32(dtArmazem.Rows[i]["ID"].ToString()),
+                    Nome = dtArmazem.Rows[i]["NOME"].ToString(),
+                    Tipo = Convert.ToInt32(dtArmazem.Rows[i]["TIPO"].ToString())
+                };
+
+                lista.Add(item);
+            }
+
+            var dtUnidade = dal.RetDataTable(sqlUnidadeMaritima);
+
+            for (int i = 0; i < dtUnidade.Rows.Count; i++)
+            {
+                var item = new EstacaoModel
+                {
+                    Id = Convert.ToInt32(dtUnidade.Rows[i]["ID"].ToString()),
+                    Nome = dtUnidade.Rows[i]["NOME"].ToString(),
+                    Tipo = Convert.ToInt32(dtUnidade.Rows[i]["TIPO"].ToString())
                 };
 
                 lista.Add(item);

@@ -90,7 +90,7 @@
                     @{
                         foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
                         {
-                            <option value="@item.Id.ToString()">@item.Descricao.ToString()</option>
+                            <option value="@item.Id.ToString()">@item.Nome.ToString()</option>
                         }
                     }
                 </select>

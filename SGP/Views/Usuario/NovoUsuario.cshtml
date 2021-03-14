@@ -6,10 +6,9 @@
 
 @{
     var vId = string.Empty;
-    var vEmail = string.Empty;
+    var vLogin = string.Empty;
     var vSenha = string.Empty;
     var vPerfilAcesso = string.Empty;
-    var vInativo = string.Empty;
     var vIdFuncionario = string.Empty;
     var vNome = string.Empty;
 
@@ -17,10 +16,9 @@
     try
     {
         vId = @ViewBag.UsuarioBanco.Id.ToString();
-        vEmail = @ViewBag.UsuarioBanco.Email.ToString();
+        vLogin = @ViewBag.UsuarioBanco.Login.ToString();
         vSenha = @ViewBag.UsuarioBanco.Senha.ToString();
         vPerfilAcesso = @ViewBag.UsuarioBanco.PerfilAcesso.ToString();
-        vInativo = @ViewBag.UsuarioBanco.Inativo.ToString();
         vIdFuncionario = @ViewBag.UsuarioBanco.IdFuncionario.ToString();
         vNome = @ViewBag.UsuarioBanco.Nome.ToString();
     }
@@ -74,10 +72,10 @@
         </div>
 
         <div class="mb-3">
-            <label for="email">Email: <span class="text-muted" /></label>
-            <input type="email" class="form-control" asp-for="Email" id="email" placeholder="nome@exemplo.com" value="@vEmail">
+            <label for="usuario">Usuário: <span class="text-muted" /></label>
+            <input type="text" class="form-control" asp-for="Login" id="usuário" placeholder="NOME.SOBRENOME" value="@vLogin">
             <div class="invalid-feedback">
-                O campo email é obrigatório.
+                O campo usuário é obrigatório.
             </div>
         </div>
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SGP.Models;
+using System;
 
 namespace SGP.Controllers
 {
@@ -27,7 +28,7 @@ namespace SGP.Controllers
 
             return View();
         }
-
+    
         [HttpGet]
         public IActionResult Excluir(int id)
         {

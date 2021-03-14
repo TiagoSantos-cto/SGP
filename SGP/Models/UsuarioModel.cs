@@ -15,10 +15,8 @@ namespace SGP.Models
 
         public string Nome { get; set; }
 
-        [Required(ErrorMessage = "O campo e-mail é obrigatório!")]
-        [DataType(DataType.EmailAddress)]
-        [EmailAddress(ErrorMessage = "E-mail inválido!")]
-        public string Email { get; set; }
+        [Required(ErrorMessage = "O campo usuário é obrigatório!")]
+        public string Login { get; set; }
 
         [Required(ErrorMessage = "O campo senha é obrigatório!")]
         public string Senha { get; set; }
@@ -40,7 +38,7 @@ namespace SGP.Models
                               FROM Usuario U, Pessoa P, Funcionario F 
                                 WHERE U.Id_Funcionario = F.IdFuncionario
                                 AND F.Id_Pessoa        = P.IdPessoa
-                                AND U.Email            = '{Email}' AND U.Senha = '{Senha}'";
+                                AND U.Login            = '{Login}' AND U.Senha = '{Senha}'";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -64,11 +62,11 @@ namespace SGP.Models
 
             if (Id == 0)
             {
-                sql = $"INSERT INTO Usuario (Email, Senha, PerfilAcesso, Inativo, Id_Funcionario) VALUES('{Email}','{Senha}','{PerfilAcesso}', '0','{IdFuncionario}')";
+                sql = $"INSERT INTO Usuario (Login, Senha, PerfilAcesso, Id_Funcionario) VALUES('{Login}','{Senha}','{PerfilAcesso}','{IdFuncionario}')";
             }
             else
             {
-                sql = $"UPDATE  Usuario SET Email = '{Email}',  Senha = '{Senha}', PerfilAcesso = '{PerfilAcesso}' WHERE Id_Funcionario = '{Id}'";
+                sql = $"UPDATE  Usuario SET Login = '{Login}',  Senha = '{Senha}', PerfilAcesso = '{PerfilAcesso}' WHERE Id_Funcionario = '{Id}'";
             }
 
 
@@ -79,8 +77,8 @@ namespace SGP.Models
         public UsuarioModel ObterUsuario(int? IdFuncionario)
         {
 
-            var sql = $@"SELECT DISTINCT U.IdUsuario as IdUsuario, U.Email as Email, U.Senha as Senha, 
-                          U.PerfilAcesso as PerfilAcesso, U.Inativo as Inativo,  U.Id_Funcionario as IdFuncionario, P.Nome as Nome
+            var sql = $@"SELECT DISTINCT U.IdUsuario as IdUsuario, U.Login as Login, U.Senha as Senha, 
+                          U.PerfilAcesso as PerfilAcesso,  U.Id_Funcionario as IdFuncionario, P.Nome as Nome
                             FROM Usuario U, Pessoa P, Funcionario F
                               WHERE U.Id_Funcionario = F.IdFuncionario
                               AND   F.Id_Pessoa      = P.IdPessoa
@@ -94,7 +92,7 @@ namespace SGP.Models
                 Id = dt.Rows[0]["IdUsuario"] != null ? Convert.ToInt32(dt.Rows[0]["IdUsuario"].ToString()) : 0,
                 IdFuncionario = dt.Rows[0]["IdFuncionario"] != null ? Convert.ToInt32(dt.Rows[0]["IdFuncionario"].ToString()) : 0,
                 Nome  = dt.Rows[0]["Nome"] != null ? dt.Rows[0]["Nome"].ToString() : string.Empty,
-                Email = dt.Rows[0]["Email"] != null ? dt.Rows[0]["Email"].ToString() : string.Empty,
+                Login = dt.Rows[0]["Login"] != null ? dt.Rows[0]["Login"].ToString() : string.Empty,
                 Senha = dt.Rows[0]["Senha"] != null ? dt.Rows[0]["Senha"].ToString() : string.Empty,
                 PerfilAcesso = dt.Rows[0]["PerfilAcesso"] != null ? Convert.ToInt32(dt.Rows[0]["PerfilAcesso"].ToString()) : 0,                      
             };
