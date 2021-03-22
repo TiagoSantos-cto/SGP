@@ -34,7 +34,7 @@ namespace SGP.Models
 
             if (!Existe(Id))
             {
-                sql = $"insert into Equipamento (IdEquipamento, Tipo, Descricao, Preco, Status, Quantidade, Estacao, ImagemPath) values ('{Id}','DEFAULT', '{Descricao}', '0.00', {Quantidade}, '{Status}', '{Estacao}', '{ImagemPath}')";
+                sql = $"insert into Equipamento (IdEquipamento, Tipo, Descricao, Preco, Quantidade, Status, Estacao, ImagemPath) values ('{Id}','DEFAULT', '{Descricao}', '0.00', {Quantidade}, '{Status}', '{Estacao}', '{ImagemPath}')";
             }
             else
             {

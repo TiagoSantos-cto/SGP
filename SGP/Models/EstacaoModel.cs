@@ -22,24 +22,44 @@ namespace SGP.Models
 
         public void GravarEstacao()
         {
-            Id = GerarSequencial(); 
-            
-            string sqlEstacao = $"insert into EstacaoTrabalho (IdEstacao, Tipo) values ('{Id}', '{Tipo}')";
-           
-            string sqlTipo;
+            Id = GerarSequencial();
+
+            string sqlEstacao = string.Empty;
+            string sqlTipo = string.Empty;
             
             if (Tipo == 0)
             {
-                sqlTipo = $"INSERT INTO Armazem (Nome, Id_Estacao) VALUES ('{Nome}', '{Id}')";
+                if (!Existe(Nome))
+                {
+                    sqlEstacao = $"insert into EstacaoTrabalho (IdEstacao, Tipo) values ('{Id}', '{Tipo}')";
+                    sqlTipo = $"INSERT INTO Armazem (Nome, Id_Estacao) VALUES ('{Nome}', '{Id}')";
+                }              
             }
             else
             {
-                sqlTipo = $"INSERT INTO UnidadeMaritima (Nome, Id_Estacao) VALUES ('{Nome}', '{Id}')";
+                if (!Existe(Nome))
+                {
+                    sqlEstacao = $"insert into EstacaoTrabalho (IdEstacao, Tipo) values ('{Id}', '{Tipo}')";
+                    sqlTipo = $"INSERT INTO UnidadeMaritima (Nome, Id_Estacao) VALUES ('{Nome}', '{Id}')";
+                }
             }
  
             var dal = new DAL();
-            dal.ExecutarComandoSQL(sqlEstacao);
-            dal.ExecutarComandoSQL(sqlTipo);
+            
+            if (!string.IsNullOrEmpty(sqlEstacao) && !string.IsNullOrEmpty(sqlTipo))
+            {
+                dal.ExecutarComandoSQL(sqlEstacao);
+                dal.ExecutarComandoSQL(sqlTipo);
+            }                  
+        }
+
+        private bool Existe(string nome)
+        {
+            var sql = $"select * from Armazem A, UnidadeMaritima UM where A.Nome = '{nome}' or UM.Nome = '{nome}'";
+            var dal = new DAL();
+            var dt = dal.RetDataTable(sql);
+
+            return dt.Rows.Count > 0;
         }
 
         private int GerarSequencial()
