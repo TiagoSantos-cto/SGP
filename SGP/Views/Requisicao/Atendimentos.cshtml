@@ -47,7 +47,7 @@
 
             <div class="form-group col-md-6 mb-3">
                 <label>Usuário:</label>
-                <select asp-for="NomeUsuario" class="form-control" style="width: 180px">
+                <select asp-for="NomeUsuarioAtual" class="form-control" style="width: 180px">
 
                     @using Microsoft.AspNetCore.Http;
                     @inject IHttpContextAccessor HttpContextAccessor
@@ -56,9 +56,9 @@
                     @{
                         foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
                         {
-                            if (@item.Nome.ToString() != @HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado"))
+                            if (@item.Login.ToString() != @HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado"))
                             {
-                                <option value="@item.Nome.ToString()">@item.Nome.ToString()</option>
+                                <option value="@item.Nome.ToString()">@item.Login.ToString()</option>
                             }
                         }
                     }
@@ -117,7 +117,7 @@
                         <td>@item.Descricao.ToString()</td>
                         <td>@item.Origem.ToString()</td>
                         <td>@item.Destino.ToString()</td>
-                        <td>@item.NomeUsuario.ToString()</td>
+                        <td>@item.NomeUsuarioAtual.ToString()</td>
                         <td><button type="button" class=" btn btn-primary" onclick="Editar(@item.Id.ToString())">Abrir</button></td>
                     </tr>
                 </tbody>

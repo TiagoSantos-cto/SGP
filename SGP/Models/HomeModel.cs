@@ -1,6 +1,4 @@
 ﻿using SGP.Util;
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace SGP.Models
 {
@@ -9,7 +7,7 @@ namespace SGP.Models
         public string LerNomeUsuario()
         {
             DAL objDAL = new DAL();
-            var dt = objDAL.RetDataTable("select * from Pessoa");
+            var dt = objDAL.RetDataTable("select * from Funcionario");
 
             if (dt != null)
             {

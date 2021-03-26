@@ -12,11 +12,8 @@ namespace SGP.Controllers
 
         public IActionResult Index()
         {
-            var requisicoes = new RequisicaoModel(HttpContextAccessor);
-            ViewBag.ListaRequisicao = requisicoes.ListaRequisicao();
-            
-            ViewBag.ListaItem = requisicoes.ListaItem(); //teste
-            
+            var requisicao = new RequisicaoModel(HttpContextAccessor);
+
             return View();
         }
 
@@ -46,6 +43,12 @@ namespace SGP.Controllers
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
 
+            var equipamento = new EquipamentoModel(HttpContextAccessor);
+            ViewBag.ListaEquipamento = equipamento.ListaEquipamento();
+
+            var estacao = new EstacaoModel(HttpContextAccessor);
+            ViewBag.ListaEstacao = estacao.ListaEstacao();
+
             ViewBag.ListaItem = requisicao.ListaItem(); //teste
 
             return View();
@@ -65,7 +68,7 @@ namespace SGP.Controllers
         {
             entity.HttpContextAccessor = HttpContextAccessor;
             ViewBag.ListaRequisicao = entity.ListaRequisicao();
-           
+          
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
 

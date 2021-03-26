@@ -30,7 +30,11 @@ namespace SGP.Models
 
         public string Tipo { get; set; }
 
-        public string NomeUsuario { get; set; }
+        public int UsuarioAtual { get; set; }
+
+        public string NomeUsuarioAtual { get; set; }
+
+        public int UsuarioResponsavel { get; set; }
 
         public string Status { get; set; }
 
@@ -40,10 +44,9 @@ namespace SGP.Models
 
         public IList<ItemRequisicaoModel> ItensRequisicao { get; set; }
 
-
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
-        public RequisicaoModel() 
+        public RequisicaoModel()
         {
             ItensRequisicao = new List<ItemRequisicaoModel>();
         }
@@ -85,21 +88,28 @@ namespace SGP.Models
                 }
             }
 
-            if (NomeUsuario != null)
+            if (UsuarioAtual > 0)
             {
-                if (!string.IsNullOrEmpty(NomeUsuario))
-                {
-                    filtro += $" AND U.Nome = '{NomeUsuario}'";
-                }
+                filtro += $" AND R.UsuarioAtual = '{UsuarioAtual}'";
             }
 
-            var sql = $@"SELECT R.IdRequisicao as ID, R.DataInclusao as DATA, P.Nome as USUARIO, R.Status as STATUS, R.Descricao as DESCRICAO, R.Tipo as TIPO, R.Origem as ORIGEM, R.Destino as DESTINO
-                        FROM Requisicao R, Funcionario F, Pessoa P
-                        WHERE R.Id_Funcionario = F.IdFuncionario
-                        AND P.IdPessoa = F.Id_Pessoa
-                        {filtro} 
-                        ORDER BY DATA DESC LIMIT 10";
-
+            var sql = $@"SELECT R.IdRequisicao AS ID,
+                                R.DataInclusao AS DATA,
+                                R.UsuarioAtual AS USUARIO,
+                                (SELECT U.Login  FROM usuario U WHERE U.IdUsuario = R.UsuarioAtual) AS NOME_USUARIO_ATUAL,
+                                R.Status AS STATUS,
+                                R.Descricao AS DESCRICAO,
+                                R.Tipo AS TIPO,
+                                R.Origem AS ORIGEM,
+                                R.Destino AS DESTINO
+                         FROM requisicao R,
+                              funcionario F,
+                              usuario U
+                         WHERE  U.IdUsuario = R.UsuarioAtual
+                         AND U.Id_Funcionario = F.IdFuncionario
+                         {filtro}
+                         ORDER BY DATA DESC
+                         LIMIT 10";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -111,11 +121,13 @@ namespace SGP.Models
                     Id = dt.Rows[i]["ID"] != null ? Convert.ToInt32(dt.Rows[i]["ID"].ToString()) : 0,
                     Descricao = dt.Rows[i]["DESCRICAO"] != null ? dt.Rows[i]["DESCRICAO"].ToString() : string.Empty,
                     Tipo = dt.Rows[i]["TIPO"] != null ? dt.Rows[i]["TIPO"].ToString() : string.Empty,
-                    NomeUsuario = dt.Rows[i]["USUARIO"] != null ? dt.Rows[i]["USUARIO"].ToString() : string.Empty,
+                    UsuarioAtual = dt.Rows[i]["USUARIO"] != null ? Convert.ToInt32(dt.Rows[i]["USUARIO"].ToString()) : 0,
+                    NomeUsuarioAtual = dt.Rows[i]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[i]["NOME_USUARIO_ATUAL"].ToString() : string.Empty,
                     Data = dt.Rows[i]["DATA"] != null ? Convert.ToDateTime(dt.Rows[i]["DATA"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
                     Status = dt.Rows[i]["STATUS"] != null ? dt.Rows[i]["STATUS"].ToString() : string.Empty,
                     Origem = dt.Rows[i]["ORIGEM"] != null ? dt.Rows[i]["ORIGEM"].ToString() : string.Empty,
                     Destino = dt.Rows[i]["DESTINO"] != null ? dt.Rows[i]["DESTINO"].ToString() : string.Empty
+
                 };
 
                 lista.Add(item);
@@ -126,12 +138,22 @@ namespace SGP.Models
 
         public RequisicaoModel CarregarRegistro(int? id)
         {
-            var sql = $@"SELECT R.IdRequisicao as ID, R.DataInclusao as DATA, P.Nome as USUARIO, R.Status as STATUS, R.Descricao as DESCRICAO, R.Tipo as TIPO, R.Origem as ORIGEM, R.Destino as DESTINO
-                        FROM Requisicao R, Funcionario F, Pessoa P
-                        WHERE R.Id_Funcionario = F.IdFuncionario
-                        AND P.IdPessoa = F.Id_Pessoa 
-                        AND R.IdRequisicao = '{id}'";     
-            
+            var sql = $@"SELECT R.IdRequisicao AS ID,
+                                R.DataInclusao AS DATA_INCLUSAO,
+                                R.UsuarioAtual AS USUARIO,
+                                (SELECT U.Login  FROM usuario U WHERE U.IdUsuario = R.UsuarioAtual) AS NOME_USUARIO_ATUAL,
+                                R.Status AS STATUS,
+                                R.Descricao AS DESCRICAO,
+                                R.Tipo AS TIPO,
+                                R.Origem AS ORIGEM,
+                                R.Destino AS DESTINO
+                         FROM requisicao R,
+                              funcionario F,
+                              usuario U
+                         WHERE  U.IdUsuario = R.UsuarioAtual
+                         AND U.Id_Funcionario = F.IdFuncionario
+                         AND R.IdRequisicao = '{id}'";
+
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -140,7 +162,8 @@ namespace SGP.Models
                 Id = dt.Rows[0]["ID"] != null ? Convert.ToInt32(dt.Rows[0]["ID"].ToString()) : 0,
                 Descricao = dt.Rows[0]["DESCRICAO"] != null ? dt.Rows[0]["DESCRICAO"].ToString() : string.Empty,
                 Tipo = dt.Rows[0]["TIPO"] != null ? dt.Rows[0]["TIPO"].ToString() : string.Empty,
-                NomeUsuario = dt.Rows[0]["USUARIO"] != null ? dt.Rows[0]["USUARIO"].ToString() : string.Empty,
+                UsuarioAtual = dt.Rows[0]["USUARIO"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO"].ToString()) : 0,
+                NomeUsuarioAtual = dt.Rows[0]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[0]["NOME_USUARIO_ATUAL"].ToString() : string.Empty,
                 Data = dt.Rows[0]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA_INCLUSAO"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
                 Status = dt.Rows[0]["STATUS"] != null ? dt.Rows[0]["STATUS"].ToString() : string.Empty,
                 Origem = dt.Rows[0]["ORIGEM"] != null ? dt.Rows[0]["ORIGEM"].ToString() : string.Empty,
@@ -152,19 +175,19 @@ namespace SGP.Models
 
         public void Gravar()
         {
-            string sql;          
+            string sql;
             var dal = new DAL();
 
             if (Id == 0)
             {
-                sql = "INSERT INTO Requisicao (IdFuncionario, Descricao, Tipo, Origem, Status, Destino, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao) VALUES " +
-                    $" ('{IdUsuarioLogado()}', '{Descricao}', '{Tipo}' ,'{Origem}', '{Status}', '{Destino}','{Convert.ToDateTime(Data):yyyy/MM/dd}', '{IdUsuarioLogado()}', '', '')";
+                sql = "INSERT INTO Requisicao (Descricao, Tipo, Origem, Status, Destino, UsuarioAtual, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao) VALUES " +
+                    $" ('{Descricao}', '{Tipo}' ,'{Origem}', '{Status}', '{Destino}', '{UsuarioAtual}','{Convert.ToDateTime(Data):yyyy/MM/dd}', '{IdUsuarioLogado()}', '', '')";
             }
             else
             {
                 sql = $"UPDATE  Requisicao SET DataAlteracao = '{Convert.ToDateTime(Data):yyyy/MM/dd}', " +
                       $"DESCRICAO = '{Descricao}',  TIPO = '{Tipo}', STATUS = '{Status}', ORIGEM ='{Origem}'," +
-                      $"DESTINO = '{Destino}', USUARIO_ALTERACAO ='{IdUsuarioLogado()}', WHERE IdRequisicao = '{Id}'";
+                      $"DESTINO = '{Destino}', UsuarioAtual = '{UsuarioAtual}', USUARIO_ALTERACAO ='{IdUsuarioLogado()}', WHERE IdRequisicao = '{Id}'";
             }
 
             GravarLista();
@@ -175,24 +198,46 @@ namespace SGP.Models
         private void GravarLista()
         {
             string sqlListaItens;
-            string deletaLista;
 
             var dal = new DAL();
 
-            deletaLista = $"DELETE FROM Requsicao_item WHERE IdRequisicao = '{Id}'";
-            dal.ExecutarComandoSQL(deletaLista);
+            if (Existe(Id))
+            {
+                ExcluirListaItens(dal, Id);
+            }
 
             foreach (var item in ItensRequisicao)
             {
-                sqlListaItens = $"INSERT INTO Requsicao_item (IdItemRequisicao, IdRequisicao, Quantidade) VALUES ('{item.CodigoEquipamento}','{item.CodigoRequisicao}','{item.Quantidade}')";
+                sqlListaItens = $"INSERT INTO itemrequisicao (Quantidade, Descricao, Id_Equipamento, Id_Requisicao) VALUES ('{item.Quantidade}', '','{item.CodigoEquipamento}','{item.CodigoRequisicao}')";
                 dal.ExecutarComandoSQL(sqlListaItens);
             }
         }
 
+        private void ExcluirListaItens(DAL dal, int id)
+        {
+            string deletaLista = $"DELETE FROM itemrequisicao WHERE Id_Requisicao = '{id}'";
+            dal.ExecutarComandoSQL(deletaLista);
+        }
+
+        private bool Existe(int id)
+        {
+            var sql = $"SELECT Id_Requisicao from itemrequisicao where Id_Requisicao = '{id}'";
+            var dal = new DAL();
+            var dt = dal.RetDataTable(sql);
+
+            return dt.Rows.Count > 0;
+        }
+
         public void Excluir(int id)
         {
-            string sql = $"DELETE FROM Requisicao WHERE IdRequisicao = {id}";
             var dal = new DAL();
+
+            if (Existe(id))
+            {
+                ExcluirListaItens(dal, id);
+            }
+
+            string sql = $"DELETE FROM Requisicao WHERE IdRequisicao = {id}";
             dal.ExecutarComandoSQL(sql);
         }
 
@@ -201,12 +246,12 @@ namespace SGP.Models
         {
             var equipamentoModel = new EquipamentoModel();
             var lista = equipamentoModel.ListaEquipamento();
-    
+
             return lista;
         }
 
         public IList<ItemRequisicaoModel> ListaItens(string idEquipamento, int Quantidade)
-        {       
+        {
             var item = new ItemRequisicaoModel
             {
                 CodigoRequisicao = Id,

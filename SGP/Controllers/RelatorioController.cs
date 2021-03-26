@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PdfSharpCore.Drawing;
 using SGP.Models;
+using SGP.Util;
 using System.IO;
 
 namespace SGP.Controllers
@@ -38,9 +39,9 @@ namespace SGP.Controllers
                 textFormatter.DrawString(qtdPaginas.ToString(), new XFont("Arial", 10), corFonte, new PdfSharpCore.Drawing.XRect(578, 825, page.Width, page.Height));
 
                 // LOGO EMPRESA
-                var logo = @"C:\Users\Tiago Santos\SGP\SGP\wwwroot\upload\porto-do-acu-logo-relatorio.png";
-                XImage imagem = XImage.FromFile(logo);
-                graphics.DrawImage(imagem, 20, 5, 70, 50);
+                //var logo = @"..\wwwroot\upload\porto-do-acu-logo-relatorio.png";
+                //XImage imagem = XImage.FromFile(logo);
+                //graphics.DrawImage(imagem, 20, 5, 70, 50);
              
                 // CABEÇALHO
                 textFormatter.DrawString("Status: ", fonteDescricao, corFonte, new XRect(20, 75, page.Width, page.Height));
@@ -83,7 +84,7 @@ namespace SGP.Controllers
                     textFormatter.DrawString(item.Origem, fonteDetalhesDescricao, corFonte, new XRect(281, alturaDetalhesItens, page.Width, page.Height));
                     textFormatter.DrawString(item.Destino, fonteDetalhesDescricao, corFonte, new XRect(381, alturaDetalhesItens, page.Width, page.Height));
                     textFormatter.DrawString(item.Status, fonteDetalhesDescricao, corFonte, new XRect(471, alturaDetalhesItens, page.Width, page.Height));
-                    textFormatter.DrawString(item.NomeUsuario, fonteDetalhesDescricao, corFonte, new XRect(541, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.NomeUsuarioAtual, fonteDetalhesDescricao, corFonte, new XRect(541, alturaDetalhesItens, page.Width, page.Height));
 
                     alturaDetalhesItens += 20;
                 }
@@ -101,6 +102,5 @@ namespace SGP.Controllers
                 }
             }         
         }
-   
     }
 }

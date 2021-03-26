@@ -29,13 +29,13 @@ namespace SGP.Controllers
             if (login)
             {
                 HttpContext.Session.SetString("IdUsuarioLogado", usuario.Id.ToString());
-                HttpContext.Session.SetString("NomeUsuarioLogado", usuario.Nome);
+                HttpContext.Session.SetString("NomeUsuarioLogado", usuario.Login);
                 HttpContext.Session.SetString("PerfilAcesso", usuario.PerfilAcesso.ToString());
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                TempData["ERRO_LOGIN"] = "E-mail ou Senha incorreta.";
+                TempData["ERRO_LOGIN"] = "Usuário ou Senha incorreta.";
                 return RedirectToAction("Login");
             }
         }   

@@ -34,11 +34,14 @@ namespace SGP.Models
 
         public bool ValidarLogin()
         {
-            string sql = $@"SELECT DISTINCT U.IdUsuario as IdUsuario, P.Nome as NomeUsuario, U.PerfilAcesso as PerfilAcesso 
-                              FROM Usuario U, Pessoa P, Funcionario F 
-                                WHERE U.Id_Funcionario = F.IdFuncionario
-                                AND F.Id_Pessoa        = P.IdPessoa
-                                AND U.Login            = '{Login}' AND U.Senha = '{Senha}'";
+            string sql = $@"SELECT DISTINCT U.IdUsuario AS IdUsuario,
+                                            F.Nome AS NomeUsuario,
+                                            U.PerfilAcesso AS PerfilAcesso
+                            FROM Usuario U,
+                                 Funcionario F
+                            WHERE U.Id_Funcionario = F.IdFuncionario
+                              AND U.Login = '{Login}'
+                              AND U.Senha = '{Senha}'";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -77,12 +80,16 @@ namespace SGP.Models
         public UsuarioModel ObterUsuario(int? IdFuncionario)
         {
 
-            var sql = $@"SELECT DISTINCT U.IdUsuario as IdUsuario, U.Login as Login, U.Senha as Senha, 
-                          U.PerfilAcesso as PerfilAcesso,  U.Id_Funcionario as IdFuncionario, P.Nome as Nome
-                            FROM Usuario U, Pessoa P, Funcionario F
-                              WHERE U.Id_Funcionario = F.IdFuncionario
-                              AND   F.Id_Pessoa      = P.IdPessoa
-                              AND   U.Id_Funcionario = '{IdFuncionario}'";
+            var sql = $@"SELECT DISTINCT U.IdUsuario AS IdUsuario,
+                                         U.Login AS Login,
+                                         U.Senha AS Senha,
+                                         U.PerfilAcesso AS PerfilAcesso,
+                                         U.Id_Funcionario AS IdFuncionario,
+                                         F.Nome AS Nome
+                         FROM Usuario U,
+                              Funcionario F
+                         WHERE U.Id_Funcionario = F.IdFuncionario
+                           AND U.Id_Funcionario = '{IdFuncionario}'";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -106,10 +113,14 @@ namespace SGP.Models
         {
             var lista = new List<UsuarioModel>();
 
-            var sql = $@"SELECT DISTINCT U.IdUsuario as IdUsuario, P.Nome as NomeUsuario, U.PerfilAcesso as PerfilAcesso, U.Id_Funcionario as IdFuncionario
-                            FROM Usuario U, Pessoa P, Funcionario F
-                              WHERE U.Id_Funcionario = F.IdFuncionario
-                              AND   F.Id_Pessoa      = P.IdPessoa";
+            var sql = $@"SELECT DISTINCT U.IdUsuario AS IdUsuario,
+                                         U.Login AS Login,
+                                         F.Nome AS NomeUsuario,
+                                         U.PerfilAcesso AS PerfilAcesso,
+                                         U.Id_Funcionario AS IdFuncionario
+                         FROM Usuario U,
+                              Funcionario F
+                         WHERE U.Id_Funcionario = F.IdFuncionario";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -119,6 +130,7 @@ namespace SGP.Models
                 var item = new UsuarioModel
                 {
                     Id = dt.Rows[i]["IdUsuario"] != null ? Convert.ToInt32(dt.Rows[i]["IdUsuario"].ToString()) : 0,
+                    Login = dt.Rows[i]["Login"] != null ? dt.Rows[i]["Login"].ToString() : string.Empty,
                     IdFuncionario = dt.Rows[i]["IdFuncionario"] != null ? Convert.ToInt32(dt.Rows[i]["IdFuncionario"].ToString()) : 0,
                     Nome = dt.Rows[i]["NomeUsuario"] != null ? dt.Rows[i]["NomeUsuario"].ToString() : string.Empty,
                     PerfilAcesso = dt.Rows[i]["PerfilAcesso"] != null ? Convert.ToInt32(dt.Rows[i]["PerfilAcesso"].ToString()) : 0
@@ -134,10 +146,10 @@ namespace SGP.Models
         {
             var lista = new List<UsuarioModel>();
 
-            var sql = $@"SELECT F.IdFuncionario as Codigo, P.Nome as Nome
-                            FROM Funcionario F, Pessoa P
-                             WHERE F.Id_Pessoa = P.IdPessoa";
-
+            var sql = $@"SELECT F.IdFuncionario AS Codigo,
+                                F.Nome AS Nome
+                         FROM Funcionario F";
+                         
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 

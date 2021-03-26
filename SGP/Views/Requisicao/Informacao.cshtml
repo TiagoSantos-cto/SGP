@@ -8,7 +8,7 @@
     var vId = 0;
     var vDescricao = string.Empty;
     var vTipo = string.Empty;
-    var vData = string.Empty;
+    var vData = DateTime.Now.ToString("yyyy-MM-dd");
     var vData_final = string.Empty;
     var vNomeUsuario = string.Empty;
     var vStatus = string.Empty;
@@ -47,115 +47,141 @@
         <div class="mb-3">
             <label>Data de abertura:</label>
             <br />
-            <input type="date" class="form-control" asp-for="Data" value="@vData">
+            <input type="date" class="form-control" asp-for="Data" value="@vData" style="width: 180px">
             <span asp-validation-for="Data" class="text-danger"></span>
         </div>
 
         <div class="form-group">
             <label>Responsável:</label>
-            <select asp-for="NomeUsuario" class="form-control" style="width: 180px">
-                @{
-                    foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
-                    {
-                        <option value="@item.Nome.ToString()">@item.Nome.ToString()</option>
-                    }
-                }
-            </select>
+            @using Microsoft.AspNetCore.Http;
+            @inject IHttpContextAccessor HttpContextAccessor
+            <input type="hidden" asp-for="UsuarioResponsavel" value="@HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado")" />
+            <input type="text" class="form-control"  value="@HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado")" style="width: 180px" disabled>
         </div>
 
         <div class="form-group">
             <label>Tipo:</label>
             @{
-                if (vTipo == "B")
-                {
-                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="B" checked>Backload</label></div>
-                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="T" unchecked>Transbordo</label></div>
-                }
-                else
+                if (vTipo == "T")
                 {
                     <div class="radio"><label><input type="radio" asp-for="Tipo" value="B" unchecked>Backload</label></div>
                     <div class="radio"><label><input type="radio" asp-for="Tipo" value="T" checked>Transbordo</label></div>
+                }
+                else
+                {
+                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="B" checked>Backload</label></div>
+                    <div class="radio"><label><input type="radio" asp-for="Tipo" value="T" unchecked>Transbordo</label></div>
                 }
             }
         </div>
 
         <div class="row">
+
+
             <div class="col-md-3 mb-3">
-                <label>Origem:</label>
-                <br />
-                <input type="text" class="form-control" asp-for="Origem" value="@vOrigem">
-            </div>
-            <div class="col-md-3 mb-4">
-                <label>Destino:</label>
-                <br />
-                <input type="text" class="form-control" asp-for="Destino" value="@vDestino">
-            </div>
-        </div>
-
-
-        <fieldset class="scheduler-border">
-            <legend class="scheduler-border">Equipamentos solicitados</legend>
-
-            <div class="form-group" style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
-                <table class="table table-bordered" id="TabelaItens">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Quantidade solicitada</th>
-                            <th> </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>                          
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Botão para acionar modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado">
-                Adicionar item 
-            </button>
-
-        </fieldset>
-
-        <div class="form-group">
-            <label>Descição:</label>
-            @Html.TextArea("Descricao", vDescricao, new { @class = "form-control" })
-            <span asp-validation-for="Descricao" class="text-danger"></span>
-        </div>
-
-        <fieldset class="scheduler-border">
-            <legend class="scheduler-border">Encaminhar</legend>
-            <div class="row">
-                <div class="form-group col-md-4 mb-3">
-                    <label>Etapa:</label>
-                    <select asp-for="Status" class="form-control" style="width: 180px">
-                        <option value="Solicitado">Soliciatação</option>
-                        <option value="Liberado para programação">Liberar para programação</option>
-                        <option value="Em coleta">Coletar</option>
-                        <option value="Em processamento">Processar</option>
-                        <option value="Cancelado">Cancelar</option>
-                        <option value="Programado">Programar</option>
-                    </select>
-                </div>
-                <div class="form-group col-md-4 mb-3">
-                    <label>Usuário:</label>
-                    <select asp-for="NomeUsuario" class="form-control" style="width: 180px">
-                        @{
-                            foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
-                            {
-                                <option value="@item.Nome.ToString()">@item.Nome.ToString()</option>
-                            }
+                <label>Terminal de origem:</label>
+                <select asp-for="Origem" class="form-control" style="width: 180px" required>
+                    <option value="">Selecionar...</option>
+                    @{
+                        foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                        {
+                            <option value="@item.Id.ToString()">@item.Nome.ToString()</option>
                         }
-                    </select>
+                    }
+                </select>
+                <div class="invalid-feedback">
+                    Selecione uma estação de origem da requisição.
                 </div>
             </div>
-        </fieldset>
 
-        <button type="submit" class="btn btn-block btn-success ">Gravar</button>
+            <div class="col-md-3 mb-4">
+                <label>Terminal de destino:</label>
+                <select asp-for="Destino" class="form-control" style="width: 180px" required>
+                    <option value="">Selecionar...</option>
+                    @{
+                        foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                        {
+                            <option value="@item.Id.ToString()">@item.Nome.ToString()</option>
+                        }
+                    }
+                </select>
+                <div class="invalid-feedback">
+                    Selecione uma estação de destino da requisição.
+                </div>
+            </div>
 
-    </form>
+        </div>
+
+
+            <fieldset class="scheduler-border">
+                <legend class="scheduler-border">Equipamentos solicitados</legend>
+
+                <div class="form-group" style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
+                    <table class="table table-bordered" id="TabelaItens">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantidade solicitada</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Botão para acionar modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado">
+                    Adicionar item
+                </button>
+
+            </fieldset>
+
+            <div class="form-group">
+                <label>Descição:</label>
+                @Html.TextArea("Descricao", vDescricao, new { @class = "form-control" })
+                <span asp-validation-for="Descricao" class="text-danger"></span>
+            </div>
+
+            <fieldset class="scheduler-border">
+                <legend class="scheduler-border">Encaminhar</legend>
+                <div class="row">
+                    <div class="form-group col-md-4 mb-3">
+                        <label>Etapa:</label>
+                        <select asp-for="Status" class="form-control" style="width: 180px">
+                            <option value="Solicitado">Soliciatação</option>
+                            <option value="Liberado para programação">Liberar para programação</option>
+                            <option value="Em coleta">Coletar</option>
+                            <option value="Em processamento">Processar</option>
+                            <option value="Cancelado">Cancelar</option>
+                            <option value="Programado">Programar</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4 mb-3">
+                        <label>Usuário:</label>
+                        <select asp-for="UsuarioAtual" class="form-control" style="width: 180px">
+                            <option value="">Selecionar...</option>
+                            @{
+                                foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
+                                {
+                                    <option value="@item.Id.ToString()">@item.Login.ToString()</option>
+                                }
+                            }
+                        </select>
+                        <div class="invalid-feedback">
+                            Selecione um usuário para próxima etapa.
+                        </div>
+                    </div>
+
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn btn-block btn-success ">Gravar</button>
+
+</form>
 </div>
 
 
