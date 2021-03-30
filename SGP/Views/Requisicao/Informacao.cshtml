@@ -9,11 +9,14 @@
     var vDescricao = string.Empty;
     var vTipo = string.Empty;
     var vData = DateTime.Now.ToString("yyyy-MM-dd");
-    var vData_final = string.Empty;
-    var vNomeUsuario = string.Empty;
     var vStatus = string.Empty;
     var vOrigem = string.Empty;
     var vDestino = string.Empty;
+    var vNomeUsuarioResponsavel = string.Empty;
+    var vNomeEstacaoOrigem = string.Empty;
+    var vNomeEstacaoDestino = string.Empty;
+    var vUsuarioAtual = string.Empty;
+    var vNomeUsuarioAtual = string.Empty;
 
     try
     {
@@ -21,15 +24,19 @@
         vDescricao = @ViewBag.Registro.Descricao;
         vTipo = @ViewBag.Registro.Tipo.ToString();
         vData = Convert.ToDateTime(@ViewBag.Registro.Data).ToString("yyyy-MM-dd");
-        vNomeUsuario = @ViewBag.Registro.NomeUsuario.ToString();
         vStatus = @ViewBag.Registro.Status.ToString();
         vOrigem = @ViewBag.Registro.Origem.ToString();
         vDestino = @ViewBag.Registro.Destino.ToString();
+        vNomeUsuarioResponsavel = @ViewBag.Registro.NomeUsuarioResponsavel.ToString();
+        vNomeEstacaoOrigem = @ViewBag.Registro.NomeEstacaoOrigem.ToString();
+        vNomeEstacaoDestino = @ViewBag.Registro.NomeEstacaoDestino.ToString();
+        vUsuarioAtual = @ViewBag.Registro.UsuarioAtual.ToString();
+        vNomeUsuarioAtual = @ViewBag.Registro.NomeUsuarioAtual.ToString();
     }
     catch { }
 }
 
-
+<!-- Cabeçalho -->
 <div class="row text-left" style="padding-left: 30px;">
     <div>
         <h2>Informação de atendimento</h2>
@@ -40,6 +47,7 @@
 </div>
 <br />
 
+<!-- Campos -->
 <div style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
     <form asp-controller="Requisicao" asp-action="Informacao">
         <input type="hidden" asp-for="Id" value="@vId" />
@@ -53,10 +61,19 @@
 
         <div class="form-group">
             <label>Responsável:</label>
-            @using Microsoft.AspNetCore.Http;
-            @inject IHttpContextAccessor HttpContextAccessor
-            <input type="hidden" asp-for="UsuarioResponsavel" value="@HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado")" />
-            <input type="text" class="form-control"  value="@HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado")" style="width: 180px" disabled>
+            @{
+                if (string.IsNullOrEmpty(vNomeUsuarioResponsavel))
+                {
+                    @using Microsoft.AspNetCore.Http;
+                    @inject IHttpContextAccessor HttpContextAccessor
+                    <input type="hidden" asp-for="UsuarioResponsavel" value="@HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado")" />
+                    <input type="text" class="form-control" value="@HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado")" style="width: 180px" disabled>
+                }
+                else
+                {
+                    <input type="text" class="form-control" value="@vNomeUsuarioResponsavel" style="width: 180px" disabled>
+                }
+            }
         </div>
 
         <div class="form-group">
@@ -80,14 +97,31 @@
 
             <div class="col-md-3 mb-3">
                 <label>Terminal de origem:</label>
+
                 <select asp-for="Origem" class="form-control" style="width: 180px" required>
-                    <option value="">Selecionar...</option>
+
                     @{
-                        foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                        if (string.IsNullOrEmpty(vOrigem))
                         {
-                            <option value="@item.Id.ToString()">@item.Nome.ToString()</option>
+                            <option value="">Selecionar...</option>
+                            foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                            {
+                                <option value="@item.Id.ToString()">@item.Nome.ToString()</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="@vOrigem">@vNomeEstacaoOrigem</option>
+                            foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                            {
+                                if (item.Id.ToString() != vOrigem)
+                                {
+                                    <option value="@item.Id.ToString()">@item.Nome</option>
+                                }
+                            }
                         }
                     }
+
                 </select>
                 <div class="invalid-feedback">
                     Selecione uma estação de origem da requisição.
@@ -97,13 +131,29 @@
             <div class="col-md-3 mb-4">
                 <label>Terminal de destino:</label>
                 <select asp-for="Destino" class="form-control" style="width: 180px" required>
-                    <option value="">Selecionar...</option>
+
                     @{
-                        foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                        if (string.IsNullOrEmpty(vDestino))
                         {
-                            <option value="@item.Id.ToString()">@item.Nome.ToString()</option>
+                            <option value="">Selecionar...</option>
+                            foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                            {
+                                <option value="@item.Id.ToString()">@item.Nome.ToString()</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="@vDestino">@vNomeEstacaoDestino</option>
+                            foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                            {
+                                if (item.Id.ToString() != vDestino)
+                                {
+                                    <option value="@item.Id.ToString()">@item.Nome</option>
+                                }
+                            }
                         }
                     }
+
                 </select>
                 <div class="invalid-feedback">
                     Selecione uma estação de destino da requisição.
@@ -112,76 +162,114 @@
 
         </div>
 
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Equipamentos solicitados</legend>
 
-            <fieldset class="scheduler-border">
-                <legend class="scheduler-border">Equipamentos solicitados</legend>
-
-                <div class="form-group" style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
-                    <table class="table table-bordered" id="TabelaItens">
-                        <thead>
-                            <tr>
-                                <th>Item</th>
-                                <th>Quantidade solicitada</th>
-                                <th> </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Botão para acionar modal -->
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado">
-                    Adicionar item
-                </button>
-
-            </fieldset>
-
-            <div class="form-group">
-                <label>Descição:</label>
-                @Html.TextArea("Descricao", vDescricao, new { @class = "form-control" })
-                <span asp-validation-for="Descricao" class="text-danger"></span>
+            <div class="form-group" style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
+                <table class="table table-bordered" id="TabelaItens">
+                    <thead>
+                        <tr>
+                            <th>Código item</th>
+                            <th>Quantidade solicitada</th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
-            <fieldset class="scheduler-border">
-                <legend class="scheduler-border">Encaminhar</legend>
-                <div class="row">
-                    <div class="form-group col-md-4 mb-3">
-                        <label>Etapa:</label>
-                        <select asp-for="Status" class="form-control" style="width: 180px">
-                            <option value="Solicitado">Soliciatação</option>
-                            <option value="Liberado para programação">Liberar para programação</option>
-                            <option value="Em coleta">Coletar</option>
-                            <option value="Em processamento">Processar</option>
-                            <option value="Cancelado">Cancelar</option>
-                            <option value="Programado">Programar</option>
-                        </select>
-                    </div>
+            <!-- Botão para acionar modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado"> Adicionar item </button>
 
-                    <div class="form-group col-md-4 mb-3">
-                        <label>Usuário:</label>
-                        <select asp-for="UsuarioAtual" class="form-control" style="width: 180px">
-                            <option value="">Selecionar...</option>
-                            @{
+        </fieldset>
+
+        <div class="form-group">
+            <label>Descição:</label>
+            @Html.TextArea("Descricao", vDescricao, new { @class = "form-control" })
+            <span asp-validation-for="Descricao" class="text-danger"></span>
+        </div>
+
+        <fieldset class="scheduler-border">
+            <legend class="scheduler-border">Encaminhar</legend>
+            <div class="row">
+                <div class="form-group col-md-4 mb-3">
+                    <label>Etapa:</label>
+
+                    <select asp-for="Status" class="form-control" style="width: 180px">
+
+                        @{
+
+                            if (string.IsNullOrEmpty(vStatus))
+                            {
+                                <option value="">Selecionar...</option>
+                                <option value="Solicitar">Solicitar</option>
+                                <option value="Liberar">Liberar</option>
+                                <option value="Coletar">Coletar</option>
+                                <option value="Processar">Processar</option>
+                                <option value="Cancelar">Cancelar</option>
+                                <option value="Programar">Programar</option>
+                            }
+                            else
+                            {
+                                <option value="@vStatus">@vStatus</option>
+
+                                foreach (var item in (List<string>)ViewBag.ListaStatus)
+                                {
+                                    if (vStatus != item)
+                                    {
+                                        <option value="@item">@item</option>
+                                    }
+                                }
+                            }
+                        }
+
+                    </select>
+
+                </div>
+
+                <div class="form-group col-md-4 mb-3">
+                    <label>Usuário:</label>
+                    <select asp-for="UsuarioAtual" class="form-control" style="width: 180px">
+
+                        @{
+
+                            if (string.IsNullOrEmpty(vNomeUsuarioAtual))
+                            {
+                                <option value="">Selecionar...</option>
                                 foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
                                 {
                                     <option value="@item.Id.ToString()">@item.Login.ToString()</option>
                                 }
                             }
-                        </select>
-                        <div class="invalid-feedback">
-                            Selecione um usuário para próxima etapa.
-                        </div>
+                            else
+                            {
+                                <option value="@vUsuarioAtual">@vNomeUsuarioAtual</option>
+                                foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
+                                {
+                                    if (item.Id.ToString() != vUsuarioAtual)
+                                    {
+                                        <option value="@item.Id.ToString()">@item.Login.ToString()</option>
+                                    }
+                                }
+
+                            }
+                        }
+
+                    </select>
+                    <div class="invalid-feedback">
+                        Selecione um usuário para próxima etapa.
                     </div>
-
                 </div>
-            </fieldset>
 
-            <button type="submit" class="btn btn-block btn-success ">Gravar</button>
+            </div>
+        </fieldset>
 
-</form>
+        <button type="submit" class="btn btn-block btn-success ">Gravar</button>
+
+    </form>
 </div>
 
 
@@ -190,7 +278,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            
+
                 <div class="row text-center" style="padding-left: 30px;">
                     <div>
                         <h3 class="modal-title" id="myModal-label">Adicionar itens</h3>
@@ -206,36 +294,36 @@
             </div>
             <div class="modal-body">
                 <div style="background-color: ghostwhite; border-radius: 10px; padding:20px; width:800px">
-                
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Descrição</th>
-                            <th> </th>
-                            <th>Estoque</th>
-                            <th>Quantidade</th>
-                            <th> </th>
-                        </tr>
-                    </thead>
-                    @{
-                        foreach (var item in (List<EquipamentoModel>)ViewBag.ListaItem)
-                        {
-                            if (@item.Status.ToString() != "Indisponível")
+
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Descrição</th>
+                                <th> </th>
+                                <th>Estoque atual</th>
+                                <th>Quantidade solicitada</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        @{
+                            foreach (var item in (List<EquipamentoModel>)ViewBag.ListaItem)
                             {
-                                <tbody>
-                                    <tr>
-                                        <td>@item.Descricao.ToString()</td>
-                                        <td><img src="@item.ImagemPath.ToString()" width="50" height="50" /></td>
-                                        <td class="text-center">@item.Quantidade.ToString()</td>
-                                        <td class="text-center"><input type="number" id="qtd" style="width:60px"></td>
-                                        <td><button type="submit" class=" btn btn-success" onclick="Add('@item.Id.ToString()')">Adicionar</button></td>
-                                    </tr>
-                                </tbody>
+                                if (@item.Status.ToString() != "Indisponível")
+                                {
+                                    <tbody>
+                                        <tr>
+                                            <td>@item.Descricao.ToString()</td>
+                                            <td><img src="@item.ImagemPath.ToString()" width="50" height="50" /></td>
+                                            <td class="text-center" id="qtdAtual">@item.Quantidade.ToString()</td>
+                                            <td class="text-center"><input type="number" id="qtdSolicitada" style="width:60px" min='0'></td>
+                                            <td><button type="submit" class=" btn btn-success" onclick="Add('@item.Id.ToString()')">Adicionar</button></td>
+                                        </tr>
+                                    </tbody>
+                                }
                             }
                         }
-                    }
-                </table>
-            </div>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -256,18 +344,23 @@
         var celula2 = linha.insertCell(1);
         var celula3 = linha.insertCell(2);
 
-        var qtd = document.getElementById('qtd');
+        var qtdSolicitada = document.getElementById('qtdSolicitada');
 
-        celula1.innerHTML =  id;
-        celula2.innerHTML =  qtd.value;
+        qtdAtual = qtdAtual - qtdSolicitada;
+
+        celula1.innerHTML = id;
+        celula2.innerHTML = qtdSolicitada.value;
         celula3.innerHTML = "<button id ='remover' onclick='removeLinha(this)'>Remover</button>";
 
         window.close();
-    } 
 
+    }
+    
     function removeLinha(linha) {
+
         var i = linha.parentNode.parentNode.rowIndex;
         document.getElementById('TabelaItens').deleteRow(i);
+
     }
 
 </script>
@@ -304,5 +397,4 @@
         -webkit-transition-duration: 0.4s;
         transition-duration: 0.4s;
     }
-
 </style>

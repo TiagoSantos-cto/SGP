@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SGP.Models;
+using System.Collections.Generic;
 
 namespace SGP.Controllers
 {
@@ -34,11 +35,13 @@ namespace SGP.Controllers
         public IActionResult Informacao(int? id)
         {
             var requisicao = new RequisicaoModel(HttpContextAccessor);
+
             if (id != null)
             {
-                //var requisicao = new RequisicaoModel(HttpContextAccessor);
                 ViewBag.Registro = requisicao.CarregarRegistro(id);
             }
+
+            ViewBag.ListaStatus = new List<string>(new string[] { "Solicitar", "Liberar", "Coletar", "Processar", "Cancelar", "Programar" });
 
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
@@ -49,7 +52,7 @@ namespace SGP.Controllers
             var estacao = new EstacaoModel(HttpContextAccessor);
             ViewBag.ListaEstacao = estacao.ListaEstacao();
 
-            ViewBag.ListaItem = requisicao.ListaItem(); //teste
+            ViewBag.ListaItem = requisicao.ListaItem();
 
             return View();
         }
@@ -66,13 +69,20 @@ namespace SGP.Controllers
         [HttpPost]
         public IActionResult Atendimentos(RequisicaoModel entity)
         {
-            entity.HttpContextAccessor = HttpContextAccessor;
-            ViewBag.ListaRequisicao = entity.ListaRequisicao();
-          
+            if (entity.UsuarioAtual != 0)
+            {
+                entity.HttpContextAccessor = HttpContextAccessor;
+                ViewBag.ListaRequisicao = entity.ListaRequisicao();
+            }
+            else
+            {
+                ViewBag.ListaRequisicao = new List<RequisicaoModel>();
+            }
+
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
 
-            ViewBag.ListaItem = entity.ListaItem(); 
+            ViewBag.ListaItem = entity.ListaItem();
 
             return View();
         }
@@ -86,7 +96,7 @@ namespace SGP.Controllers
             };
 
             ViewBag.ListaItem = entity.ListaItem();
-            
+
             return PartialView();
         }
 

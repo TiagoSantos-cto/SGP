@@ -10,12 +10,12 @@ namespace SGP.Models
     {
         public enum StatusRequisicao
         {
-            Solicitado,
-            Liberado,
-            EmColeta,
-            EmProcessamento,
-            Cancelado,
-            Programado
+            Solicitar,
+            Liberar,
+            Coletar,
+            Processar,
+            Cancelar,
+            Programar
         }
 
         public int Id { get; set; }
@@ -36,11 +36,17 @@ namespace SGP.Models
 
         public int UsuarioResponsavel { get; set; }
 
+        public string NomeUsuarioResponsavel { get; set; }
+
         public string Status { get; set; }
 
         public string Origem { get; set; }
 
+        public string NomeEstacaoOrigem { get; set; }
+
         public string Destino { get; set; }
+
+        public string NomeEstacaoDestino { get; set; }
 
         public IList<ItemRequisicaoModel> ItensRequisicao { get; set; }
 
@@ -95,22 +101,54 @@ namespace SGP.Models
 
             var sql = $@"SELECT R.IdRequisicao AS ID,
                                 R.DataInclusao AS DATA,
-                                R.UsuarioAtual AS USUARIO,
-                                (SELECT U.Login  FROM usuario U WHERE U.IdUsuario = R.UsuarioAtual) AS NOME_USUARIO_ATUAL,
+                                R.UsuarioAtual AS USUARIO_ATUAL,                    
+                           (SELECT U.Login
+                            FROM usuario U
+                            WHERE U.IdUsuario = R.UsuarioAtual) AS NOME_USUARIO_ATUAL,
+                                R.UsuarioInclusao AS USUARIO_INCLUSAO,                        
+                           (SELECT U.Login
+                            FROM usuario U
+                            WHERE U.IdUsuario = R.UsuarioInclusao) AS NOME_USUARIO_INCLUSAO,
                                 R.Status AS STATUS,
                                 R.Descricao AS DESCRICAO,
                                 R.Tipo AS TIPO,
-                                R.Origem AS ORIGEM,
-                                R.Destino AS DESTINO
-                         FROM requisicao R,
+                                R.Origem AS ORIGEM,                       
+                           (SELECT CASE e.Tipo
+                                       WHEN 0 THEN
+                                              (SELECT a.Nome
+                                               FROM armazem a
+                                               WHERE a.Id_Estacao = R.Origem)
+                                       WHEN 1 THEN
+                                              (SELECT u.Nome
+                                               FROM unidademaritima u
+                                               WHERE u.Id_Estacao = R.Origem)
+                                       ELSE ('')
+                                   END
+                            FROM estacaotrabalho e
+                            WHERE e.IdEstacao = R.Origem) AS NOME_ESTACAO_ORIGEM,
+                                R.Destino AS DESTINO,                        
+                           (SELECT CASE e.Tipo
+                                       WHEN 0 THEN
+                                              (SELECT a.Nome
+                                               FROM armazem a
+                                               WHERE a.Id_Estacao = R.Destino)
+                                       WHEN 1 THEN
+                                              (SELECT u.Nome
+                                               FROM unidademaritima u
+                                               WHERE u.Id_Estacao = R.Destino)
+                                       ELSE ('')
+                                   END
+                            FROM estacaotrabalho e
+                            WHERE e.IdEstacao = R.Destino) AS NOME_ESTACAO_DESTINO
+                          FROM requisicao R,
                               funcionario F,
                               usuario U
-                         WHERE  U.IdUsuario = R.UsuarioAtual
-                         AND U.Id_Funcionario = F.IdFuncionario
-                         {filtro}
+                          WHERE U.IdUsuario = R.UsuarioAtual
+                           AND U.Id_Funcionario = F.IdFuncionario
+                          {filtro}
                          ORDER BY DATA DESC
                          LIMIT 10";
-
+                         
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -121,13 +159,15 @@ namespace SGP.Models
                     Id = dt.Rows[i]["ID"] != null ? Convert.ToInt32(dt.Rows[i]["ID"].ToString()) : 0,
                     Descricao = dt.Rows[i]["DESCRICAO"] != null ? dt.Rows[i]["DESCRICAO"].ToString() : string.Empty,
                     Tipo = dt.Rows[i]["TIPO"] != null ? dt.Rows[i]["TIPO"].ToString() : string.Empty,
-                    UsuarioAtual = dt.Rows[i]["USUARIO"] != null ? Convert.ToInt32(dt.Rows[i]["USUARIO"].ToString()) : 0,
+                    UsuarioAtual = dt.Rows[i]["USUARIO_ATUAL"] != null ? Convert.ToInt32(dt.Rows[i]["USUARIO_ATUAL"].ToString()) : 0,
                     NomeUsuarioAtual = dt.Rows[i]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[i]["NOME_USUARIO_ATUAL"].ToString() : string.Empty,
                     Data = dt.Rows[i]["DATA"] != null ? Convert.ToDateTime(dt.Rows[i]["DATA"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
                     Status = dt.Rows[i]["STATUS"] != null ? dt.Rows[i]["STATUS"].ToString() : string.Empty,
                     Origem = dt.Rows[i]["ORIGEM"] != null ? dt.Rows[i]["ORIGEM"].ToString() : string.Empty,
-                    Destino = dt.Rows[i]["DESTINO"] != null ? dt.Rows[i]["DESTINO"].ToString() : string.Empty
-
+                    NomeEstacaoOrigem = dt.Rows[i]["NOME_ESTACAO_ORIGEM"] != null ? dt.Rows[i]["NOME_ESTACAO_ORIGEM"].ToString() : string.Empty,
+                    Destino = dt.Rows[i]["DESTINO"] != null ? dt.Rows[i]["DESTINO"].ToString() : string.Empty,
+                    NomeEstacaoDestino = dt.Rows[i]["NOME_ESTACAO_DESTINO"] != null ? dt.Rows[i]["NOME_ESTACAO_DESTINO"].ToString() : string.Empty,                   
+                    NomeUsuarioResponsavel = dt.Rows[i]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[i]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty                 
                 };
 
                 lista.Add(item);
@@ -139,20 +179,52 @@ namespace SGP.Models
         public RequisicaoModel CarregarRegistro(int? id)
         {
             var sql = $@"SELECT R.IdRequisicao AS ID,
-                                R.DataInclusao AS DATA_INCLUSAO,
-                                R.UsuarioAtual AS USUARIO,
-                                (SELECT U.Login  FROM usuario U WHERE U.IdUsuario = R.UsuarioAtual) AS NOME_USUARIO_ATUAL,
+                                R.DataInclusao AS DATA,
+                                R.UsuarioAtual AS USUARIO_ATUAL,                    
+                           (SELECT U.Login
+                            FROM usuario U
+                            WHERE U.IdUsuario = R.UsuarioAtual) AS NOME_USUARIO_ATUAL,
+                                R.UsuarioInclusao AS USUARIO_INCLUSAO,                        
+                           (SELECT U.Login
+                            FROM usuario U
+                            WHERE U.IdUsuario = R.UsuarioInclusao) AS NOME_USUARIO_INCLUSAO,
                                 R.Status AS STATUS,
                                 R.Descricao AS DESCRICAO,
                                 R.Tipo AS TIPO,
-                                R.Origem AS ORIGEM,
-                                R.Destino AS DESTINO
-                         FROM requisicao R,
+                                R.Origem AS ORIGEM,                       
+                           (SELECT CASE e.Tipo
+                                       WHEN 0 THEN
+                                              (SELECT a.Nome
+                                               FROM armazem a
+                                               WHERE a.Id_Estacao = R.Origem)
+                                       WHEN 1 THEN
+                                              (SELECT u.Nome
+                                               FROM unidademaritima u
+                                               WHERE u.Id_Estacao = R.Origem)
+                                       ELSE ('')
+                                   END
+                            FROM estacaotrabalho e
+                            WHERE e.IdEstacao = R.Origem) AS NOME_ESTACAO_ORIGEM,
+                                R.Destino AS DESTINO,                        
+                           (SELECT CASE e.Tipo
+                                       WHEN 0 THEN
+                                              (SELECT a.Nome
+                                               FROM armazem a
+                                               WHERE a.Id_Estacao = R.Destino)
+                                       WHEN 1 THEN
+                                              (SELECT u.Nome
+                                               FROM unidademaritima u
+                                               WHERE u.Id_Estacao = R.Destino)
+                                       ELSE ('')
+                                   END
+                            FROM estacaotrabalho e
+                            WHERE e.IdEstacao = R.Destino) AS NOME_ESTACAO_DESTINO
+                          FROM requisicao R,
                               funcionario F,
                               usuario U
-                         WHERE  U.IdUsuario = R.UsuarioAtual
-                         AND U.Id_Funcionario = F.IdFuncionario
-                         AND R.IdRequisicao = '{id}'";
+                          WHERE U.IdUsuario = R.UsuarioAtual
+                           AND U.Id_Funcionario = F.IdFuncionario
+                           AND R.IdRequisicao = '{id}'";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -162,12 +234,16 @@ namespace SGP.Models
                 Id = dt.Rows[0]["ID"] != null ? Convert.ToInt32(dt.Rows[0]["ID"].ToString()) : 0,
                 Descricao = dt.Rows[0]["DESCRICAO"] != null ? dt.Rows[0]["DESCRICAO"].ToString() : string.Empty,
                 Tipo = dt.Rows[0]["TIPO"] != null ? dt.Rows[0]["TIPO"].ToString() : string.Empty,
-                UsuarioAtual = dt.Rows[0]["USUARIO"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO"].ToString()) : 0,
+                UsuarioAtual = dt.Rows[0]["USUARIO_ATUAL"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO_ATUAL"].ToString()) : 0,
                 NomeUsuarioAtual = dt.Rows[0]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[0]["NOME_USUARIO_ATUAL"].ToString() : string.Empty,
-                Data = dt.Rows[0]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA_INCLUSAO"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
+                Data = dt.Rows[0]["DATA"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
                 Status = dt.Rows[0]["STATUS"] != null ? dt.Rows[0]["STATUS"].ToString() : string.Empty,
                 Origem = dt.Rows[0]["ORIGEM"] != null ? dt.Rows[0]["ORIGEM"].ToString() : string.Empty,
-                Destino = dt.Rows[0]["DESTINO"] != null ? dt.Rows[0]["DESTINO"].ToString() : string.Empty
+                NomeEstacaoOrigem = dt.Rows[0]["NOME_ESTACAO_ORIGEM"] != null ? dt.Rows[0]["NOME_ESTACAO_ORIGEM"].ToString() : string.Empty,
+                Destino = dt.Rows[0]["DESTINO"] != null ? dt.Rows[0]["DESTINO"].ToString() : string.Empty,
+                NomeEstacaoDestino = dt.Rows[0]["NOME_ESTACAO_DESTINO"] != null ? dt.Rows[0]["NOME_ESTACAO_DESTINO"].ToString() : string.Empty,         
+                UsuarioResponsavel = dt.Rows[0]["USUARIO_INCLUSAO"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO_INCLUSAO"].ToString()) : 0,
+                NomeUsuarioResponsavel = dt.Rows[0]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[0]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty
             };
 
             return entity;
@@ -186,8 +262,8 @@ namespace SGP.Models
             else
             {
                 sql = $"UPDATE  Requisicao SET DataAlteracao = '{Convert.ToDateTime(Data):yyyy/MM/dd}', " +
-                      $"DESCRICAO = '{Descricao}',  TIPO = '{Tipo}', STATUS = '{Status}', ORIGEM ='{Origem}'," +
-                      $"DESTINO = '{Destino}', UsuarioAtual = '{UsuarioAtual}', USUARIO_ALTERACAO ='{IdUsuarioLogado()}', WHERE IdRequisicao = '{Id}'";
+                      $"Descricao = '{Descricao}',  Tipo = '{Tipo}', Status = '{Status}', Origem ='{Origem}'," +
+                      $"Destino = '{Destino}', UsuarioAtual = '{UsuarioAtual}', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{Id}'";
             }
 
             GravarLista();
