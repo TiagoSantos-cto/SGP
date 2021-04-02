@@ -174,11 +174,33 @@
                             <th> </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                        </tr>
-                    </tbody>
+
+                    @{
+                        var lista = (List<ItemRequisicaoModel>)ViewBag.ItemRequisicao;
+                        if (lista.Count() > 0)
+                        {
+                            foreach (var equipamento in lista)
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td>@equipamento.CodigoEquipamento.ToString()</td>
+                                        <td>@equipamento.Quantidade.ToString()</td>
+                                    </tr>
+                                </tbody>
+                            }
+                        }
+                        else
+                        {
+                            <tbody>
+                                <tr>                                
+                                </tr>
+                            </tbody>
+                        }
+
+                    }
+
                 </table>
+
             </div>
 
             <!-- Botão para acionar modal -->
@@ -305,21 +327,29 @@
                                 <th> </th>
                             </tr>
                         </thead>
+
                         @{
+                            var contador = 1;
+
                             foreach (var item in (List<EquipamentoModel>)ViewBag.ListaItem)
                             {
                                 if (@item.Status.ToString() != "Indisponível")
                                 {
+
+                                    var identificador = "qtdSolicidatada" + contador.ToString();
+
                                     <tbody>
                                         <tr>
                                             <td>@item.Descricao.ToString()</td>
                                             <td><img src="@item.ImagemPath.ToString()" width="50" height="50" /></td>
                                             <td class="text-center" id="qtdAtual">@item.Quantidade.ToString()</td>
-                                            <td class="text-center"><input type="number" id="qtdSolicitada" style="width:60px" min='0'></td>
-                                            <td><button type="submit" class=" btn btn-success" onclick="Add('@item.Id.ToString()')">Adicionar</button></td>
+                                            <td class="text-center"><input type="number" id="@identificador" style="width:60px" min='0' max="@item.Quantidade.ToString()"></td>
+                                            <td><button type="submit" class=" btn btn-success" onclick="Add('@item.Id.ToString()', @contador.ToString())">Adicionar</button></td>
                                         </tr>
                                     </tbody>
                                 }
+
+                                contador++;
                             }
                         }
                     </table>
@@ -334,7 +364,7 @@
 
 <script type="text/javascript">
 
-    function Add(id) {
+    function Add(id, contador) {
 
         var tabela = document.getElementById('TabelaItens');
         var numeroLinhas = tabela.rows.length;
@@ -344,17 +374,18 @@
         var celula2 = linha.insertCell(1);
         var celula3 = linha.insertCell(2);
 
-        var qtdSolicitada = '';
-        qtdSolicitada = document.querySelector("#qtdSolicitada");
-      
+        var identificador = "qtdSolicidatada" + contador;
+
+        var quantidade = document.getElementById(identificador);
+
         celula1.innerHTML = id;
-        celula2.innerHTML = qtdSolicitada.value;
+        celula2.innerHTML = quantidade.value;
         celula3.innerHTML = "<button id ='remover' onclick='removeLinha(this)'>Remover</button>";
 
         window.close();
 
     }
-    
+
     function removeLinha(linha) {
 
         var i = linha.parentNode.parentNode.rowIndex;

@@ -241,12 +241,35 @@ namespace SGP.Models
                 Origem = dt.Rows[0]["ORIGEM"] != null ? dt.Rows[0]["ORIGEM"].ToString() : string.Empty,
                 NomeEstacaoOrigem = dt.Rows[0]["NOME_ESTACAO_ORIGEM"] != null ? dt.Rows[0]["NOME_ESTACAO_ORIGEM"].ToString() : string.Empty,
                 Destino = dt.Rows[0]["DESTINO"] != null ? dt.Rows[0]["DESTINO"].ToString() : string.Empty,
-                NomeEstacaoDestino = dt.Rows[0]["NOME_ESTACAO_DESTINO"] != null ? dt.Rows[0]["NOME_ESTACAO_DESTINO"].ToString() : string.Empty,         
+                NomeEstacaoDestino = dt.Rows[0]["NOME_ESTACAO_DESTINO"] != null ? dt.Rows[0]["NOME_ESTACAO_DESTINO"].ToString() : string.Empty,
                 UsuarioResponsavel = dt.Rows[0]["USUARIO_INCLUSAO"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO_INCLUSAO"].ToString()) : 0,
                 NomeUsuarioResponsavel = dt.Rows[0]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[0]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty
             };
 
             return entity;
+        }
+
+        public IList<ItemRequisicaoModel> ObterItensRequisicao(int? id)
+        {
+            var sql = $"SELECT Id_Equipamento, Quantidade from itemrequisicao where Id_Requisicao = '{id}'";
+            
+            var dal = new DAL();
+            var dt = dal.RetDataTable(sql);
+
+            var lista = new List<ItemRequisicaoModel>();
+            
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                var item = new ItemRequisicaoModel
+                {
+                    CodigoEquipamento = !string.IsNullOrEmpty(dt.Rows[i]["Id_Equipamento"].ToString()) ? dt.Rows[i]["Id_Equipamento"].ToString() : string.Empty,
+                    Quantidade = !string.IsNullOrEmpty(dt.Rows[i]["Quantidade"].ToString()) ? Convert.ToInt32(dt.Rows[i]["Quantidade"].ToString()) : 0              
+                };
+
+                lista.Add(item);
+            }
+
+            return lista;
         }
 
         public void Gravar()

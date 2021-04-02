@@ -39,6 +39,7 @@ namespace SGP.Controllers
             if (id != null)
             {
                 ViewBag.Registro = requisicao.CarregarRegistro(id);
+                ViewBag.ItemRequisicao = requisicao.ObterItensRequisicao(id);
             }
 
             ViewBag.ListaStatus = new List<string>(new string[] { "Solicitar", "Liberar", "Coletar", "Processar", "Cancelar", "Programar" });
