@@ -3,6 +3,8 @@ using SGP.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace SGP.Models
 {
@@ -34,6 +36,8 @@ namespace SGP.Models
 
         public bool ValidarLogin()
         {
+            var senhaCriptografada = CriptografarSenha(Senha);
+
             string sql = $@"SELECT DISTINCT U.IdUsuario AS IdUsuario,
                                             F.Nome AS NomeUsuario,
                                             U.PerfilAcesso AS PerfilAcesso
@@ -41,7 +45,7 @@ namespace SGP.Models
                                  Funcionario F
                             WHERE U.Id_Funcionario = F.IdFuncionario
                               AND U.Login = '{Login}'
-                              AND U.Senha = '{Senha}'";
+                              AND U.Senha = '{senhaCriptografada}'";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -61,15 +65,16 @@ namespace SGP.Models
 
         public void GravarUsuario()
         {
+            var senhaCriptografada = CriptografarSenha(Senha);
             string sql;
 
             if (Id == 0)
             {
-                sql = $"INSERT INTO Usuario (Login, Senha, PerfilAcesso, Id_Funcionario) VALUES('{Login}','{Senha}','{PerfilAcesso}','{IdFuncionario}')";
+                sql = $"INSERT INTO Usuario (Login, Senha, PerfilAcesso, Id_Funcionario) VALUES('{Login}','{senhaCriptografada}','{PerfilAcesso}','{IdFuncionario}')";
             }
             else
             {
-                sql = $"UPDATE  Usuario SET Login = '{Login}',  Senha = '{Senha}', PerfilAcesso = '{PerfilAcesso}' WHERE Id_Funcionario = '{Id}'";
+                sql = $"UPDATE  Usuario SET Login = '{Login}',  Senha = '{senhaCriptografada}', PerfilAcesso = '{PerfilAcesso}' WHERE Id_Funcionario = '{Id}'";
             }
 
 
@@ -172,6 +177,25 @@ namespace SGP.Models
             string sql = $"DELETE FROM USUARIO WHERE IdUsuario = {id}";
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
+        }
+
+
+        public string CriptografarSenha(string senha)
+        {
+            MD5 md5Hash = MD5.Create();
+            // Converter a String para array de bytes, que é como a biblioteca trabalha.
+            byte[] data = md5Hash.ComputeHash(Encoding.UTF8.GetBytes(senha));
+
+            // Cria-se um StringBuilder para recompôr a string.
+            StringBuilder sBuilder = new StringBuilder();
+
+            // Loop para formatar cada byte como uma String em hexadecimal
+            for (int i = 0; i < data.Length; i++)
+            {
+                sBuilder.Append(data[i].ToString("x2"));
+            }
+
+            return sBuilder.ToString();
         }
     }
 }

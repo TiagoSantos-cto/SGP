@@ -344,10 +344,9 @@
         var celula2 = linha.insertCell(1);
         var celula3 = linha.insertCell(2);
 
-        var qtdSolicitada = document.getElementById('qtdSolicitada');
-
-        qtdAtual = qtdAtual - qtdSolicitada;
-
+        var qtdSolicitada = '';
+        qtdSolicitada = document.querySelector("#qtdSolicitada");
+      
         celula1.innerHTML = id;
         celula2.innerHTML = qtdSolicitada.value;
         celula3.innerHTML = "<button id ='remover' onclick='removeLinha(this)'>Remover</button>";
