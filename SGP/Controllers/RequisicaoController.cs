@@ -53,8 +53,6 @@ namespace SGP.Controllers
             var estacao = new EstacaoModel(HttpContextAccessor);
             ViewBag.ListaEstacao = estacao.ListaEstacao();
 
-            ViewBag.ListaItem = requisicao.ListaItem();
-
             return View();
         }
 

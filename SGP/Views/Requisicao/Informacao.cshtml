@@ -176,8 +176,10 @@
                     </thead>
 
                     @{
+                        
                         var lista = (List<ItemRequisicaoModel>)ViewBag.ItemRequisicao;
-                        if (lista.Count() > 0)
+                        
+                        if (lista != null)
                         {
                             foreach (var equipamento in lista)
                             {
@@ -192,7 +194,7 @@
                         else
                         {
                             <tbody>
-                                <tr>                                
+                                <tr>
                                 </tr>
                             </tbody>
                         }
@@ -331,7 +333,7 @@
                         @{
                             var contador = 1;
 
-                            foreach (var item in (List<EquipamentoModel>)ViewBag.ListaItem)
+                            foreach (var item in (List<EquipamentoModel>)ViewBag.ListaEquipamento)
                             {
                                 if (@item.Status.ToString() != "Indisponível")
                                 {
