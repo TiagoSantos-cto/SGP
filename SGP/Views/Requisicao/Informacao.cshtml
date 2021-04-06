@@ -50,7 +50,12 @@
 <!-- Campos -->
 <div style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
     <form asp-controller="Requisicao" asp-action="Informacao">
-        <input type="hidden" asp-for="Id" value="@vId" />
+      
+        <div class="mb-3">
+            <label>Requisição:</label>
+            <br />
+            <input type="number" class="form-control" asp-for="Id" value="@vId" style="width: 180px" disabled="disabled">          
+        </div>
 
         <div class="mb-3">
             <label>Data de abertura:</label>
@@ -60,7 +65,7 @@
         </div>
 
         <div class="form-group">
-            <label>Responsável:</label>
+            <label>Usuário solicitante:</label>
             @{
                 if (string.IsNullOrEmpty(vNomeUsuarioResponsavel))
                 {
@@ -176,9 +181,9 @@
                     </thead>
 
                     @{
-                        
+
                         var lista = (List<ItemRequisicaoModel>)ViewBag.ItemRequisicao;
-                        
+
                         if (lista != null)
                         {
                             foreach (var equipamento in lista)
@@ -187,6 +192,7 @@
                                     <tr>
                                         <td>@equipamento.CodigoEquipamento.ToString()</td>
                                         <td>@equipamento.Quantidade.ToString()</td>
+                                        <td><button id='remover' onclick='removeLinha(this)'>Remover</button></td>
                                     </tr>
                                 </tbody>
                             }
@@ -366,6 +372,7 @@
 
 <script type="text/javascript">
 
+
     function Add(id, contador) {
 
         var tabela = document.getElementById('TabelaItens');
@@ -384,8 +391,7 @@
         celula2.innerHTML = quantidade.value;
         celula3.innerHTML = "<button id ='remover' onclick='removeLinha(this)'>Remover</button>";
 
-        window.close();
-
+  
     }
 
     function removeLinha(linha) {
