@@ -50,11 +50,11 @@
 <!-- Campos -->
 <div style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
     <form asp-controller="Requisicao" asp-action="Informacao">
-      
+
         <div class="mb-3">
             <label>Requisição:</label>
             <br />
-            <input type="number" class="form-control" asp-for="Id" value="@vId" style="width: 180px" disabled="disabled">          
+            <input type="number" class="form-control" asp-for="Id" value="@vId" style="width: 180px" disabled="disabled">
         </div>
 
         <div class="mb-3">
@@ -65,7 +65,7 @@
         </div>
 
         <div class="form-group">
-            <label>Usuário solicitante:</label>
+            <label>Requisitante:</label>
             @{
                 if (string.IsNullOrEmpty(vNomeUsuarioResponsavel))
                 {
@@ -170,47 +170,26 @@
         <fieldset class="scheduler-border">
             <legend class="scheduler-border">Equipamentos solicitados</legend>
 
-            <div class="form-group" style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
-                <table class="table table-bordered" id="TabelaItens">
-                    <thead>
-                        <tr>
-                            <th>Código item</th>
-                            <th>Quantidade solicitada</th>
-                            <th> </th>
-                        </tr>
-                    </thead>
+            <div class="form-group" style="background-color: ghostwhite;">
 
-                    @{
+                <select asp-for="ItensRequisicaoTela" class="custom-select" multiple aria-label="multiple select example" style="width:250px" id="mySelect" data-live-search="true">
 
-                        var lista = (List<ItemRequisicaoModel>)ViewBag.ItemRequisicao;
+                    <optgroup label="Código   -   Quantidade"></optgroup>
 
-                        if (lista != null)
-                        {
-                            foreach (var equipamento in lista)
+                        @{
+                            var lista = (List<ItemRequisicaoModel>)ViewBag.ItemRequisicao;
+
+                            if (lista != null)
                             {
-                                <tbody>
-                                    <tr>
-                                        <td>@equipamento.CodigoEquipamento.ToString()</td>
-                                        <td>@equipamento.Quantidade.ToString()</td>
-                                        <td><button id='remover' onclick='removeLinha(this)'>Remover</button></td>
-                                    </tr>
-                                </tbody>
+                                foreach (var equipamento in lista)
+                                {
+                                    <option value="@equipamento.CodigoEquipamento.ToString();@equipamento.Quantidade.ToString()" data-mdb-secondary-text="Secondary text">@equipamento.CodigoEquipamento.ToString()  -  @equipamento.Quantidade.ToString()</option>
+                                }
                             }
-                        }
-                        else
-                        {
-                            <tbody>
-                                <tr>
-                                </tr>
-                            </tbody>
-                        }
-
-                    }
-
-                </table>
-
+                        }              
+                </select>
             </div>
-
+          
             <!-- Botão para acionar modal -->
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado"> Adicionar item </button>
 
@@ -352,7 +331,7 @@
                                             <td><img src="@item.ImagemPath.ToString()" width="50" height="50" /></td>
                                             <td class="text-center" id="qtdAtual">@item.Quantidade.ToString()</td>
                                             <td class="text-center"><input type="number" id="@identificador" style="width:60px" min='0' max="@item.Quantidade.ToString()"></td>
-                                            <td><button type="submit" class=" btn btn-success" onclick="Add('@item.Id.ToString()', @contador.ToString())">Adicionar</button></td>
+                                            <td><button type="submit" class=" btn btn-success" onclick="addOption('@item.Id.ToString()', '@contador.ToString()')">Adicionar</button></td>
                                         </tr>
                                     </tbody>
                                 }
@@ -373,25 +352,22 @@
 <script type="text/javascript">
 
 
-    function Add(id, contador) {
+    function addOption(id, contador) {
 
-        var tabela = document.getElementById('TabelaItens');
-        var numeroLinhas = tabela.rows.length;
-        var linha = tabela.insertRow(numeroLinhas);
-
-        var celula1 = linha.insertCell(0);
-        var celula2 = linha.insertCell(1);
-        var celula3 = linha.insertCell(2);
 
         var identificador = "qtdSolicidatada" + contador;
 
         var quantidade = document.getElementById(identificador);
+        
+        var text = id + ' - ' + quantidade.value;
 
-        celula1.innerHTML = id;
-        celula2.innerHTML = quantidade.value;
-        celula3.innerHTML = "<button id ='remover' onclick='removeLinha(this)'>Remover</button>";
+        var valor = id +';'+ quantidade.value;
 
-  
+        var option = new Option(text, valor);
+
+        var select = document.getElementById("mySelect");
+
+        select.add(option);
     }
 
     function removeLinha(linha) {

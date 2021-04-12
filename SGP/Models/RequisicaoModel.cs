@@ -50,6 +50,8 @@ namespace SGP.Models
 
         public IList<ItemRequisicaoModel> ItensRequisicao { get; set; }
 
+        public IList<string> ItensRequisicaoTela { get; set; }
+
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
         public RequisicaoModel()
@@ -305,9 +307,26 @@ namespace SGP.Models
                 ExcluirListaItens(dal, Id);
             }
 
-            foreach (var item in ItensRequisicao)
+            var listaGravacao = new List<ItemRequisicaoModel>();
+         
+            foreach (var item in ItensRequisicaoTela)
             {
-                sqlListaItens = $"INSERT INTO itemrequisicao (Quantidade, Descricao, Id_Equipamento, Id_Requisicao) VALUES ('{item.Quantidade}', '','{item.CodigoEquipamento}','{item.CodigoRequisicao}')";
+                string dados = item;
+                string[] dadosDoItem = dados.Split(';');
+
+                var newItem = new ItemRequisicaoModel
+                {
+                    CodigoRequisicao = Id,
+                    CodigoEquipamento = dadosDoItem[0],
+                    Quantidade = Convert.ToInt32(dadosDoItem[1])
+                };
+
+                listaGravacao.Add(newItem);
+            }
+
+            foreach (var item in listaGravacao)
+            {
+                sqlListaItens = $"INSERT INTO itemrequisicao (Quantidade, Id_Equipamento, Id_Requisicao) VALUES ('{item.Quantidade}', '{item.CodigoEquipamento}', '{item.CodigoRequisicao}')";
                 dal.ExecutarComandoSQL(sqlListaItens);
             }
         }
