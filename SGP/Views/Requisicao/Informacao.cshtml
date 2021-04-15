@@ -172,7 +172,7 @@
 
             <div class="form-group" style="background-color: ghostwhite;">
 
-                <select asp-for="ItensRequisicaoTela" class="custom-select" multiple aria-label="multiple select example" style="width:250px" id="mySelect" data-live-search="true">
+                <select asp-for="ItensRequisicaoTela" class="custom-select"  style="width:250px" id="mySelect" multiple >
 
                     <optgroup label="Código   -   Quantidade"></optgroup>
 
@@ -183,12 +183,13 @@
                             {
                                 foreach (var equipamento in lista)
                                 {
-                                    <option value="@equipamento.CodigoEquipamento.ToString();@equipamento.Quantidade.ToString()" data-mdb-secondary-text="Secondary text">@equipamento.CodigoEquipamento.ToString()  -  @equipamento.Quantidade.ToString()</option>
+                                    <option value="@equipamento.CodigoEquipamento.ToString();@equipamento.Quantidade.ToString()" selected="selected">@equipamento.CodigoEquipamento.ToString()  -  @equipamento.Quantidade.ToString()</option>
                                 }
                             }
                         }              
                 </select>
             </div>
+
           
             <!-- Botão para acionar modal -->
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado"> Adicionar item </button>
@@ -358,16 +359,16 @@
         var identificador = "qtdSolicidatada" + contador;
 
         var quantidade = document.getElementById(identificador);
-        
+
         var text = id + ' - ' + quantidade.value;
 
         var valor = id +';'+ quantidade.value;
 
-        var option = new Option(text, valor);
+        var option = new Option(text, valor, true, true);
 
         var select = document.getElementById("mySelect");
 
-        select.add(option);
+        select.add(option);            
     }
 
     function removeLinha(linha) {

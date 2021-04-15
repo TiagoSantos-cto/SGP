@@ -30,7 +30,7 @@ namespace SGP.Controllers
             }
             return View();
         }
-
+    
         [HttpGet]
         public IActionResult Informacao(int? id)
         {
