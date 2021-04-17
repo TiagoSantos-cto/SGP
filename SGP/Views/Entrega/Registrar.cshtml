@@ -1,0 +1,148 @@
+﻿@model EntregaModel
+
+@{
+    ViewData["Title"] = "Entrega";
+}
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+@{
+    var vIdEntrega = string.Empty;
+    var vIdRequisicao = string.Empty;
+    var vDataMaisCedo = string.Empty;
+    var vDataMaisTarde = string.Empty;
+    var vStatus = string.Empty;
+    var vIdEmbarcacao = string.Empty;
+
+    try
+    {
+        vIdEntrega = @ViewBag.Registro.IdEntrega.ToString();
+        vIdRequisicao = @ViewBag.Registro.IdRequisicao.ToString();
+        vDataMaisCedo = Convert.ToDateTime(@ViewBag.Registro.DataMaisCedo).ToString("yyyy-MM-dd");
+        vDataMaisTarde = Convert.ToDateTime(@ViewBag.Registro.DataMaisTarde).ToString("yyyy-MM-dd");
+        vStatus = @ViewBag.Registro.Status.ToString();
+        vIdEmbarcacao = @ViewBag.Registro.IdEmbarcacao.ToString();
+    }
+    catch { }
+}
+
+
+<div class="row text-left" style="padding-left: 30px;">
+    <div>
+        <h2>Entrega</h2>
+        <h6>Cadastro de entrega e transporte</h6>
+    </div>
+    <div style="padding-left: 30px;">
+        <img src="~/images/movimentacao-icon.png" width="63" height="63" />
+    </div>
+</div>
+<br />
+
+<div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
+    <form asp-controller="Entrega" asp-action="Registrar" class="needs-validation" novalidate>
+
+        <div class="mb-3">
+            <label>Código entrega:</label>
+            <br />
+            <input type="number" class="form-control" asp-for="IdEntrega" value="@vIdEntrega" style="width: 180px" disabled="disabled">
+        </div>
+
+        <div class="mb-3">
+            <label>Código requisição:</label>
+            <br />
+            <input type="number" class="form-control" asp-for="IdRequisicao" value="@vIdRequisicao" style="width: 180px">
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <br />
+                <label>Data mais cedo:</label>
+                <input type="date" class="form-control" asp-for="IdRequisicao" value="@vDataMaisCedo">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <br />
+                <label>Data mais tarde:</label>
+                <input type="date" class="form-control" asp-for="DataMaisTarde" value="@vDataMaisTarde">
+            </div>
+        </div>
+       
+        <br />
+
+        <div class="row">
+
+            <div class="col-md-3 mb-3">
+                <label>Embarcação:</label>
+
+                <select asp-for="IdEmbarcacao" class="form-control" style="width: 180px" required>
+
+                    @{
+                        if (string.IsNullOrEmpty(@vIdEmbarcacao))
+                        {
+                            <option value="">Selecionar...</option>
+                            foreach (var item in (List<EmbarcacaoModel>)ViewBag.ListaEmbarcacao)
+                            {
+                                <option value="@item.Id.ToString()">@item.Nome.ToString()</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="@vIdEmbarcacao">@vIdEmbarcacao</option>
+                            
+                            foreach (var item in (List<EmbarcacaoModel>)ViewBag.ListaEmbarcacao)
+                            {
+                                if (item.Id.ToString() != @vIdEmbarcacao)
+                                {
+                                    <option value="@item.Id.ToString()">@item.Nome</option>
+                                }
+                            }
+                        }
+                    }
+
+                </select>
+                <div class="invalid-feedback">
+                    Selecione uma embarcação para transporte.
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-4" style="padding-left:40px">
+                <label>Status:</label>
+
+                <select asp-for="Status" class="form-control" style="width: 180px">
+
+                    @{
+
+                        if (string.IsNullOrEmpty(vStatus))
+                        {
+                            <option value="">Selecionar...</option>
+                            <option value="Processamento">Processamento</option>
+                            <option value="Transito">Transito</option>
+                            <option value="Encerrada">Encerrada</option>
+                        }
+                        else
+                        {
+                            <option value="@vStatus">@vStatus</option>
+
+                            foreach (var item in (List<string>)ViewBag.ListaStatus)
+                            {
+                                if (vStatus != item)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            }
+                        }
+                    }
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-block btn-success ">Gravar</button>
+
+    </form>
+</div>
+
+

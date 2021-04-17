@@ -11,9 +11,9 @@ namespace SGP.Controllers
 
         public RequisicaoController(IHttpContextAccessor httpContextAccessor) { HttpContextAccessor = httpContextAccessor; }
 
-        public IActionResult Index()
+        public IActionResult Index(RequisicaoModel requisicao)
         {
-            var requisicao = new RequisicaoModel(HttpContextAccessor);
+            ViewBag.Registro = requisicao;
 
             return View();
         }
@@ -26,7 +26,7 @@ namespace SGP.Controllers
             {
                 requisicao.HttpContextAccessor = HttpContextAccessor;
                 requisicao.Gravar();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", requisicao);
             }
             return View();
         }
