@@ -208,7 +208,7 @@
                 <div class="form-group col-md-4 mb-3">
                     <label>Etapa:</label>
 
-                    <select asp-for="Status" class="form-control" style="width: 180px">
+                    <select asp-for="Status" class="form-control" style="width: 180px" id="selectStatus" onchange="LiberarTransporte()">
 
                         @{
 
@@ -276,7 +276,7 @@
 
             </div>
 
-            <button type="button" class=" btn btn-info" onclick="Editar()">Processar entrega</button>
+            <button id="btnEntrega" type="button" class=" btn btn-info" onclick="Editar()" style="display:none">Processar entrega</button>
 
         </fieldset>
 
@@ -384,6 +384,15 @@
     function Editar() {
         var id = document.getElementById('ID').value;
         window.location.href = "../../Entrega/Registrar/" + id;
+    }
+
+    function LiberarTransporte() {
+        var select = document.getElementById('selectStatus');
+        var option = select.options[select.selectedIndex].value;
+
+        if (option == "Processar") {
+            document.getElementById('btnEntrega').style.display = 'inline';
+        }
     }
 
 </script>

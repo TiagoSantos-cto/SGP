@@ -11,6 +11,7 @@ namespace SGP.Models
         public int IdRequisicao { get; set; }
         public string Status { get; set; }
         public int IdEmbarcacao { get; set; }
+        public string NomeEmbarcacao { get; set; }
         public string DataMaisCedo { get; set; }
         public string DataMaisTarde { get; set; }
 
@@ -54,14 +55,15 @@ namespace SGP.Models
                     DataMaisCedo = dt.Rows[0]["DTCEDO"] != null ? Convert.ToDateTime(dt.Rows[0]["DTCEDO"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
                     DataMaisTarde = dt.Rows[0]["DTTARDE"] != null ? Convert.ToDateTime(dt.Rows[0]["DTTARDE"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
                     Status = dt.Rows[0]["STATUS"] != null ? dt.Rows[0]["STATUS"].ToString() : string.Empty,
-                    IdEmbarcacao = dt.Rows[0]["ID_EMBARCACAO"] != null ? Convert.ToInt32(dt.Rows[0]["ID_EMBARCACAO"].ToString()) : 0
+                    IdEmbarcacao = dt.Rows[0]["ID_EMBARCACAO"] != null ? Convert.ToInt32(dt.Rows[0]["ID_EMBARCACAO"].ToString()) : 0,
+                    NomeEmbarcacao = "NomeEmbarcação"
                 };
                
                 entity = obj;
             }
             else
             {
-                entity.IdRequisicao = (int)idRequisicao;
+                entity.IdRequisicao = idRequisicao != null ? (int)idRequisicao : 0;
             }
 
             return entity;
