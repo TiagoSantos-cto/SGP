@@ -86,19 +86,22 @@ namespace SGP.Models
                
                 sqlEntrega = $"insert into Entrega (IdEntrega, Status, DataMaisCedo, DataMaisTarde) values ('{IdEntrega}', '{Status}', '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}', '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}')";
                 sqlEmbarcacaoEntrega = $"insert into EmbarcacaoEntrega (Id_Embarcacao, Id_Entrega) values ('{IdEmbarcacao}', '{IdEntrega}')";
-                sqlEntregaRequisicao = $"insert into EntregaRequisicao (Id_Entrega, Id_Requisicao) values ('{IdEntrega}', '{IdRequisicao}')";
-                
-                dal.ExecutarComandoSQL(sqlEntregaRequisicao);
-                
+                sqlEntregaRequisicao = $"insert into EntregaRequisicao (Id_Entrega, Id_Requisicao) values ('{IdEntrega}', '{IdRequisicao}')";  
             }
             else
             {
                 sqlEntrega = $"update Entrega set Status = '{Status}', DataMaisCedo = '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}', DataMaisTarde = '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}'  where IdEntrega = '{IdEntrega}'";
                 sqlEmbarcacaoEntrega = $"update embarcacaoentrega set Id_Embarcacao = '{IdEmbarcacao}' where Id_Entrega = '{IdEntrega}'";
             }
-
+            
+            dal.ExecutarComandoSQL(sqlEntrega);
             dal.ExecutarComandoSQL(sqlEmbarcacaoEntrega);
-            dal.ExecutarComandoSQL(sqlEntrega);     
+            
+            if (!string.IsNullOrEmpty(sqlEntregaRequisicao))
+            {
+                dal.ExecutarComandoSQL(sqlEntregaRequisicao);
+            }
+          
         }
 
         private int GerarSequencial()

@@ -291,9 +291,9 @@ namespace SGP.Models
                       $"Destino = '{Destino}', UsuarioAtual = '{UsuarioAtual}', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{Id}'";
             }
 
-            GravarLista();
-
             dal.ExecutarComandoSQL(sql);
+           
+            GravarLista(); 
         }
 
         private void GravarLista()
@@ -308,21 +308,26 @@ namespace SGP.Models
             }
 
             var listaGravacao = new List<ItemRequisicaoModel>();
-         
-            foreach (var item in ItensRequisicaoTela)
+           
+            
+            if (ItensRequisicaoTela != null)
             {
-                string dados = item;
-                string[] dadosDoItem = dados.Split(';');
-
-                var newItem = new ItemRequisicaoModel
+                foreach (var item in ItensRequisicaoTela)
                 {
-                    CodigoRequisicao = Id,
-                    CodigoEquipamento = dadosDoItem[0],
-                    Quantidade = Convert.ToInt32(dadosDoItem[1])
-                };
+                    string dados = item;
+                    string[] dadosDoItem = dados.Split(';');
 
-                listaGravacao.Add(newItem);
+                    var newItem = new ItemRequisicaoModel
+                    {
+                        CodigoRequisicao = Id,
+                        CodigoEquipamento = dadosDoItem[0],
+                        Quantidade = Convert.ToInt32(dadosDoItem[1])
+                    };
+
+                    listaGravacao.Add(newItem);
+                }
             }
+           
 
             foreach (var item in listaGravacao)
             {

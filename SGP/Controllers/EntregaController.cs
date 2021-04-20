@@ -11,13 +11,6 @@ namespace SGP.Controllers
         
         public EntregaController(IHttpContextAccessor httpContextAccessor) { HttpContextAccessor = httpContextAccessor; }
 
-
-        [HttpGet]
-        public IActionResult Buscar(int? id)
-        {
-            return RedirectToAction("Registrar", id);
-        }
-
         [HttpGet]
         public IActionResult Registrar(int? id)
         {
