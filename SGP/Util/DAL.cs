@@ -9,7 +9,7 @@ namespace SGP.Util
         private static string database = "sgp";
         private static string user = "root";
         private static string password = "";
-        private static string connectionString = $"Server={server};Database={database};Uid={user};Pwd={password}";
+        private static string connectionString = $"Server={server};Database={database};Uid={user};Pwd={password}; convert zero datetime=True";
         private MySqlConnection connection;
 
         //Executa conexão

@@ -48,13 +48,13 @@
         <div class="mb-3">
             <label>Código entrega:</label>
             <br />
-            <input type="number" class="form-control" asp-for="IdEntrega" value="@vIdEntrega" style="width: 180px" disabled="disabled">
+            <input type="number" class="form-control" asp-for="IdEntrega" value="@vIdEntrega" style="width: 180px">
         </div>
 
         <div class="mb-3">
             <label>Código requisição:</label>
             <br />
-            <input type="number" class="form-control" asp-for="IdRequisicao" value="@vIdRequisicao" style="width: 180px">
+            <input id="IDReq" type="number" class="form-control" asp-for="IdRequisicao" value="@vIdRequisicao" style="width: 180px">
         </div>
 
         <button id="btnBuscar" type="button" class=" btn btn-info" onclick="CarregarCampos()" style="display:inline">Buscar</button>
@@ -63,7 +63,7 @@
             <div class="col-md-6 mb-3">
                 <br />
                 <label>Data mais cedo:</label>
-                <input type="date" class="form-control" asp-for="IdRequisicao" value="@vDataMaisCedo">
+                <input type="date" class="form-control" asp-for="DataMaisCedo" value="@vDataMaisCedo">
             </div>
 
             <div class="col-md-6 mb-3">
@@ -149,3 +149,12 @@
 
     </form>
 </div>
+
+<script>
+
+    function CarregarCampos() {
+        var id = document.getElementById('IDReq').value;
+        window.location.href = "../../Entrega/Registrar/" + id;
+    }
+
+</script>

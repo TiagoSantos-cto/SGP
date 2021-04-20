@@ -11,7 +11,13 @@ namespace SGP.Controllers
         
         public EntregaController(IHttpContextAccessor httpContextAccessor) { HttpContextAccessor = httpContextAccessor; }
 
-       
+
+        [HttpGet]
+        public IActionResult Buscar(int? id)
+        {
+            return RedirectToAction("Registrar", id);
+        }
+
         [HttpGet]
         public IActionResult Registrar(int? id)
         {
@@ -21,11 +27,11 @@ namespace SGP.Controllers
             var ListaEmbarcacao = new EmbarcacaoModel(HttpContextAccessor);
             ViewBag.ListaEmbarcacao = ListaEmbarcacao.ListaEmbarcacao();
 
-            ViewBag.ListaStatus = new List<string>(new string[] { "Processamento", "Trânsito", "Encerrada"});
+            ViewBag.ListaStatus = new List<string>(new string[] { "Processamento", "Transito", "Encerrada"});
 
             return View();
         }
-
+       
         [HttpPost]
         public IActionResult Registrar(EntregaModel Entrega)
         {

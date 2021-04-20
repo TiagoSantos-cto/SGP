@@ -276,7 +276,7 @@
 
             </div>
 
-            <button id="btnEntrega" type="button" class=" btn btn-info" onclick="Editar()" style="display:none">Processar entrega</button>
+            <button id="btnEntrega" type="button" class=" btn btn-info" onclick="Editar()" style="display:none">Programar entrega</button>
 
         </fieldset>
 
@@ -390,7 +390,7 @@
         var select = document.getElementById('selectStatus');
         var option = select.options[select.selectedIndex].value;
 
-        if (option == "Processar") {
+        if (option == "Programar") {
             document.getElementById('btnEntrega').style.display = 'inline';
         }
     }

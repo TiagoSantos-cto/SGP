@@ -33,12 +33,15 @@ namespace SGP.Models
                                E.DataMaisTarde AS DTTARDE,
                                E.Status AS STATUS,
                                ER.Id_Requisicao AS ID_REQUISICAO,
-                               EE.Id_Embarcacao AS ID_EMBARCACAO
+                               EE.Id_Embarcacao AS ID_EMBARCACAO,
+                               EB.Nome AS NOME_EMBARCACAO
                         FROM entrega E,
                              entregarequisicao ER,
-                             embarcacaoentrega EE
+                             embarcacaoentrega EE,
+                             embarcacao EB
                         WHERE E.IdEntrega = ER.Id_Entrega
                           AND EE.Id_Entrega = E.IdEntrega
+                          AND EB.IdEmbarcacao = EE.Id_Embarcacao
                           AND ER.Id_Requisicao  = '{id}'";
 
             var dal = new DAL();
@@ -56,7 +59,7 @@ namespace SGP.Models
                     DataMaisTarde = dt.Rows[0]["DTTARDE"] != null ? Convert.ToDateTime(dt.Rows[0]["DTTARDE"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
                     Status = dt.Rows[0]["STATUS"] != null ? dt.Rows[0]["STATUS"].ToString() : string.Empty,
                     IdEmbarcacao = dt.Rows[0]["ID_EMBARCACAO"] != null ? Convert.ToInt32(dt.Rows[0]["ID_EMBARCACAO"].ToString()) : 0,
-                    NomeEmbarcacao = "NomeEmbarcação"
+                    NomeEmbarcacao = dt.Rows[0]["NOME_EMBARCACAO"] != null ? dt.Rows[0]["NOME_EMBARCACAO"].ToString() : string.Empty
                 };
                
                 entity = obj;
@@ -71,26 +74,31 @@ namespace SGP.Models
 
         public void GravarEntrega()
         {
-            string sqlEntrega;
+            string sqlEntrega = string.Empty;
             string sqlEmbarcacaoEntrega = string.Empty;
             string sqlEntregaRequisicao = string.Empty;
-                   
-            if (!Existe(IdEntrega))
+
+            var dal = new DAL();
+
+            if (!Existe(IdEntrega, IdRequisicao))
             {
                 IdEntrega = GerarSequencial();
-                sqlEntrega = $"insert into Entrega (IdEntrega, Status, DataMaisCedo, DataMaisTarde) values ('{IdEntrega}', '{Status}', '{DataMaisCedo}', '{DataMaisTarde}')";
+               
+                sqlEntrega = $"insert into Entrega (IdEntrega, Status, DataMaisCedo, DataMaisTarde) values ('{IdEntrega}', '{Status}', '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}', '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}')";
                 sqlEmbarcacaoEntrega = $"insert into EmbarcacaoEntrega (Id_Embarcacao, Id_Entrega) values ('{IdEmbarcacao}', '{IdEntrega}')";
                 sqlEntregaRequisicao = $"insert into EntregaRequisicao (Id_Entrega, Id_Requisicao) values ('{IdEntrega}', '{IdRequisicao}')";
+                
+                dal.ExecutarComandoSQL(sqlEntregaRequisicao);
+                
             }
             else
             {
-                sqlEntrega = $"update Entrega set Status = '{Status}', DataMaisCedo = '{DataMaisCedo}', DataMaisTarde = '{DataMaisTarde}'  where IdEntrega = '{IdEntrega}'";
+                sqlEntrega = $"update Entrega set Status = '{Status}', DataMaisCedo = '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}', DataMaisTarde = '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}'  where IdEntrega = '{IdEntrega}'";
+                sqlEmbarcacaoEntrega = $"update embarcacaoentrega set Id_Embarcacao = '{IdEmbarcacao}' where Id_Entrega = '{IdEntrega}'";
             }
 
-            var dal = new DAL();
-            dal.ExecutarComandoSQL(sqlEntrega);
-            dal.ExecutarComandoSQL(sqlEntregaRequisicao);
-            dal.ExecutarComandoSQL(sqlEmbarcacaoEntrega);       
+            dal.ExecutarComandoSQL(sqlEmbarcacaoEntrega);
+            dal.ExecutarComandoSQL(sqlEntrega);     
         }
 
         private int GerarSequencial()
@@ -136,9 +144,9 @@ namespace SGP.Models
             return lista;
         }
 
-        public bool Existe(int id)
+        public bool Existe(int idEntrega, int idRequisicao)
         {
-            var sql = $"select IdEntrega from Entrega where IdEntrega = '{id}'";
+            var sql = $"select * from EntregaRequisicao where Id_Entrega = '{idEntrega}' AND Id_Requisicao = '{idRequisicao}' ";
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
