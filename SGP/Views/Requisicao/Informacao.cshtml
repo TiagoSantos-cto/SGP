@@ -35,7 +35,6 @@
     }
     catch { }
 }
-
 <!-- Cabeçalho -->
 <div class="row text-left" style="padding-left: 30px;">
     <div>
@@ -172,27 +171,27 @@
 
             <div class="form-group" style="background-color: ghostwhite;">
 
-                <select asp-for="ItensRequisicaoTela" class="custom-select"  style="width:250px" id="mySelect" multiple >
+                <select asp-for="ItensRequisicaoTela" class="custom-select" style="width:250px" id="mySelect" multiple>
 
                     <optgroup label="Código   -   Quantidade"></optgroup>
 
-                        @{
-                            var lista = (List<ItemRequisicaoModel>)ViewBag.ItemRequisicao;
+                    @{
+                        var lista = (List<ItemRequisicaoModel>)ViewBag.ItemRequisicao;
 
-                            if (lista != null)
+                        if (lista != null)
+                        {
+                            foreach (var equipamento in lista)
                             {
-                                foreach (var equipamento in lista)
-                                {
-                                    <option value="@equipamento.CodigoEquipamento.ToString();@equipamento.Quantidade.ToString()" selected="selected">@equipamento.CodigoEquipamento.ToString()  -  @equipamento.Quantidade.ToString()</option>
-                                }
+                                <option value="@equipamento.CodigoEquipamento.ToString();@equipamento.Quantidade.ToString()" selected="selected">@equipamento.CodigoEquipamento.ToString()  -  @equipamento.Quantidade.ToString()</option>
                             }
-                        }              
+                        }
+                    }
                 </select>
+
             </div>
 
-          
             <!-- Botão para acionar modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado"> Adicionar item </button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado" id="btnAdicionar" style="display:none"> Adicionar item </button>
 
         </fieldset>
 
@@ -286,6 +285,7 @@
 </div>
 
 
+
 <!-- Modal -->
 <div class="modal fade" id="ExemploModalCentralizado" tabindex="-1" role="dialog" aria-labelledby="TituloModalCentralizado" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -355,9 +355,17 @@
 
 <script type="text/javascript">
 
+    window.onload = function () {
+        var id = document.getElementById('ID').value;
+
+        if (id != 0) {
+            document.getElementById('btnAdicionar').style.display = 'inline';
+        }  
+
+        LiberarTransporte();
+    } 
 
     function addOption(id, contador) {
-
 
         var identificador = "qtdSolicidatada" + contador;
 
@@ -365,13 +373,13 @@
 
         var text = id + ' - ' + quantidade.value;
 
-        var valor = id +';'+ quantidade.value;
+        var valor = id + ';' + quantidade.value;
 
         var option = new Option(text, valor, true, true);
 
         var select = document.getElementById("mySelect");
 
-        select.add(option);            
+        select.add(option);
     }
 
     function removeLinha(linha) {

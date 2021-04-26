@@ -59,18 +59,11 @@
 
         <button id="btnBuscar" type="button" class=" btn btn-info" onclick="CarregarCampos()" style="display:inline">Buscar</button>
 
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <br />
-                <label>Data mais cedo:</label>
-                <input type="date" class="form-control" asp-for="DataMaisCedo" value="@vDataMaisCedo">
-            </div>
 
-            <div class="col-md-6 mb-3">
-                <br />
-                <label>Data mais tarde:</label>
-                <input type="date" class="form-control" asp-for="DataMaisTarde" value="@vDataMaisTarde">
-            </div>
+        <div class="mb-3">
+            <br />
+            <label>Previsão de entrega:</label>
+            <input type="date" class="form-control" asp-for="DataMaisTarde" value="@vDataMaisTarde" style="width: 180px">
         </div>
 
         <br />
