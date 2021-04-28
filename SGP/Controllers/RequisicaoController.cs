@@ -66,6 +66,22 @@ namespace SGP.Controllers
         }
 
         [HttpGet]
+        public IActionResult Encerrar(int id)
+        {
+            var conta = new RequisicaoModel(HttpContextAccessor);
+            conta.Encerrar(id);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Cancelar(int id)
+        {
+            var conta = new RequisicaoModel(HttpContextAccessor);
+            conta.Cancelar(id);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
         [HttpPost]
         public IActionResult Atendimentos(RequisicaoModel entity)
         {

@@ -17,6 +17,8 @@
     var vNomeEstacaoDestino = string.Empty;
     var vUsuarioAtual = string.Empty;
     var vNomeUsuarioAtual = string.Empty;
+    var vVbCancelada = 0;
+    var vVbEncerrada = 0;
 
     try
     {
@@ -32,6 +34,8 @@
         vNomeEstacaoDestino = @ViewBag.Registro.NomeEstacaoDestino.ToString();
         vUsuarioAtual = @ViewBag.Registro.UsuarioAtual.ToString();
         vNomeUsuarioAtual = @ViewBag.Registro.NomeUsuarioAtual.ToString();
+        vVbCancelada = Convert.ToInt32(@ViewBag.Registro.VbCancelada);
+        vVbEncerrada = Convert.ToInt32(@ViewBag.Registro.VbEncerrada);
     }
     catch { }
 }
@@ -47,13 +51,33 @@
 <br />
 
 <!-- Campos -->
-<div style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
+<div id="divCampos" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
     <form asp-controller="Requisicao" asp-action="Informacao">
 
-        <div class="mb-3">
-            <label>Requisição:</label>
-            <br />
-            <input id="ID" type="number" class="form-control" asp-for="Id" value="@vId" style="width: 180px" disabled="disabled">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label>Requisição:</label>
+                <br />
+                <input id="ID" type="number" class="form-control" asp-for="Id" value="@vId" style="width: 180px" disabled="disabled">
+            </div>
+
+            <div class="col-md-3 mb-lg-5">
+                @{
+                    if (vVbCancelada > 0)
+                    {
+                        <label style="color:red;font:700;padding-left: 700px">CANCELADA</label>
+                    }
+                    else if (vVbEncerrada > 0)
+                    {
+                        <label style="color:red;font:700;padding-left: 700px">ENCERRADA</label>
+                    }
+                    else
+                    {
+                        <label style="color:green;font:700;padding-left: 700px">ATIVA</label>
+                    }
+                }
+            </div>
+
         </div>
 
         <div class="mb-3">
@@ -207,7 +231,7 @@
                 <div class="form-group col-md-4 mb-3">
                     <label>Etapa:</label>
 
-                    <select asp-for="Status" class="form-control" style="width: 180px" id="selectStatus" onchange="LiberarTransporte()">
+                    <select asp-for="Status" class="form-control" style="width: 180px" id="selectStatus">
 
                         @{
 
@@ -279,12 +303,14 @@
 
         </fieldset>
 
-        <button type="submit" class="btn btn-block btn-success ">Gravar</button>
+        <button id="btnGravar" type="submit" class="btn btn-block btn-success">Gravar</button>
+        <br />
+        <br />
+        <button id="btnEncerrar" type="button" class="btn btn-block btn-danger" onclick="EncerrarRequisicao()" style="display:none">Encerrar</button>
+        <button id="btnCancelar" type="button" class="btn btn-block btn-outline-danger" onclick="CancelarRequisicao()" style="display:none">Cancelar</button>
 
     </form>
 </div>
-
-
 
 <!-- Modal -->
 <div class="modal fade" id="ExemploModalCentralizado" tabindex="-1" role="dialog" aria-labelledby="TituloModalCentralizado" aria-hidden="true">
@@ -360,10 +386,14 @@
 
         if (id != 0) {
             document.getElementById('btnAdicionar').style.display = 'inline';
-        }  
+        }
+
+        if (@vVbCancelada > 0 || @vVbCancelada > 0) {
+            $("#divPrincipal").find("*").prop("disabled", true);
+        }
 
         LiberarTransporte();
-    } 
+    }
 
     function addOption(id, contador) {
 
@@ -398,9 +428,26 @@
         var select = document.getElementById('selectStatus');
         var option = select.options[select.selectedIndex].value;
 
-        if (option == "Programar") {
+        if (option == "Programar")
+        {
             document.getElementById('btnEntrega').style.display = 'inline';
         }
+        else if (option == "Cancelar")
+        {
+            document.getElementById('btnCancelar').style.display = 'inline';
+        }
+        else if (option == "Encerrar")
+        {
+            document.getElementById('btnEncerrar').style.display = 'inline';
+        }
+    }
+
+    function EncerrarRequisicao() {
+        window.location.href = "../Encerrar/" + @vId;
+    }
+
+    function CancelarRequisicao() {
+        window.location.href = "../Cancelar/" + @vId;
     }
 
 </script>
