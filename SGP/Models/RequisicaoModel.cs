@@ -152,6 +152,8 @@ namespace SGP.Models
                               usuario U
                           WHERE U.IdUsuario = R.UsuarioAtual
                            AND U.Id_Funcionario = F.IdFuncionario
+                           AND R.VbCancelada = 0
+                           AND R.VbEncerrada = 0
                           {filtro}
                          ORDER BY DATA DESC
                          LIMIT 10";

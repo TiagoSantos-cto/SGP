@@ -58,8 +58,12 @@
             <div class="col-md-3 mb-3">
                 <label>Requisição:</label>
                 <br />
-                <input id="ID" type="number" class="form-control" asp-for="Id" value="@vId" style="width: 180px" disabled="disabled">
+                <input id="ID" type="number" class="form-control" asp-for="Id" value="@vId" style="width: 180px">
+                <br />
+                <button id="btnBuscar" type="button" class=" btn btn-info" onclick="CarregarCampos()">Buscar</button>
             </div>
+
+           
 
             <div class="col-md-3 mb-lg-5">
                 @{
@@ -389,7 +393,7 @@
         }
 
         if (@vVbCancelada > 0 || @vVbCancelada > 0) {
-            $("#divPrincipal").find("*").prop("disabled", true);
+            $("#divPrincipal").find("*").prop("disabled", true); //COLOCAR PRA FUNCIONAR
         }
 
         LiberarTransporte();
@@ -450,6 +454,14 @@
         window.location.href = "../Cancelar/" + @vId;
     }
 
+    function CarregarCampos() {
+        var id = document.getElementById('ID').value;
+
+        if (id > 0) {
+            window.location.href = "../Informacao/" + id;
+        }  
+        
+    }
 </script>
 
 <style>
