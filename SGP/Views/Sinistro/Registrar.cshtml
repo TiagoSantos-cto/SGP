@@ -1,0 +1,190 @@
+﻿@model SinistroModel
+
+@{
+    ViewData["Title"] = "Sinistro";
+}
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+@{
+    var vIdSinistro = string.Empty;
+    var vIdRequisicao = string.Empty;
+    var vDataAbertura = DateTime.Now.ToString("yyyy-MM-dd");
+    var vDataFechamento = string.Empty;
+    var vStatus = string.Empty;
+    var vDescricao = string.Empty;
+    var vUsuarioReponsavel = string.Empty;
+    var vUsuarioAtual = string.Empty;
+    var vNomeUsuarioAtual = string.Empty;
+    var vNomeUsuarioResponsavel = string.Empty;
+
+    try
+    {
+        vIdSinistro = @ViewBag.Registro.IdSinistro.ToString();
+        vIdRequisicao = @ViewBag.Registro.IdRequisicao.ToString();
+        vDataAbertura = Convert.ToDateTime(@ViewBag.Registro.DataMaisCedo).ToString("yyyy-MM-dd");
+        vDataFechamento = Convert.ToDateTime(@ViewBag.Registro.DataMaisTarde).ToString("yyyy-MM-dd");
+        vStatus = @ViewBag.Registro.Status.ToString();
+        vDescricao = @ViewBag.Registro.IdEmbarcacao.ToString();
+        vUsuarioReponsavel = @ViewBag.Registro.NomeEmbarcacao.ToString();
+        vNomeUsuarioResponsavel = @ViewBag.Registro.NomeUsuarioResponsavel.ToString();
+    }
+    catch { }
+}
+
+
+<div class="row text-left" style="padding-left: 30px;">
+    <div>
+        <h2>Sinistro</h2>
+        <h6>Análise de sinistro</h6>
+    </div>
+    <div style="padding-left: 30px;">
+        <img src="~/images/search-icon.png" width="63" height="63" />
+    </div>
+</div>
+<br />
+
+<div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
+    <form asp-controller="Sinistro" asp-action="Registrar" class="needs-validation" novalidate>
+
+        <div>
+            <div class="mb-3">
+                <label>Código Sinistro:</label>
+                <br />
+                <input type="number" class="form-control" asp-for="Id" value="@vIdSinistro" style="width: 180px">
+            </div>
+
+            <div class="mb-3">
+                <label>Código requisição:</label>
+                <br />
+                <input id="IDReq" type="number" class="form-control" asp-for="IdRequisicao" value="@vIdRequisicao" style="width: 180px">
+            </div>
+
+            <button id="btnBuscar" type="button" class=" btn btn-info" onclick="CarregarCampos()" style="display:inline">Buscar</button>
+
+            <button id="btnReq" type="button" class=" btn btn-warning" onclick="AbriRequisicao()" style="display:inline">Requisição</button>
+        </div>
+
+        <br />
+
+        <div class="row">
+
+            <div class="col-md-4 mb-3">
+                <label>Requisitante:</label>
+                @{
+                    if (string.IsNullOrEmpty(vNomeUsuarioResponsavel))
+                    {
+                        @using Microsoft.AspNetCore.Http;
+                        @inject IHttpContextAccessor HttpContextAccessor
+                        <input type="hidden" asp-for="UsuarioResponsavel" value="@HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado")" />
+                        <input type="text" class="form-control" value="@HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado")" style="width: 180px" disabled>
+                    }
+                    else
+                    {
+                        <input type="text" class="form-control" value="@vNomeUsuarioResponsavel" style="width: 180px" disabled>
+                    }
+                }
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <label>Data de abertura:</label>
+                <input type="date" class="form-control" asp-for="DataAbertura" value="@vDataAbertura" style="width: 180px" disabled>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="form-group col-md-4 mb-3">
+                <label>Etapa:</label>
+
+                <select asp-for="Status" class="form-control" style="width: 180px" id="selectStatus">
+
+                    @{
+
+                        if (string.IsNullOrEmpty(vStatus))
+                        {
+                            <option value="">Selecionar...</option>
+                            <option value="Aberto">Aberto</option>
+                            <option value="EmAnalise">EmAnalise</option>
+                            <option value="Finalizado">Finalizado</option>
+                        }
+                        else
+                        {
+                            <option value="@vStatus">@vStatus</option>
+
+                            foreach (var item in (List<string>)ViewBag.ListaStatus)
+                            {
+                                if (vStatus != item)
+                                {
+                                    <option value="@item">@item</option>
+                                }
+                            }
+                        }
+                    }
+
+                </select>
+
+            </div>
+
+            <div class="form-group col-md-4 mb-3">
+                <label>Usuário:</label>
+                <select asp-for="UsuarioAtual" class="form-control" style="width: 180px">
+
+                    @{
+
+                        if (string.IsNullOrEmpty(vNomeUsuarioAtual))
+                        {
+                            <option value="">Selecionar...</option>
+                            foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
+                            {
+                                <option value="@item.Id.ToString()">@item.Login.ToString()</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="@vUsuarioAtual">@vNomeUsuarioAtual</option>
+                            foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
+                            {
+                                if (item.Id.ToString() != vUsuarioAtual)
+                                {
+                                    <option value="@item.Id.ToString()">@item.Login.ToString()</option>
+                                }
+                            }
+
+                        }
+                    }
+
+                </select>
+                <div class="invalid-feedback">
+                    Selecione um usuário para próxima etapa.
+                </div>
+            </div>
+
+        </div>
+
+        <br />
+
+        <button type="submit" class="btn btn-block btn-success ">Registrar</button>
+        <button id="btnEncerrar" type="button" class="btn btn-block btn-danger" onclick="Encerrar()" style="display:none">Encerrar</button>
+
+    </form>
+</div>
+
+<script>
+
+    function CarregarCampos() {
+        var id = document.getElementById('IDSinistro').value;
+        window.location.href = "../../Sinistro/Registrar/" + id;
+    }
+
+    function AbrirRquisicao() {
+        var id = document.getElementById('IDRequisicao').value;
+        window.location.href = "../../Requisicao/Registrar/" + id;
+    }
+
+     function Encerrar() {
+        window.location.href = "../Encerrar/" + @vIdSinistro;
+    }
+
+</script>
