@@ -1,0 +1,114 @@
+﻿@model SinistroModel
+@{
+    ViewData["Title"] = "Atendimentos de sinistro";
+}
+
+
+<div class="row text-left" style="padding-left: 30px;">
+    <div>
+        <h2>Atendimentos de sinistro</h2>
+    </div>
+    <div style="padding-left: 30px;">
+        <img src="~/images/registrar-icon.png" width="63" height="63" />
+    </div>
+</div>
+<br />
+
+<div class="container" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
+
+    <form asp-controller="Sinistro" asp-action="AtendimentosSinistro">
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <br />
+                <input type="date" class="form-control" asp-for="DataAbertura">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <br />
+                <input type="date" class="form-control" asp-for="DataFechamento">
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label>Status:</label>
+                <select asp-for="Status" class="form-control" style="width: 180px">
+                    <option value="Todos">Todos</option>
+                    <option value="Aberto">Aberto</option>
+                    <option value="Em análise">Em análise</option>
+                    <option value="Finalizado">Finalizado</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-6 mb-3">
+                <label>Usuário:</label>
+                <select asp-for="UsuarioAtual" class="form-control" style="width: 180px">
+
+                    @using Microsoft.AspNetCore.Http;
+                    @inject IHttpContextAccessor HttpContextAccessor
+
+                    <option value="@HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado")">@HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado")</option>
+
+                    @{
+                        foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
+                        {
+                            if (@item.Login.ToString() != @HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado"))
+                            {
+                                <option value="@item.Id.ToString()">@item.Login.ToString()</option>
+                            }
+                        }
+                    }
+
+                </select>
+            </div>
+        </div>
+        <br />
+
+        <button type="submit" class="btn btn-block btn-warning"><strong>Filtrar</strong></button>
+
+    </form>
+
+    <br />
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Número</th>
+                <th>Requisição</th>
+                <th>Data</th>
+                <th>Etapa</th>
+                <th>Descrição</th>
+                <th>Usuário</th>
+                <th> </th>
+            </tr>
+        </thead>
+
+        @{
+            foreach (var item in (List<SinistroModel>)ViewBag.ListaSinistro)
+            {
+                <tbody>
+                    <tr>
+                        <td>@item.Id.ToString()</td>
+                        <td>@item.IdRequisicao.ToString()</td>
+                        <td>@item.DataAbertura.ToString()</td>
+                        <td>@item.Status.ToString()</td>
+                        <td>@item.Descricao.ToString()</td>
+                        <td>@item.NomeUsuarioAtual.ToString()</td>
+                        <td><button type="button" class=" btn btn-primary" onclick="Editar(@item.IdRequisicao.ToString())">Abrir</button></td>
+                    </tr>
+                </tbody>
+            }
+        }
+
+    </table>
+</div>
+
+<script>
+    function Editar(id) {
+        window.location.href = "../Sinistro/Registrar/" + id;
+    }
+</script>
+
+

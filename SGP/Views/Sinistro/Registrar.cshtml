@@ -14,20 +14,20 @@
     var vDataFechamento = string.Empty;
     var vStatus = string.Empty;
     var vDescricao = string.Empty;
-    var vUsuarioReponsavel = string.Empty;
     var vUsuarioAtual = string.Empty;
     var vNomeUsuarioAtual = string.Empty;
     var vNomeUsuarioResponsavel = string.Empty;
 
     try
     {
-        vIdSinistro = @ViewBag.Registro.IdSinistro.ToString();
+        vIdSinistro = @ViewBag.Registro.Id.ToString();
         vIdRequisicao = @ViewBag.Registro.IdRequisicao.ToString();
-        vDataAbertura = Convert.ToDateTime(@ViewBag.Registro.DataMaisCedo).ToString("yyyy-MM-dd");
-        vDataFechamento = Convert.ToDateTime(@ViewBag.Registro.DataMaisTarde).ToString("yyyy-MM-dd");
+        vDataAbertura = Convert.ToDateTime(@ViewBag.Registro.DataAbertura).ToString("yyyy-MM-dd");
+        vDataFechamento = Convert.ToDateTime(@ViewBag.Registro.DataFechamento).ToString("yyyy-MM-dd");
         vStatus = @ViewBag.Registro.Status.ToString();
-        vDescricao = @ViewBag.Registro.IdEmbarcacao.ToString();
-        vUsuarioReponsavel = @ViewBag.Registro.NomeEmbarcacao.ToString();
+        vDescricao = @ViewBag.Registro.Descricao.ToString();
+        vUsuarioAtual = @ViewBag.Registro.UsuarioAtual.ToString();
+        vNomeUsuarioAtual = @ViewBag.Registro.NomeUsuarioAtual.ToString();
         vNomeUsuarioResponsavel = @ViewBag.Registro.NomeUsuarioResponsavel.ToString();
     }
     catch { }
@@ -49,21 +49,18 @@
     <form asp-controller="Sinistro" asp-action="Registrar" class="needs-validation" novalidate>
 
         <div>
-            <div class="mb-3">
-                <label>Código Sinistro:</label>
-                <br />
-                <input type="number" class="form-control" asp-for="Id" value="@vIdSinistro" style="width: 180px">
-            </div>
+
+            <input type="number" class="form-control" asp-for="Id" value="@vIdSinistro" style="width: 180px" hidden="hidden">
 
             <div class="mb-3">
                 <label>Código requisição:</label>
                 <br />
-                <input id="IDReq" type="number" class="form-control" asp-for="IdRequisicao" value="@vIdRequisicao" style="width: 180px">
+                <input id="IDReq" type="number" class="form-control" asp-for="IdRequisicao" value="@vIdRequisicao" style="width: 262px">
+                <span asp-validation-for="IdRequisicao" class="text-danger"></span>
             </div>
 
-            <button id="btnBuscar" type="button" class=" btn btn-info" onclick="CarregarCampos()" style="display:inline">Buscar</button>
-
-            <button id="btnReq" type="button" class=" btn btn-warning" onclick="AbriRequisicao()" style="display:inline">Requisição</button>
+            <button id="btnBuscar" type="button" class=" btn btn-info" onclick="CarregarCampos()">Buscar dados</button>
+            <button id="btnReq" type="button" class=" btn btn-warning" onclick="AbrirRequisicao()"> Abrir requisição</button>
         </div>
 
         <br />
@@ -71,7 +68,7 @@
         <div class="row">
 
             <div class="col-md-4 mb-3">
-                <label>Requisitante:</label>
+                <label>Solicitante:</label>
                 @{
                     if (string.IsNullOrEmpty(vNomeUsuarioResponsavel))
                     {
@@ -82,7 +79,7 @@
                     }
                     else
                     {
-                        <input type="text" class="form-control" value="@vNomeUsuarioResponsavel" style="width: 180px" disabled>
+                        <input type="text" class="form-control" asp-for="UsuarioResponsavel" value="@vNomeUsuarioResponsavel" style="width: 180px" disabled>
                     }
                 }
             </div>
@@ -94,7 +91,14 @@
 
         </div>
 
+        <div class="form-group">
+            <label>Descrição:</label>
+            @Html.TextArea("Descricao", vDescricao, new { @class = "form-control" })
+            <span asp-validation-for="Descricao" class="text-danger"></span>
+        </div>
+
         <div class="row">
+
             <div class="form-group col-md-4 mb-3">
                 <label>Etapa:</label>
 
@@ -106,7 +110,7 @@
                         {
                             <option value="">Selecionar...</option>
                             <option value="Aberto">Aberto</option>
-                            <option value="EmAnalise">EmAnalise</option>
+                            <option value="Em análise">Em análise</option>
                             <option value="Finalizado">Finalizado</option>
                         }
                         else
@@ -174,17 +178,20 @@
 <script>
 
     function CarregarCampos() {
-        var id = document.getElementById('IDSinistro').value;
-        window.location.href = "../../Sinistro/Registrar/" + id;
+        var id = document.getElementById('IDReq').value;
+
+        if (id > 0 && id != null) {
+            window.location.href = "../../Sinistro/Registrar/" + id;
+        }
     }
 
-    function AbrirRquisicao() {
-        var id = document.getElementById('IDRequisicao').value;
-        window.location.href = "../../Requisicao/Registrar/" + id;
+    function AbrirRequisicao() {
+        var id = document.getElementById('IDReq').value;
+        window.location.href = "../../Requisicao/Informacao/" + id;
     }
 
      function Encerrar() {
-        window.location.href = "../Encerrar/" + @vIdSinistro;
-    }
+         window.location.href = "../Encerrar/" + @vIdSinistro;
+     }
 
 </script>

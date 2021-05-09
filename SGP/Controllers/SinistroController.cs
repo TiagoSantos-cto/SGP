@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SGP.Models;
-using System;
+using SGP.Util;
 using System.Collections.Generic;
 using static SGP.Models.SinistroModel;
 
@@ -16,14 +16,19 @@ namespace SGP.Controllers
         [HttpGet]
         public IActionResult Registrar(int? id)
         {
-            var Sinistro = new SinistroModel();
+            var Sinistro = new SinistroModel(HttpContextAccessor);
             
             if (id != null && id > 0)
             {
                 ViewBag.Registro = Sinistro.CarregarRegistro(id);
             }
+            else
+            {
+                ViewBag.Registro = Sinistro;
+            }
 
-            ViewBag.ListaStatus = new List<string>(new string[] { Enum.GetName(typeof(StatusSinistro), 0),  StatusSinistro.Aberto.ToString(), StatusSinistro.Analise.ToString(), StatusSinistro.Finalizado.ToString() });
+            ViewBag.ListaStatus = new List<string>(new string[] { StatusSinistro.Aberto.GetDescription(), StatusSinistro.Analise.GetDescription(), StatusSinistro.Finalizado.GetDescription()});
+           
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
 
@@ -35,13 +40,39 @@ namespace SGP.Controllers
         {
             if (ModelState.IsValid)
             {
+                Sinistro.HttpContextAccessor = HttpContextAccessor;
                 Sinistro.Gravar();
                 return RedirectToAction("Sucesso", Sinistro);
             }
 
+            ViewBag.ListaStatus = new List<string>(new string[] { StatusSinistro.Aberto.GetDescription(), StatusSinistro.Analise.GetDescription(), StatusSinistro.Finalizado.GetDescription() });
+
+            var usuario = new UsuarioModel(HttpContextAccessor);
+            ViewBag.ListaUsuario = usuario.ListaUsuario();
+
             return View();
         }
-       
+
+        [HttpGet]
+        [HttpPost]
+        public IActionResult AtendimentosSinistro(SinistroModel entity)
+        {
+            if (entity.UsuarioAtual != 0)
+            {
+                entity.HttpContextAccessor = HttpContextAccessor;
+                ViewBag.ListaSinistro = entity.ListaSinistro();
+            }
+            else
+            {
+                ViewBag.ListaSinistro = new List<SinistroModel>();
+            }
+
+            var usuario = new UsuarioModel(HttpContextAccessor);
+            ViewBag.ListaUsuario = usuario.ListaUsuario();
+
+            return View();
+        }
+
         public IActionResult Sucesso(SinistroModel Sinistro)
         {
             ViewBag.Registro = Sinistro;

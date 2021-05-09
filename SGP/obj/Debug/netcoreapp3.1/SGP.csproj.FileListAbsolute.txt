@@ -1151,3 +1151,4 @@ C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razo
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.csprojAssemblyReference.cache
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Sinistro\Registrar.cshtml.g.cs
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Sinistro\Sucesso.cshtml.g.cs
+C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Sinistro\AtendimentosSinistro.cshtml.g.cs
