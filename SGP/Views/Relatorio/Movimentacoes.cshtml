@@ -1,0 +1,56 @@
+﻿@model RequisicaoModel
+@{
+    ViewData["Title"] = "Relatório de movimentações";
+}
+
+<div class="row text-left" style="padding-left: 30px;">
+    <div>
+        <h2>Relatório de movimentações</h2>
+        <h4>Movimentações de requisições</h4>
+    </div>
+    <div style="padding-left: 30px;">
+        <img src="~/images/rel-icon.png" width="63" height="63" />
+    </div>
+</div>
+
+
+<br />
+
+<div style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
+    <form asp-controller="Requisicao" asp-action="Atendimentos">
+       
+        <label>Período:</label>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <br />
+                <input type="date" class="form-control" asp-for="Data">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <br />
+                <input type="date" class="form-control" asp-for="DataFinal">
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="form-group col-md-6 mb-3">
+                <label>Status:</label>
+                <select asp-for="Status" class="form-control" style="width: 180px">
+                    <option value="Todos">Todos</option>
+                    <option value="Solicitado">Solicitado</option>
+                    <option value="Liberado para programação">Liberado para programação</option>
+                    <option value="Em coleta">Em coleta</option>
+                    <option value="Em processamento">Em processamento</option>
+                    <option value="Cancelado">Cancelado</option>
+                    <option value="Programado">Programado</option>
+                </select>
+            </div>
+        </div>
+        <br />
+
+        <button type="submit" class="btn btn-block btn-success" asp-controller="Relatorio" asp-action="ImprimirMovimentacoes"><strong>Imprimir</strong></button>
+
+    </form>
+
+</div>

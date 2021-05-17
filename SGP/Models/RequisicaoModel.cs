@@ -15,7 +15,7 @@ namespace SGP.Models
             Coletar,
             Processar,
             Cancelar,
-            Programar, 
+            Programar,
             Encerrar
         }
 
@@ -157,7 +157,7 @@ namespace SGP.Models
                           {filtro}
                          ORDER BY DATA DESC
                          LIMIT 10";
-                         
+
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -175,8 +175,8 @@ namespace SGP.Models
                     Origem = dt.Rows[i]["ORIGEM"] != null ? dt.Rows[i]["ORIGEM"].ToString() : string.Empty,
                     NomeEstacaoOrigem = dt.Rows[i]["NOME_ESTACAO_ORIGEM"] != null ? dt.Rows[i]["NOME_ESTACAO_ORIGEM"].ToString() : string.Empty,
                     Destino = dt.Rows[i]["DESTINO"] != null ? dt.Rows[i]["DESTINO"].ToString() : string.Empty,
-                    NomeEstacaoDestino = dt.Rows[i]["NOME_ESTACAO_DESTINO"] != null ? dt.Rows[i]["NOME_ESTACAO_DESTINO"].ToString() : string.Empty,                   
-                    NomeUsuarioResponsavel = dt.Rows[i]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[i]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty                 
+                    NomeEstacaoDestino = dt.Rows[i]["NOME_ESTACAO_DESTINO"] != null ? dt.Rows[i]["NOME_ESTACAO_DESTINO"].ToString() : string.Empty,
+                    NomeUsuarioResponsavel = dt.Rows[i]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[i]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty
                 };
 
                 lista.Add(item);
@@ -262,21 +262,27 @@ namespace SGP.Models
             return entity;
         }
 
+        public List<ReqHistoricoModel> ObterHistorico(int id)
+        {
+            var historicoRequisicao = new ReqHistoricoModel();
+            return historicoRequisicao.ListaReqHistorico(id);
+        }
+
         public IList<ItemRequisicaoModel> ObterItensRequisicao(int? id)
         {
             var sql = $"SELECT Id_Equipamento, Quantidade from itemrequisicao where Id_Requisicao = '{id}'";
-            
+
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
             var lista = new List<ItemRequisicaoModel>();
-            
+
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 var item = new ItemRequisicaoModel
                 {
                     CodigoEquipamento = !string.IsNullOrEmpty(dt.Rows[i]["Id_Equipamento"].ToString()) ? dt.Rows[i]["Id_Equipamento"].ToString() : string.Empty,
-                    Quantidade = !string.IsNullOrEmpty(dt.Rows[i]["Quantidade"].ToString()) ? Convert.ToInt32(dt.Rows[i]["Quantidade"].ToString()) : 0              
+                    Quantidade = !string.IsNullOrEmpty(dt.Rows[i]["Quantidade"].ToString()) ? Convert.ToInt32(dt.Rows[i]["Quantidade"].ToString()) : 0
                 };
 
                 lista.Add(item);
@@ -292,8 +298,10 @@ namespace SGP.Models
 
             if (Id == 0)
             {
-                sql = "INSERT INTO Requisicao (Descricao, Tipo, Origem, Status, Destino, UsuarioAtual, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao) VALUES " +
-                    $" ('{Descricao}', '{Tipo}' ,'{Origem}', '{Status}', '{Destino}', '{UsuarioAtual}','{Convert.ToDateTime(Data):yyyy/MM/dd}', '{IdUsuarioLogado()}', '', '')";
+                Id = GerarSequencial();
+
+                sql = "INSERT INTO Requisicao (IdRequisicao, Descricao, Tipo, Origem, Status, Destino, UsuarioAtual, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao) VALUES " +
+                    $" ('{Id}', '{Descricao}', '{Tipo}' ,'{Origem}', '{Status}', '{Destino}', '{UsuarioAtual}','{Convert.ToDateTime(Data):yyyy/MM/dd}', '{IdUsuarioLogado()}', '', '')";
             }
             else
             {
@@ -301,10 +309,36 @@ namespace SGP.Models
                       $"Descricao = '{Descricao}',  Tipo = '{Tipo}', Status = '{Status}', Origem ='{Origem}'," +
                       $"Destino = '{Destino}', UsuarioAtual = '{UsuarioAtual}', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{Id}'";
             }
-
+          
             dal.ExecutarComandoSQL(sql);
-           
-            GravarLista(); 
+
+            RegistrarHistorico();
+            GravarLista();
+        }
+
+        private int GerarSequencial()
+        {
+            var codigos = ListaSequencial();
+            
+            if (codigos.Count > 0)
+            {
+                var sequencial = codigos[codigos.Count - 1];
+
+                return sequencial + 1;
+            }
+            
+            return 1;
+        }
+
+        private void RegistrarHistorico()
+        {
+            var historicoRequisicao = new ReqHistoricoModel();
+            historicoRequisicao.IdRequisicao = Id;
+            historicoRequisicao.IdUsuario = UsuarioAtual;
+            historicoRequisicao.Descricao = Descricao;
+            historicoRequisicao.DataAlteracao = Data;
+
+            historicoRequisicao.GravarReqHistorico();
         }
 
         private void GravarLista()
@@ -319,8 +353,8 @@ namespace SGP.Models
             }
 
             var listaGravacao = new List<ItemRequisicaoModel>();
-           
-            
+
+
             if (ItensRequisicaoTela != null)
             {
                 foreach (var item in ItensRequisicaoTela)
@@ -338,7 +372,7 @@ namespace SGP.Models
                     listaGravacao.Add(newItem);
                 }
             }
-           
+
 
             foreach (var item in listaGravacao)
             {
@@ -414,6 +448,24 @@ namespace SGP.Models
 
             ItensRequisicao.Add(item);
             return ItensRequisicao;
+        }
+
+        public List<int> ListaSequencial()
+        {
+            var lista = new List<int>();
+       
+            var sql = $@"SELECT IdRequisicao AS ID FROM requisicao R ORDER BY ID;";
+
+            var dal = new DAL();
+            var dt = dal.RetDataTable(sql);
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                var item = Id = dt.Rows[i]["ID"] != null ? Convert.ToInt32(dt.Rows[i]["ID"].ToString()) : 0;
+                lista.Add(item);
+            }
+
+            return lista;
         }
     }
 }

@@ -61,9 +61,7 @@
                 <input id="ID" type="number" class="form-control" asp-for="Id" value="@vId" style="width: 180px">
                 <br />
                 <button id="btnBuscar" type="button" class=" btn btn-info" onclick="CarregarCampos()">Buscar</button>
-            </div>
-
-           
+            </div>         
 
             <div class="col-md-3 mb-lg-5">
                 @{
@@ -224,9 +222,20 @@
         </fieldset>
 
         <div class="form-group">
-            <label>Descição:</label>
-            @Html.TextArea("Descricao", vDescricao, new { @class = "form-control" })
-            <span asp-validation-for="Descricao" class="text-danger"></span>
+            
+            <div>
+                @Html.TextArea("Descricao", vDescricao, new { @class = "form-control", disabled = "disabled" })
+            </div>
+            <br />
+
+            <label>Descrição:</label>
+            <div>
+                @Html.TextArea("Descricao", new { @class = "form-control" })
+                <div class="invalid-feedback">
+                    O campo od escrição é obrigatório.
+                </div>
+            </div>
+
         </div>
 
         <fieldset class="scheduler-border">
@@ -386,6 +395,7 @@
 <script type="text/javascript">
 
     window.onload = function () {
+
         var id = document.getElementById('ID').value;
 
         if (id != 0) {
@@ -397,6 +407,8 @@
         }
 
         LiberarTransporte();
+
+        document.getElementById("DesAnterior").disabled = true
     }
 
     function addOption(id, contador) {
@@ -459,8 +471,17 @@
 
         if (id > 0) {
             window.location.href = "../Informacao/" + id;
-        }  
-        
+        }
+
+        if (@vNomeUsuarioAtual == "")
+        {
+            var id = document.getElementById('ID').value;
+
+            if (id > 0) {
+                window.location.href = "../Requisicao/Informacao/" + id;
+            }
+
+        }
     }
 </script>
 

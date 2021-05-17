@@ -19,7 +19,7 @@ namespace SGP.Controllers
             return View();
         }
         
-        public IActionResult ImprimirHistorico(RequisicaoModel entity)
+        public IActionResult ImprimirMovimentacoes(RequisicaoModel entity)
         {
             using (var doc = new PdfSharpCore.Pdf.PdfDocument())
             {
@@ -95,12 +95,90 @@ namespace SGP.Controllers
                     var contantType = "application/pdf";
                     doc.Save(stream, false);
 
-                    var nomeArquivo = "Historico.pdf";
+                    var nomeArquivo = "Movimentacoes.pdf";
 
                     return File(stream.ToArray(), contantType, nomeArquivo);
 
                 }
             }         
+        }
+
+
+        public IActionResult ImprimirHistorico(RequisicaoModel entity)
+        {
+            using (var doc = new PdfSharpCore.Pdf.PdfDocument())
+            {
+                var page = doc.AddPage();
+                page.Size = PdfSharpCore.PageSize.A4;
+                page.Orientation = PdfSharpCore.PageOrientation.Portrait;
+                var graphics = XGraphics.FromPdfPage(page);
+                var corFonte = XBrushes.Black;
+
+                var textFormatter = new PdfSharpCore.Drawing.Layout.XTextFormatter(graphics);
+                var fonteOrganzacao = new XFont("Arial", 10);
+                var fonteDescricao = new XFont("Arial", 8, XFontStyle.BoldItalic);
+                var titulodetalhes = new XFont("Arial", 14, XFontStyle.Bold);
+                var fonteDetalhesDescricao = new XFont("Arial", 7);
+
+                var qtdPaginas = doc.PageCount;
+                textFormatter.DrawString(qtdPaginas.ToString(), new XFont("Arial", 10), corFonte, new PdfSharpCore.Drawing.XRect(578, 825, page.Width, page.Height));
+
+                // LOGO EMPRESA
+                //var logo = @"..\wwwroot\upload\porto-do-acu-logo-relatorio.png";
+                //XImage imagem = XImage.FromFile(logo);
+                //graphics.DrawImage(imagem, 20, 5, 70, 50);
+
+                var cabecalho = entity.CarregarRegistro(entity.Id);
+
+                // CABEÇALHO                                                        // horizontal, vertical 
+                textFormatter.DrawString("Código requisição: ", fonteDescricao, corFonte, new XRect(20, 70, page.Width, page.Height));
+                textFormatter.DrawString(cabecalho.Id.ToString(), fonteOrganzacao, corFonte, new XRect(95, 69, page.Width, page.Height));
+                
+                textFormatter.DrawString("Usuário requisitante: ", fonteDescricao, corFonte, new XRect(20, 90, page.Width, page.Height));
+                textFormatter.DrawString(cabecalho.NomeUsuarioResponsavel, fonteOrganzacao, corFonte, new XRect(105, 89, page.Width, page.Height));
+
+                textFormatter.DrawString("Data de abertura: ", fonteDescricao, corFonte, new XRect(20, 110, page.Width, page.Height));
+                textFormatter.DrawString(cabecalho.Data.ToString(), fonteOrganzacao, corFonte, new XRect(95, 109, page.Width, page.Height));
+
+                // DETALHE
+                var tituloDetalhes = new PdfSharpCore.Drawing.Layout.XTextFormatter(graphics);
+                tituloDetalhes.Alignment = PdfSharpCore.Drawing.Layout.XParagraphAlignment.Center;
+
+                // COLUNAS
+                var alturaTituloDetalhesY = 140;
+                var detalhes = new PdfSharpCore.Drawing.Layout.XTextFormatter(graphics);
+
+                detalhes.DrawString("Data de alteração", fonteDescricao, corFonte, new XRect(20, alturaTituloDetalhesY, page.Width, page.Height));
+
+                detalhes.DrawString("Descrição", fonteDescricao, corFonte, new XRect(200, alturaTituloDetalhesY, page.Width, page.Height));
+            
+                detalhes.DrawString("Usuário", fonteDescricao, corFonte, new XRect(300, alturaTituloDetalhesY, page.Width, page.Height));
+
+                var dados = entity.ObterHistorico(entity.Id);
+
+                // DADOS
+                var alturaDetalhesItens = 160;
+                foreach (var item in dados)
+                {
+                    textFormatter.DrawString(item.DataAlteracao.ToString(), fonteDetalhesDescricao, corFonte, new XRect(21, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.Descricao, fonteDetalhesDescricao, corFonte, new XRect(201, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.NomeUsuario, fonteDetalhesDescricao, corFonte, new XRect(301, alturaDetalhesItens, page.Width, page.Height));
+
+                    alturaDetalhesItens += 20;
+                }
+
+                //DOWNLOAD
+                using (MemoryStream stream = new MemoryStream())
+                {
+                    var contantType = "application/pdf";
+                    doc.Save(stream, false);
+
+                    var nomeArquivo = "Historico.pdf";
+
+                    return File(stream.ToArray(), contantType, nomeArquivo);
+
+                }
+            }
         }
     }
 }

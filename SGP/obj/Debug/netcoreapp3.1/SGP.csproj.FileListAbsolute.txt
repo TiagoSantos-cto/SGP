@@ -1152,3 +1152,4 @@ C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\SGP.
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Sinistro\Registrar.cshtml.g.cs
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Sinistro\Sucesso.cshtml.g.cs
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Sinistro\AtendimentosSinistro.cshtml.g.cs
+C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Debug\netcoreapp3.1\Razor\Views\Relatorio\Movimentacoes.cshtml.g.cs
