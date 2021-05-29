@@ -75,6 +75,5 @@ namespace SGP.Controllers
 
             return View();
         }
-
     }
 }

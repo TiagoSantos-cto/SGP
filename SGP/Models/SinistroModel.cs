@@ -9,7 +9,8 @@ namespace SGP.Models
 {
     public class SinistroModel
     {
-        #region PROPRIEDADES
+        #region ENUM
+
         public enum StatusSinistro
         {
             [Description("Aberto")]
@@ -19,6 +20,10 @@ namespace SGP.Models
             [Description("Finalizado")]
             Finalizado
         }
+
+        #endregion
+
+        #region PROPRIEDADES
 
         public int Id { get; set; }
 

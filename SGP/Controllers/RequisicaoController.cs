@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SGP.Models;
+using SGP.Util;
 using System.Collections.Generic;
+using static SGP.Models.RequisicaoModel;
 
 namespace SGP.Controllers
 {
@@ -17,7 +19,6 @@ namespace SGP.Controllers
 
             return View();
         }
-
 
         [HttpPost]
         public IActionResult Informacao(RequisicaoModel requisicao)
@@ -42,7 +43,7 @@ namespace SGP.Controllers
                 ViewBag.ItemRequisicao = requisicao.ObterItensRequisicao(id);
             }
 
-            ViewBag.ListaStatus = new List<string>(new string[] { "Solicitar", "Liberar", "Coletar", "Processar", "Cancelar", "Programar" });
+            ViewBag.ListaStatus = new List<string>(new string[] { StatusRequisicao.Solicitar.GetDescription(), StatusRequisicao.Liberar.GetDescription(), StatusRequisicao.Coletar.GetDescription(), StatusRequisicao.Processar.GetDescription(), StatusRequisicao.Cancelar.GetDescription(), StatusRequisicao.Programar.GetDescription()});
 
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
@@ -115,7 +116,6 @@ namespace SGP.Controllers
 
             return PartialView();
         }
-
 
         [HttpPost]
         public IActionResult ListaItens(string id, int quantidade)

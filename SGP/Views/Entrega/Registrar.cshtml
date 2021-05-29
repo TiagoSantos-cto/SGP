@@ -10,8 +10,7 @@
 @{
     var vIdEntrega = string.Empty;
     var vIdRequisicao = string.Empty;
-    var vDataMaisCedo = string.Empty;
-    var vDataMaisTarde = string.Empty;
+    var vDataMaisTarde = DateTime.Now.ToString("yyyy-MM-dd");
     var vStatus = string.Empty;
     var vIdEmbarcacao = string.Empty;
     var vNomeEmbarcacao = string.Empty;
@@ -20,7 +19,6 @@
     {
         vIdEntrega = @ViewBag.Registro.IdEntrega.ToString();
         vIdRequisicao = @ViewBag.Registro.IdRequisicao.ToString();
-        vDataMaisCedo = Convert.ToDateTime(@ViewBag.Registro.DataMaisCedo).ToString("yyyy-MM-dd");
         vDataMaisTarde = Convert.ToDateTime(@ViewBag.Registro.DataMaisTarde).ToString("yyyy-MM-dd");
         vStatus = @ViewBag.Registro.Status.ToString();
         vIdEmbarcacao = @ViewBag.Registro.IdEmbarcacao.ToString();

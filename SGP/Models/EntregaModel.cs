@@ -2,11 +2,26 @@
 using SGP.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace SGP.Models
 {
     public class EntregaModel
     {
+        #region ENUM
+
+        public enum StatusEntrega
+        {
+            [Description("Em processamento")]
+            Processamento,
+            [Description("Em trânsito")]
+            Transito,
+            [Description("Encerrada")]
+            Encerrada
+        }
+
+        #endregion
+
         #region PROPRIEDADES
 
         public int IdEntrega { get; set; }
