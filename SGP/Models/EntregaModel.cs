@@ -7,6 +7,8 @@ namespace SGP.Models
 {
     public class EntregaModel
     {
+        #region PROPRIEDADES
+
         public int IdEntrega { get; set; }
         public int IdRequisicao { get; set; }
         public string Status { get; set; }
@@ -14,8 +16,11 @@ namespace SGP.Models
         public string NomeEmbarcacao { get; set; }
         public string DataMaisCedo { get; set; }
         public string DataMaisTarde { get; set; }
-
         public IHttpContextAccessor HttpContextAccessor { get; set; }
+
+        #endregion
+
+        #region CONSTRUTORES
 
         public EntregaModel() { }
 
@@ -24,25 +29,29 @@ namespace SGP.Models
             HttpContextAccessor = httpContextAccessor;
         }
 
+        #endregion
+
+        #region MÉTODOS
+
         public EntregaModel CarregarRegistro(int? idRequisicao)
         {
             var id = idRequisicao != null ? idRequisicao.ToString() : string.Empty;
 
             var sql = @$"SELECT E.IdEntrega AS ID,
-                               E.DataMaisCedo AS DTCEDO,
-                               E.DataMaisTarde AS DTTARDE,
-                               E.Status AS STATUS,
-                               ER.Id_Requisicao AS ID_REQUISICAO,
-                               EE.Id_Embarcacao AS ID_EMBARCACAO,
-                               EB.Nome AS NOME_EMBARCACAO
-                        FROM entrega E,
-                             entregarequisicao ER,
-                             embarcacaoentrega EE,
-                             embarcacao EB
-                        WHERE E.IdEntrega = ER.Id_Entrega
-                          AND EE.Id_Entrega = E.IdEntrega
-                          AND EB.IdEmbarcacao = EE.Id_Embarcacao
-                          AND ER.Id_Requisicao  = '{id}'";
+                                E.DataMaisCedo AS DTCEDO,
+                                E.DataMaisTarde AS DTTARDE,
+                                E.Status AS STATUS,
+                                ER.Id_Requisicao AS ID_REQUISICAO,
+                                EE.Id_Embarcacao AS ID_EMBARCACAO,
+                                EB.Nome AS NOME_EMBARCACAO
+                         FROM entrega E,
+                              entregarequisicao ER,
+                              embarcacaoentrega EE,
+                              embarcacao EB
+                         WHERE E.IdEntrega = ER.Id_Entrega
+                           AND EE.Id_Entrega = E.IdEntrega
+                           AND EB.IdEmbarcacao = EE.Id_Embarcacao
+                           AND ER.Id_Requisicao  = '{id}'";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -61,7 +70,7 @@ namespace SGP.Models
                     IdEmbarcacao = dt.Rows[0]["ID_EMBARCACAO"] != null ? Convert.ToInt32(dt.Rows[0]["ID_EMBARCACAO"].ToString()) : 0,
                     NomeEmbarcacao = dt.Rows[0]["NOME_EMBARCACAO"] != null ? dt.Rows[0]["NOME_EMBARCACAO"].ToString() : string.Empty
                 };
-               
+
                 entity = obj;
             }
             else
@@ -83,25 +92,38 @@ namespace SGP.Models
             if (!Existe(IdEntrega, IdRequisicao))
             {
                 IdEntrega = GerarSequencial();
-               
-                sqlEntrega = $"insert into Entrega (IdEntrega, Status, DataMaisCedo, DataMaisTarde) values ('{IdEntrega}', '{Status}', '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}', '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}')";
-                sqlEmbarcacaoEntrega = $"insert into EmbarcacaoEntrega (Id_Embarcacao, Id_Entrega) values ('{IdEmbarcacao}', '{IdEntrega}')";
-                sqlEntregaRequisicao = $"insert into EntregaRequisicao (Id_Entrega, Id_Requisicao) values ('{IdEntrega}', '{IdRequisicao}')";  
+
+                sqlEntrega = $@"INSERT INTO Entrega (IdEntrega, Status, DataMaisCedo, DataMaisTarde)
+                                VALUES('{IdEntrega}', '{Status}', '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}', '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}')";
+
+                sqlEmbarcacaoEntrega = $@"INSERT INTO EmbarcacaoEntrega (Id_Embarcacao, Id_Entrega)
+                                          VALUES('{IdEmbarcacao}', '{IdEntrega}')";
+
+                sqlEntregaRequisicao = $@"INSERT INTO EntregaRequisicao (Id_Entrega, Id_Requisicao)
+                                          VALUES('{IdEntrega}', '{IdRequisicao}')";
+
             }
             else
             {
-                sqlEntrega = $"update Entrega set Status = '{Status}', DataMaisCedo = '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}', DataMaisTarde = '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}'  where IdEntrega = '{IdEntrega}'";
-                sqlEmbarcacaoEntrega = $"update embarcacaoentrega set Id_Embarcacao = '{IdEmbarcacao}' where Id_Entrega = '{IdEntrega}'";
+                sqlEntrega = $@"UPDATE Entrega
+                                SET Status = '{Status}',
+                                    DataMaisCedo = '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}',
+                                    DataMaisTarde = '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}'
+                                WHERE IdEntrega = '{IdEntrega}'";
+
+                sqlEmbarcacaoEntrega = $@"UPDATE embarcacaoentrega
+                                          SET Id_Embarcacao = '{IdEmbarcacao}'
+                                          WHERE Id_Entrega = '{IdEntrega}'";
             }
-            
+
             dal.ExecutarComandoSQL(sqlEntrega);
             dal.ExecutarComandoSQL(sqlEmbarcacaoEntrega);
-            
+
             if (!string.IsNullOrEmpty(sqlEntregaRequisicao))
             {
                 dal.ExecutarComandoSQL(sqlEntregaRequisicao);
             }
-          
+
         }
 
         private int GerarSequencial()
@@ -111,8 +133,8 @@ namespace SGP.Models
             var entregas = ListaEntrega();
 
             var listaID = new List<int>();
-            
-            if (entregas.Count >0 )
+
+            if (entregas.Count > 0)
             {
                 foreach (var item in entregas)
                 {
@@ -123,7 +145,7 @@ namespace SGP.Models
 
                 sequencial = listaID[listaID.Count - 1];
             }
-           
+
             return sequencial + 1;
         }
 
@@ -131,7 +153,9 @@ namespace SGP.Models
         {
             var lista = new List<EntregaModel>();
 
-            var sql = $"select IdEntrega from Entrega";
+            var sql = $@"SELECT IdEntrega
+                         FROM Entrega";
+
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -149,11 +173,17 @@ namespace SGP.Models
 
         public bool Existe(int idEntrega, int idRequisicao)
         {
-            var sql = $"select * from EntregaRequisicao where Id_Entrega = '{idEntrega}' AND Id_Requisicao = '{idRequisicao}' ";
+            var sql = $@"SELECT *
+                         FROM EntregaRequisicao
+                         WHERE Id_Entrega = '{idEntrega}'
+                           AND Id_Requisicao = '{idRequisicao}'";
+
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
             return dt.Rows.Count > 0;
         }
+
+        #endregion
     }
 }

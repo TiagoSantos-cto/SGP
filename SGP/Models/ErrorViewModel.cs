@@ -1,5 +1,3 @@
-using System;
-
 namespace SGP.Models
 {
     public class ErrorViewModel

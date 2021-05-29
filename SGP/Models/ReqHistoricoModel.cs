@@ -7,14 +7,19 @@ namespace SGP.Models
 {
     public class ReqHistoricoModel
     {
+        #region PROPRIEDADES
+
         public string Id { get; set; }
         public string Descricao { get; set; }
         public int IdUsuario { get; set; }
         public string NomeUsuario { get; set; }
         public string DataAlteracao { get; set; }
         public int IdRequisicao { get; set; }
-
         public IHttpContextAccessor HttpContextAccessor { get; set; }
+
+        #endregion
+
+        #region CONTRUTORES
 
         public ReqHistoricoModel() { }
 
@@ -23,11 +28,14 @@ namespace SGP.Models
             HttpContextAccessor = httpContextAccessor;
         }
 
+        #endregion
+
+        #region MÉTODOS
+
         public void GravarReqHistorico()
         {
-            string sql;
-
-            sql = $"insert into Historico (Descricao, IdUsuario, DataAlteracao, Id_Requisicao) values ('{Descricao}', '{IdUsuario}', '{Convert.ToDateTime(DateTime.Now):yyyy/MM/dd}', '{IdRequisicao}')";
+            string sql = $@"INSERT INTO Historico (Descricao, IdUsuario, DataAlteracao, Id_Requisicao)
+                     VALUES('{Descricao}', '{IdUsuario}', '{Convert.ToDateTime(DateTime.Now):yyyy/MM/dd}', '{IdRequisicao}')";
 
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
@@ -45,7 +53,7 @@ namespace SGP.Models
                               usuario U
                          WHERE U.IdUsuario = H.IdUsuario
                            AND H.Id_Requisicao ='{idRequisicao}'";
-                  
+
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -63,6 +71,8 @@ namespace SGP.Models
 
             return lista;
         }
+
+        #endregion
     }
 }
 

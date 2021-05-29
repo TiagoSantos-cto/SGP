@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SGP.Util;
 using System;
 using System.Collections.Generic;
-
 
 namespace SGP.Models
 {
     public class EquipamentoModel
     {
+        #region PROPRIEDADES
+
         public string  Id { get; set; }
         public string Descricao { get; set; }
         public string Status { get; set; }
@@ -16,17 +16,20 @@ namespace SGP.Models
         public int Quantidade { get; set; }
         public IFormFile Imagem { get; set; }
         public string ImagemPath { get; set; }
-
-
-
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
-        public EquipamentoModel(){}
+        #endregion
+
+        #region CONTRUTORES
+        public EquipamentoModel() { }
 
         public EquipamentoModel(IHttpContextAccessor httpContextAccessor)
         {
             HttpContextAccessor = httpContextAccessor;
         }
+        #endregion
+
+        #region MÉTODOS
 
         public void GravarEquipamento()
         {
@@ -34,11 +37,18 @@ namespace SGP.Models
 
             if (!Existe(Id))
             {
-                sql = $"insert into Equipamento (IdEquipamento, Tipo, Descricao, Preco, Quantidade, Status, Estacao, ImagemPath) values ('{Id}','DEFAULT', '{Descricao}', '0.00', {Quantidade}, '{Status}', '{Estacao}', '{ImagemPath}')";
+                sql = $@"INSERT INTO Equipamento (IdEquipamento, Tipo, Descricao, Preco, Quantidade, Status, Estacao, ImagemPath)
+                         VALUES ('{Id}','DEFAULT', '{Descricao}', '0.00', '{Quantidade}', '{Status}', '{Estacao}', '{ImagemPath}')";
             }
             else
             {
-                sql = $"update Equipamento SET Descricao = '{Descricao}',  Status = '{Status}', Estacao = '{Estacao}', Quantidade = '{Quantidade}', ImagemPath = '{ImagemPath}' where IdEquipamento = '{Id}'";
+                sql = $@"UPDATE Equipamento
+                         SET Descricao = '{Descricao}',
+                             Status = '{Status}',
+                             Estacao = '{Estacao}',
+                             Quantidade = '{Quantidade}',
+                             ImagemPath = '{ImagemPath}'
+                         WHERE IdEquipamento = '{Id}'";
             }
 
             var dal = new DAL();
@@ -47,14 +57,25 @@ namespace SGP.Models
 
         public void ExcluirEquipamento(int id)
         {
-            string sql = $"delete from Equipamento where IdEquipamento = {id}";
+            string sql = $@"DELETE
+                            FROM Equipamento
+                            WHERE IdEquipamento = '{id}'";
+
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
         }
 
         public EquipamentoModel CarregarRegistro(string id)
         {
-            var sql = $"select IdEquipamento, Descricao, Status, Quantidade, Estacao, ImagemPath from Equipamento WHERE IdEquipamento = '{id}'";
+            var sql = $@"SELECT IdEquipamento,
+                                Descricao,
+                                Status,
+                                Quantidade,
+                                Estacao,
+                                ImagemPath
+                         FROM Equipamento
+                         WHERE IdEquipamento = '{id}'";
+            
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -67,6 +88,7 @@ namespace SGP.Models
                 Quantidade = dt.Rows[0]["Quantidade"] != null ? Convert.ToInt32(dt.Rows[0]["Quantidade"].ToString()) : 0,
                 ImagemPath = dt.Rows[0]["ImagemPath"] != null ? dt.Rows[0]["ImagemPath"].ToString() : string.Empty,
             };
+
             return entity;
         }
 
@@ -74,7 +96,14 @@ namespace SGP.Models
         {
             var lista = new List<EquipamentoModel>();
 
-            var sql = $"select IdEquipamento, Descricao, Status, Quantidade, Estacao, ImagemPath from Equipamento";
+            var sql = $@"SELECT IdEquipamento,
+                                Descricao,
+                                Status,
+                                Quantidade,
+                                Estacao,
+                                ImagemPath
+                         FROM Equipamento";
+           
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -83,7 +112,7 @@ namespace SGP.Models
                 var item = new EquipamentoModel
                 {
                     Id = dt.Rows[i]["IdEquipamento"].ToString(),
-                    Descricao = dt.Rows[i]["Descricao"].ToString(),  
+                    Descricao = dt.Rows[i]["Descricao"].ToString(),
                     Status = dt.Rows[i]["Status"].ToString(),
                     Estacao = Convert.ToInt32(dt.Rows[i]["Estacao"].ToString()),
                     Quantidade = Convert.ToInt32(dt.Rows[i]["Quantidade"].ToString()),
@@ -97,11 +126,16 @@ namespace SGP.Models
 
         public bool Existe(string id)
         {
-            var sql = $"select IdEquipamento from Equipamento where IdEquipamento = '{id}'";
+            var sql = $@"SELECT IdEquipamento
+                          FROM Equipamento
+                          WHERE IdEquipamento = '{id}'";
+
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
             return dt.Rows.Count > 0;
         }
+
+        #endregion
     }
 }

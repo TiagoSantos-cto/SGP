@@ -30,7 +30,7 @@ namespace SGP.Util
             return dataTable;
         }
 
-        //Eecuta INSERT, UPDATE e DELETE
+        //Executa INSERT, UPDATE e DELETE
         public void ExecutarComandoSQL(string sql)
         {
             var command = new MySqlCommand(sql, connection);

@@ -2,22 +2,36 @@
 using SGP.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SGP.Models
 {
     public class RequisicaoModel
     {
+        #region ENUM
+
         public enum StatusRequisicao
         {
+            [Description("Solicitar")]
             Solicitar,
+            [Description("Liberar")]
             Liberar,
+            [Description("Coletar")]
             Coletar,
+            [Description("Processar")]
             Processar,
+            [Description("Cancelar")]
             Cancelar,
+            [Description("Programar")]
             Programar,
+            [Description("Encerrar")]
             Encerrar
         }
+
+        #endregion
+
+        #region PROPRIEDADES
 
         public int Id { get; set; }
 
@@ -59,6 +73,10 @@ namespace SGP.Models
 
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
+        #endregion
+
+        #region CONTRUTORES
+
         public RequisicaoModel()
         {
             ItensRequisicao = new List<ItemRequisicaoModel>();
@@ -68,6 +86,10 @@ namespace SGP.Models
         {
             HttpContextAccessor = httpContextAccessor;
         }
+
+        #endregion
+
+        #region MÉTODOS
 
         private string IdUsuarioLogado()
         {
@@ -241,23 +263,25 @@ namespace SGP.Models
             var dt = dal.RetDataTable(sql);
 
             var entity = new RequisicaoModel();
-            //{
-            entity.Id = dt.Rows[0]["ID"] != null ? Convert.ToInt32(dt.Rows[0]["ID"].ToString()) : 0;
-            entity.Descricao = dt.Rows[0]["DESCRICAO"] != null ? dt.Rows[0]["DESCRICAO"].ToString() : string.Empty;
-            entity.Tipo = dt.Rows[0]["TIPO"] != null ? dt.Rows[0]["TIPO"].ToString() : string.Empty;
-            entity.UsuarioAtual = dt.Rows[0]["USUARIO_ATUAL"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO_ATUAL"].ToString()) : 0;
-            entity.NomeUsuarioAtual = dt.Rows[0]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[0]["NOME_USUARIO_ATUAL"].ToString() : string.Empty;
-            entity.Data = dt.Rows[0]["DATA"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA"].ToString()).ToString("dd/MM/yyyy") : string.Empty;
-            entity.Status = dt.Rows[0]["STATUS"] != null ? dt.Rows[0]["STATUS"].ToString() : string.Empty;
-            entity.Origem = dt.Rows[0]["ORIGEM"] != null ? dt.Rows[0]["ORIGEM"].ToString() : string.Empty;
-            entity.NomeEstacaoOrigem = dt.Rows[0]["NOME_ESTACAO_ORIGEM"] != null ? dt.Rows[0]["NOME_ESTACAO_ORIGEM"].ToString() : string.Empty;
-            entity.Destino = dt.Rows[0]["DESTINO"] != null ? dt.Rows[0]["DESTINO"].ToString() : string.Empty;
-            entity.NomeEstacaoDestino = dt.Rows[0]["NOME_ESTACAO_DESTINO"] != null ? dt.Rows[0]["NOME_ESTACAO_DESTINO"].ToString() : string.Empty;
-            entity.UsuarioResponsavel = dt.Rows[0]["USUARIO_INCLUSAO"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO_INCLUSAO"].ToString()) : 0;
-            entity.NomeUsuarioResponsavel = dt.Rows[0]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[0]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty;
-            entity.VbCancelada = dt.Rows[0]["VBCANCELADA"] != null ? Convert.ToInt32(dt.Rows[0]["VBCANCELADA"].ToString()) : 0;
-            entity.VbEncerrada = dt.Rows[0]["VBENCERRADA"] != null ? Convert.ToInt32(dt.Rows[0]["VBENCERRADA"].ToString()) : 0;
-            //};
+
+            if (dt.Rows.Count > 0)
+            {
+                entity.Id = dt.Rows[0]["ID"] != null ? Convert.ToInt32(dt.Rows[0]["ID"].ToString()) : 0;
+                entity.Descricao = dt.Rows[0]["DESCRICAO"] != null ? dt.Rows[0]["DESCRICAO"].ToString() : string.Empty;
+                entity.Tipo = dt.Rows[0]["TIPO"] != null ? dt.Rows[0]["TIPO"].ToString() : string.Empty;
+                entity.UsuarioAtual = dt.Rows[0]["USUARIO_ATUAL"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO_ATUAL"].ToString()) : 0;
+                entity.NomeUsuarioAtual = dt.Rows[0]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[0]["NOME_USUARIO_ATUAL"].ToString() : string.Empty;
+                entity.Data = dt.Rows[0]["DATA"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA"].ToString()).ToString("dd/MM/yyyy") : string.Empty;
+                entity.Status = dt.Rows[0]["STATUS"] != null ? dt.Rows[0]["STATUS"].ToString() : string.Empty;
+                entity.Origem = dt.Rows[0]["ORIGEM"] != null ? dt.Rows[0]["ORIGEM"].ToString() : string.Empty;
+                entity.NomeEstacaoOrigem = dt.Rows[0]["NOME_ESTACAO_ORIGEM"] != null ? dt.Rows[0]["NOME_ESTACAO_ORIGEM"].ToString() : string.Empty;
+                entity.Destino = dt.Rows[0]["DESTINO"] != null ? dt.Rows[0]["DESTINO"].ToString() : string.Empty;
+                entity.NomeEstacaoDestino = dt.Rows[0]["NOME_ESTACAO_DESTINO"] != null ? dt.Rows[0]["NOME_ESTACAO_DESTINO"].ToString() : string.Empty;
+                entity.UsuarioResponsavel = dt.Rows[0]["USUARIO_INCLUSAO"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO_INCLUSAO"].ToString()) : 0;
+                entity.NomeUsuarioResponsavel = dt.Rows[0]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[0]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty;
+                entity.VbCancelada = dt.Rows[0]["VBCANCELADA"] != null ? Convert.ToInt32(dt.Rows[0]["VBCANCELADA"].ToString()) : 0;
+                entity.VbEncerrada = dt.Rows[0]["VBENCERRADA"] != null ? Convert.ToInt32(dt.Rows[0]["VBENCERRADA"].ToString()) : 0;
+            }
 
             return entity;
         }
@@ -270,7 +294,10 @@ namespace SGP.Models
 
         public IList<ItemRequisicaoModel> ObterItensRequisicao(int? id)
         {
-            var sql = $"SELECT Id_Equipamento, Quantidade from itemrequisicao where Id_Requisicao = '{id}'";
+            var sql = $@"SELECT Id_Equipamento,
+                                Quantidade
+                         FROM itemrequisicao
+                         WHERE Id_Requisicao = '{id}'";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -300,16 +327,16 @@ namespace SGP.Models
             {
                 Id = GerarSequencial();
 
-                sql = "INSERT INTO Requisicao (IdRequisicao, Descricao, Tipo, Origem, Status, Destino, UsuarioAtual, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao) VALUES " +
-                    $" ('{Id}', '{Descricao}', '{Tipo}' ,'{Origem}', '{Status}', '{Destino}', '{UsuarioAtual}','{Convert.ToDateTime(Data):yyyy/MM/dd}', '{IdUsuarioLogado()}', '', '')";
+                sql = $@"INSERT INTO Requisicao (IdRequisicao, Descricao, Tipo, Origem, Status, Destino, UsuarioAtual, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao) 
+                         VALUES ('{Id}', '{Descricao}', '{Tipo}' ,'{Origem}', '{Status}', '{Destino}', '{UsuarioAtual}','{Convert.ToDateTime(Data):yyyy/MM/dd}', '{IdUsuarioLogado()}', '', '')";
             }
             else
             {
-                sql = $"UPDATE  Requisicao SET DataAlteracao = '{Convert.ToDateTime(Data):yyyy/MM/dd}', " +
-                      $"Descricao = '{Descricao}',  Tipo = '{Tipo}', Status = '{Status}', Origem ='{Origem}'," +
-                      $"Destino = '{Destino}', UsuarioAtual = '{UsuarioAtual}', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{Id}'";
+                sql = $@"UPDATE  Requisicao SET DataAlteracao = '{Convert.ToDateTime(Data):yyyy/MM/dd}', 
+                         Descricao = '{Descricao}',  Tipo = '{Tipo}', Status = '{Status}', Origem ='{Origem}',
+                         Destino = '{Destino}', UsuarioAtual = '{UsuarioAtual}', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{Id}'";
             }
-          
+
             dal.ExecutarComandoSQL(sql);
 
             RegistrarHistorico();
@@ -319,14 +346,14 @@ namespace SGP.Models
         private int GerarSequencial()
         {
             var codigos = ListaSequencial();
-            
+
             if (codigos.Count > 0)
             {
                 var sequencial = codigos[codigos.Count - 1];
 
                 return sequencial + 1;
             }
-            
+
             return 1;
         }
 
@@ -354,7 +381,6 @@ namespace SGP.Models
 
             var listaGravacao = new List<ItemRequisicaoModel>();
 
-
             if (ItensRequisicaoTela != null)
             {
                 foreach (var item in ItensRequisicaoTela)
@@ -373,10 +399,11 @@ namespace SGP.Models
                 }
             }
 
-
             foreach (var item in listaGravacao)
             {
-                sqlListaItens = $"INSERT INTO itemrequisicao (Quantidade, Id_Equipamento, Id_Requisicao) VALUES ('{item.Quantidade}', '{item.CodigoEquipamento}', '{item.CodigoRequisicao}')";
+                sqlListaItens = $@"INSERT INTO itemrequisicao (Quantidade, Id_Equipamento, Id_Requisicao) 
+                                   VALUES ('{item.Quantidade}', '{item.CodigoEquipamento}', '{item.CodigoRequisicao}')";
+
                 dal.ExecutarComandoSQL(sqlListaItens);
             }
         }
@@ -389,7 +416,10 @@ namespace SGP.Models
 
         private bool Existe(int id)
         {
-            var sql = $"SELECT Id_Requisicao from itemrequisicao where Id_Requisicao = '{id}'";
+            var sql = $@"SELECT Id_Requisicao
+                         FROM itemrequisicao
+                         WHERE Id_Requisicao = '{id}'";
+
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -413,8 +443,8 @@ namespace SGP.Models
         {
             var dal = new DAL();
 
-            string sql = $"UPDATE Requisicao SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', " +
-                         $"Descricao = 'Requisição encerrada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {IdUsuarioLogado()}' ,  VbEncerrada = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
+            string sql = $@"UPDATE Requisicao SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', 
+                            Descricao = 'Requisição encerrada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {IdUsuarioLogado()}' , VbEncerrada = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
 
             dal.ExecutarComandoSQL(sql);
         }
@@ -423,8 +453,8 @@ namespace SGP.Models
         {
             var dal = new DAL();
 
-            string sql = $"UPDATE Requisicao SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', " +
-                         $"Descricao = 'Requisição cancelada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {IdUsuarioLogado()}' ,  VbCancelada = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
+            string sql = $@"UPDATE Requisicao SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', 
+                            Descricao = 'Requisição cancelada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {IdUsuarioLogado()}' , VbCancelada = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
 
             dal.ExecutarComandoSQL(sql);
         }
@@ -453,8 +483,8 @@ namespace SGP.Models
         public List<int> ListaSequencial()
         {
             var lista = new List<int>();
-       
-            var sql = $@"SELECT IdRequisicao AS ID FROM requisicao R ORDER BY ID;";
+
+            var sql = $@"SELECT IdRequisicao AS ID FROM requisicao ORDER BY ID;";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -467,5 +497,7 @@ namespace SGP.Models
 
             return lista;
         }
+
+        #endregion
     }
 }

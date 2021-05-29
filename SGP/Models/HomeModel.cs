@@ -7,7 +7,7 @@ namespace SGP.Models
         public string LerNomeUsuario()
         {
             DAL objDAL = new DAL();
-            var dt = objDAL.RetDataTable("select * from Funcionario");
+            var dt = objDAL.RetDataTable("SELECT * FROM Funcionario");
 
             if (dt != null)
             {

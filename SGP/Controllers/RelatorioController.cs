@@ -18,7 +18,13 @@ namespace SGP.Controllers
         {
             return View();
         }
-        
+
+        [HttpGet]
+        public IActionResult Movimentacoes()
+        {
+            return View();
+        }
+
         public IActionResult ImprimirMovimentacoes(RequisicaoModel entity)
         {
             using (var doc = new PdfSharpCore.Pdf.PdfDocument())

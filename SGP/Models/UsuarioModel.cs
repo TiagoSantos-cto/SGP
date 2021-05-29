@@ -10,6 +10,8 @@ namespace SGP.Models
 {
     public class UsuarioModel
     {
+        #region PROPRIEDADES
+
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O campo funcionário é obrigatório!")]
@@ -24,8 +26,11 @@ namespace SGP.Models
         public string Senha { get; set; }
 
         public int PerfilAcesso { get; set; }
-
         public IHttpContextAccessor HttpContextAccessor { get; set; }
+
+        #endregion
+
+        #region CONTRUTORES
 
         public UsuarioModel() { }
 
@@ -33,6 +38,10 @@ namespace SGP.Models
         {
             HttpContextAccessor = httpContextAccessor;
         }
+
+        #endregion
+
+        #region MÉTODOS
 
         public bool ValidarLogin()
         {
@@ -103,16 +112,14 @@ namespace SGP.Models
             {
                 Id = dt.Rows[0]["IdUsuario"] != null ? Convert.ToInt32(dt.Rows[0]["IdUsuario"].ToString()) : 0,
                 IdFuncionario = dt.Rows[0]["IdFuncionario"] != null ? Convert.ToInt32(dt.Rows[0]["IdFuncionario"].ToString()) : 0,
-                Nome  = dt.Rows[0]["Nome"] != null ? dt.Rows[0]["Nome"].ToString() : string.Empty,
+                Nome = dt.Rows[0]["Nome"] != null ? dt.Rows[0]["Nome"].ToString() : string.Empty,
                 Login = dt.Rows[0]["Login"] != null ? dt.Rows[0]["Login"].ToString() : string.Empty,
                 Senha = dt.Rows[0]["Senha"] != null ? dt.Rows[0]["Senha"].ToString() : string.Empty,
-                PerfilAcesso = dt.Rows[0]["PerfilAcesso"] != null ? Convert.ToInt32(dt.Rows[0]["PerfilAcesso"].ToString()) : 0,                      
+                PerfilAcesso = dt.Rows[0]["PerfilAcesso"] != null ? Convert.ToInt32(dt.Rows[0]["PerfilAcesso"].ToString()) : 0,
             };
 
             return usuario;
         }
-
-       
 
         public List<UsuarioModel> ListaUsuario()
         {
@@ -154,7 +161,7 @@ namespace SGP.Models
             var sql = $@"SELECT F.IdFuncionario AS Codigo,
                                 F.Nome AS Nome
                          FROM Funcionario F";
-                         
+
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -174,11 +181,10 @@ namespace SGP.Models
 
         public void Excluir(int id)
         {
-            string sql = $"DELETE FROM USUARIO WHERE IdUsuario = {id}";
+            string sql = $"DELETE FROM usuario WHERE IdUsuario = {id}";
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
         }
-
 
         public string CriptografarSenha(string senha)
         {
@@ -197,5 +203,7 @@ namespace SGP.Models
 
             return sBuilder.ToString();
         }
+
+        #endregion
     }
 }

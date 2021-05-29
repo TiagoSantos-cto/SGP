@@ -7,18 +7,27 @@ namespace SGP.Models
 {
     public class EstacaoModel
     {
-        public int  Id { get; set; }
+        #region PROPRIEDADES
+
+        public int Id { get; set; }
         public string Nome { get; set; }
         public int Tipo { get; set; }
- 
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
-        public EstacaoModel(){}
+        #endregion
+
+        #region CONTRUTORES
+
+        public EstacaoModel() { }
 
         public EstacaoModel(IHttpContextAccessor httpContextAccessor)
         {
             HttpContextAccessor = httpContextAccessor;
         }
+
+        #endregion
+
+        #region MÉTODOS
 
         public void GravarEstacao()
         {
@@ -26,36 +35,47 @@ namespace SGP.Models
 
             string sqlEstacao = string.Empty;
             string sqlTipo = string.Empty;
-            
+
             if (Tipo == 0)
             {
                 if (!Existe(Nome))
                 {
-                    sqlEstacao = $"insert into EstacaoTrabalho (IdEstacao, Tipo) values ('{Id}', '{Tipo}')";
-                    sqlTipo = $"INSERT INTO Armazem (Nome, Id_Estacao) VALUES ('{Nome}', '{Id}')";
-                }              
+                    sqlEstacao = $@"INSERT INTO EstacaoTrabalho (IdEstacao, Tipo)
+                                    VALUES ('{Id}', '{Tipo}')";
+                    
+                    sqlTipo = $@"INSERT INTO Armazem (Nome, Id_Estacao)
+                                 VALUES ('{Nome}', '{Id}')";
+                }
             }
             else
             {
                 if (!Existe(Nome))
                 {
-                    sqlEstacao = $"insert into EstacaoTrabalho (IdEstacao, Tipo) values ('{Id}', '{Tipo}')";
-                    sqlTipo = $"INSERT INTO UnidadeMaritima (Nome, Id_Estacao) VALUES ('{Nome}', '{Id}')";
+                    sqlEstacao = $@"INSERT INTO EstacaoTrabalho (IdEstacao, Tipo)
+                                    VALUES('{Id}', '{Tipo}')";
+                    
+                    sqlTipo = $@"INSERT INTO UnidadeMaritima (Nome, Id_Estacao) 
+                                 VALUES ('{Nome}', '{Id}')";
                 }
             }
- 
+
             var dal = new DAL();
-            
+
             if (!string.IsNullOrEmpty(sqlEstacao) && !string.IsNullOrEmpty(sqlTipo))
             {
                 dal.ExecutarComandoSQL(sqlEstacao);
                 dal.ExecutarComandoSQL(sqlTipo);
-            }                  
+            }
         }
 
         private bool Existe(string nome)
         {
-            var sql = $"select * from Armazem A, UnidadeMaritima UM where A.Nome = '{nome}' or UM.Nome = '{nome}'";
+            var sql = $@"SELECT *
+                         FROM Armazem A,
+                              UnidadeMaritima UM
+                         WHERE A.Nome = '{nome}'
+                           OR UM.Nome = '{nome}'";
+
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
 
@@ -65,9 +85,9 @@ namespace SGP.Models
         private int GerarSequencial()
         {
             var estacoes = ListaEstacao();
-            
+
             var listaID = new List<int>();
-            
+
             foreach (var item in estacoes)
             {
                 listaID.Add(item.Id);
@@ -77,12 +97,15 @@ namespace SGP.Models
 
             var sequencial = listaID[listaID.Count - 1];
 
-            return sequencial+1;                 
+            return sequencial + 1;
         }
 
         public void ExcluirEstacao(int id)
         {
-            string sql = $"delete from EstacaoTrabalho where IdEstacao = {id}";
+            string sql = $@"DELETE
+                            FROM EstacaoTrabalho
+                            WHERE IdEstacao = '{id}'";
+
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
         }
@@ -91,13 +114,26 @@ namespace SGP.Models
         {
             var lista = new List<EstacaoModel>();
 
-            var sqlArmazem = $"select E.IdEstacao as ID, E.Tipo as TIPO, A.Nome as NOME from EstacaoTrabalho E, Armazem A where E.IdEstacao = A.Id_Estacao order by E.IdEstacao";
-            var sqlUnidadeMaritima = $"select E.IdEstacao as ID, E.Tipo as TIPO, U.Nome as NOME from EstacaoTrabalho E, UnidadeMaritima U where E.IdEstacao = U.Id_Estacao order by E.IdEstacao;";
-            
+            var sqlArmazem = $@"SELECT E.IdEstacao AS ID,
+                                       E.Tipo AS TIPO,
+                                       A.Nome AS NOME
+                                FROM EstacaoTrabalho E,
+                                     Armazem A
+                                WHERE E.IdEstacao = A.Id_Estacao
+                                ORDER BY E.IdEstacao";
+
+            var sqlUnidadeMaritima = $@"SELECT E.IdEstacao AS ID,
+                                               E.Tipo AS TIPO,
+                                               U.Nome AS NOME
+                                        FROM EstacaoTrabalho E,
+                                             UnidadeMaritima U
+                                        WHERE E.IdEstacao = U.Id_Estacao
+                                        ORDER BY E.IdEstacao;";
+
             var dal = new DAL();
-            
+
             var dtArmazem = dal.RetDataTable(sqlArmazem);
-            
+
             for (int i = 0; i < dtArmazem.Rows.Count; i++)
             {
                 var item = new EstacaoModel
@@ -126,5 +162,7 @@ namespace SGP.Models
 
             return lista;
         }
+
+        #endregion
     }
 }

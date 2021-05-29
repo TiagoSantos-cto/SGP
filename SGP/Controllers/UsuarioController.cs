@@ -7,7 +7,6 @@ namespace SGP.Controllers
     public class UsuarioController : Controller
     {
         IHttpContextAccessor HttpContextAccessor;
-
         public UsuarioController(IHttpContextAccessor httpContextAccessor) { HttpContextAccessor = httpContextAccessor; }
 
         [HttpGet]

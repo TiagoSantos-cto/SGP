@@ -18,13 +18,9 @@ namespace SGP.Controllers
         {
             var Sinistro = new SinistroModel(HttpContextAccessor);
             
-            if (id != null && id > 0)
+            if (id != null)
             {
                 ViewBag.Registro = Sinistro.CarregarRegistro(id);
-            }
-            else
-            {
-                ViewBag.Registro = Sinistro;
             }
 
             ViewBag.ListaStatus = new List<string>(new string[] { StatusSinistro.Aberto.GetDescription(), StatusSinistro.Analise.GetDescription(), StatusSinistro.Finalizado.GetDescription()});

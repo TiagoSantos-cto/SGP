@@ -9,6 +9,7 @@ namespace SGP.Models
 {
     public class SinistroModel
     {
+        #region PROPRIEDADES
         public enum StatusSinistro
         {
             [Description("Aberto")]
@@ -20,7 +21,7 @@ namespace SGP.Models
         }
 
         public int Id { get; set; }
-        
+
         [Required(ErrorMessage = "O código da requisição é obrigatório.")]
         public int IdRequisicao { get; set; }
 
@@ -29,9 +30,7 @@ namespace SGP.Models
         public string NomeUsuarioResponsavel { get; set; }
 
         [Required(ErrorMessage = "O campo data é obrigatório.")]
-        public string DataAbertura { get; set; }
-
-        public string DataFechamento { get; set; }
+        public DateTime DataAbertura { get; set; }
 
         [Required(ErrorMessage = "O campo descrição é obrigatório.")]
         public string Descricao { get; set; }
@@ -46,13 +45,20 @@ namespace SGP.Models
 
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
+        #endregion
+
+        #region CONSTRUTORES
+
+        public SinistroModel() { }
+
         public SinistroModel(IHttpContextAccessor httpContextAccessor)
         {
             HttpContextAccessor = httpContextAccessor;
-            DataAbertura = string.Empty;
         }
 
-        public SinistroModel() { }
+        #endregion
+
+        #region MÉTODOS
 
         private string IdUsuarioLogado()
         {
@@ -80,17 +86,20 @@ namespace SGP.Models
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
-
             var entity = new SinistroModel();
-            entity.Id = dt.Rows[0]["ID"] != null ? Convert.ToInt32(dt.Rows[0]["ID"].ToString()) : 0;
-            entity.IdRequisicao = dt.Rows[0]["ID_REQUISICAO"] != null ? Convert.ToInt32(dt.Rows[0]["ID_REQUISICAO"].ToString()) : 0;
-            entity.Descricao = dt.Rows[0]["DESCRICAO"] != null ? dt.Rows[0]["DESCRICAO"].ToString() : string.Empty;
-            entity.DataAbertura = dt.Rows[0]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA_INCLUSAO"].ToString()).ToString("dd/MM/yyyy") : string.Empty;
-            var statusBanco = dt.Rows[0]["STATUS"] != null ? Convert.ToInt32(dt.Rows[0]["STATUS"].ToString()) : 0;
-            entity.Status = ((StatusSinistro)statusBanco).GetDescription();
-            entity.NomeUsuarioResponsavel = dt.Rows[0]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[0]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty;
-            entity.NomeUsuarioAtual = dt.Rows[0]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[0]["NOME_USUARIO_ATUAL"].ToString() : string.Empty;
-            entity.UsuarioAtual = dt.Rows[0]["USUARIO_ATUAL"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO_ATUAL"].ToString()) : 0;
+
+            if (dt.Rows.Count > 0)
+            {
+                entity.Id = dt.Rows[0]["ID"] != null ? Convert.ToInt32(dt.Rows[0]["ID"].ToString()) : 0;
+                entity.IdRequisicao = dt.Rows[0]["ID_REQUISICAO"] != null ? Convert.ToInt32(dt.Rows[0]["ID_REQUISICAO"].ToString()) : 0;
+                entity.Descricao = dt.Rows[0]["DESCRICAO"] != null ? dt.Rows[0]["DESCRICAO"].ToString() : string.Empty;
+                entity.DataAbertura = dt.Rows[0]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA_INCLUSAO"].ToString()) : DateTime.MinValue;
+                var statusBanco = dt.Rows[0]["STATUS"] != null ? Convert.ToInt32(dt.Rows[0]["STATUS"].ToString()) : 0;
+                entity.Status = ((StatusSinistro)statusBanco).GetDescription();
+                entity.NomeUsuarioResponsavel = dt.Rows[0]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[0]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty;
+                entity.NomeUsuarioAtual = dt.Rows[0]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[0]["NOME_USUARIO_ATUAL"].ToString() : string.Empty;
+                entity.UsuarioAtual = dt.Rows[0]["USUARIO_ATUAL"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO_ATUAL"].ToString()) : 0;
+            }
 
             return entity;
         }
@@ -131,9 +140,9 @@ namespace SGP.Models
 
             var filtro = string.Empty;
 
-            if ((DataAbertura != null) && (DataFechamento != null))
+            if ((DataAbertura != null))
             {
-                filtro += $"AND R.DataInclusao >='{Convert.ToDateTime(DataAbertura):yyyy/MM/dd}' AND R.DataInclusao <= '{Convert.ToDateTime(DataFechamento):yyyy/MM/dd}'";
+                filtro += $"AND R.DataInclusao >='{Convert.ToDateTime(DataAbertura):yyyy/MM/dd}'";
             }
 
             if (Status != null)
@@ -143,7 +152,7 @@ namespace SGP.Models
                     filtro += $" AND S.Status = '{(int)Status.GetEnumValue<StatusSinistro>()}'";
                 }
             }
-        
+
             if (UsuarioAtual > 0)
             {
                 filtro += $" AND S.UsuarioAtual = '{UsuarioAtual}'";
@@ -182,8 +191,8 @@ namespace SGP.Models
                     Id = dt.Rows[i]["ID"] != null ? Convert.ToInt32(dt.Rows[i]["ID"].ToString()) : 0,
                     IdRequisicao = dt.Rows[i]["ID_REQUISICAO"] != null ? Convert.ToInt32(dt.Rows[i]["ID_REQUISICAO"].ToString()) : 0,
                     Descricao = dt.Rows[i]["DESCRICAO"] != null ? dt.Rows[i]["DESCRICAO"].ToString() : string.Empty,
-                    NomeUsuarioAtual = dt.Rows[i]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[i]["NOME_USUARIO_ATUAL"].ToString() : string.Empty,                  
-                    DataAbertura = dt.Rows[i]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[i]["DATA_INCLUSAO"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
+                    NomeUsuarioAtual = dt.Rows[i]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[i]["NOME_USUARIO_ATUAL"].ToString() : string.Empty,
+                    DataAbertura = dt.Rows[i]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[i]["DATA_INCLUSAO"].ToString()) : DateTime.MinValue,
                     Status = dt.Rows[i]["STATUS"] != null ? dt.Rows[i]["STATUS"].ToString() : string.Empty,
                     NomeUsuarioResponsavel = dt.Rows[i]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[i]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty
                 };
@@ -193,6 +202,7 @@ namespace SGP.Models
 
             return lista;
         }
-    }
 
+        #endregion
+    }
 }

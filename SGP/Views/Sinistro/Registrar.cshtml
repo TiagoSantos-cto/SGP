@@ -11,7 +11,6 @@
     var vIdSinistro = string.Empty;
     var vIdRequisicao = string.Empty;
     var vDataAbertura = DateTime.Now.ToString("yyyy-MM-dd");
-    var vDataFechamento = string.Empty;
     var vStatus = string.Empty;
     var vDescricao = string.Empty;
     var vUsuarioAtual = string.Empty;
@@ -22,8 +21,7 @@
     {
         vIdSinistro = @ViewBag.Registro.Id.ToString();
         vIdRequisicao = @ViewBag.Registro.IdRequisicao.ToString();
-        vDataAbertura = Convert.ToDateTime(@ViewBag.Registro.DataAbertura).ToString("yyyy-MM-dd");
-        vDataFechamento = Convert.ToDateTime(@ViewBag.Registro.DataFechamento).ToString("yyyy-MM-dd");
+        vDataAbertura = Convert.ToDateTime(@ViewBag.Registro.DataAbertura).ToString("yyyy-MM-dd");   
         vStatus = @ViewBag.Registro.Status.ToString();
         vDescricao = @ViewBag.Registro.Descricao.ToString();
         vUsuarioAtual = @ViewBag.Registro.UsuarioAtual.ToString();
@@ -75,18 +73,18 @@
                         @using Microsoft.AspNetCore.Http;
                         @inject IHttpContextAccessor HttpContextAccessor
                         <input type="hidden" asp-for="UsuarioResponsavel" value="@HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado")" />
-                        <input type="text" class="form-control" value="@HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado")" style="width: 180px" disabled>
+                        <input type="text" asp-for="NomeUsuarioResponsavel" class="form-control" value="@HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado")" style="width: 180px" disabled>
                     }
                     else
                     {
-                        <input type="text" class="form-control" asp-for="UsuarioResponsavel" value="@vNomeUsuarioResponsavel" style="width: 180px" disabled>
+                        <input type="text" class="form-control" asp-for="NomeUsuarioResponsavel" value="@vNomeUsuarioResponsavel" style="width: 180px" disabled>
                     }
                 }
             </div>
 
             <div class="col-md-3 mb-3">
                 <label>Data de abertura:</label>
-                <input type="date" class="form-control" asp-for="DataAbertura" value="@vDataAbertura" style="width: 180px" disabled>
+                <input type="date" class="form-control" asp-for="DataAbertura" value="@vDataAbertura" style="width: 180px">
             </div>
 
         </div>
@@ -169,7 +167,7 @@
 
         <br />
 
-        <button type="submit" class="btn btn-block btn-success ">Registrar</button>
+        <button type="submit" class="btn btn-block btn-success">Registrar</button>
         <button id="btnEncerrar" type="button" class="btn btn-block btn-danger" onclick="Encerrar()" style="display:none">Encerrar</button>
 
     </form>

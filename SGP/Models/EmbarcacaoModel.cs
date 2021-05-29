@@ -7,21 +7,30 @@ namespace SGP.Models
 {
     public class EmbarcacaoModel
     {
-        public string  Id { get; set; }
+        #region PROPRIEDADES
+       
+        public string Id { get; set; }
         public string Nome { get; set; }
         public double Capacidade { get; set; }
         public double AreaCarga { get; set; }
         public int Acomodacao { get; set; }
         public string Categoria { get; set; }
-
         public IHttpContextAccessor HttpContextAccessor { get; set; }
 
-        public EmbarcacaoModel(){}
+        #endregion
+
+        #region CONTRUTORES
+
+        public EmbarcacaoModel() { }
 
         public EmbarcacaoModel(IHttpContextAccessor httpContextAccessor)
         {
             HttpContextAccessor = httpContextAccessor;
         }
+
+        #endregion
+
+        #region MÉTODOS
 
         public void GravarEmbarcacao()
         {
@@ -62,9 +71,9 @@ namespace SGP.Models
                     Id = dt.Rows[i]["IdEmbarcacao"].ToString(),
                     Nome = dt.Rows[i]["Nome"].ToString(),
                     Capacidade = Convert.ToDouble(dt.Rows[i]["Capacidade"].ToString()),
-                    AreaCarga = Convert.ToDouble(dt.Rows[i]["AreaCarga"].ToString()), 
+                    AreaCarga = Convert.ToDouble(dt.Rows[i]["AreaCarga"].ToString()),
                     Acomodacao = Convert.ToInt32(dt.Rows[i]["Acomodacao"].ToString()),
-                    Categoria = dt.Rows[i]["Categoria"].ToString()                
+                    Categoria = dt.Rows[i]["Categoria"].ToString()
                 };
 
                 lista.Add(item);
@@ -81,5 +90,7 @@ namespace SGP.Models
 
             return dt.Rows.Count > 0;
         }
+
+        #endregion
     }
 }
