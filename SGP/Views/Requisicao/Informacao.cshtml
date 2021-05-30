@@ -73,7 +73,7 @@
                     }
                 }
 
-            </div>         
+            </div>
 
 
             <div class="col-md-3 mb-lg-5">
@@ -235,7 +235,7 @@
         </fieldset>
 
         <div class="form-group">
-            
+
             <div>
                 @Html.TextArea("Descricao", vDescricao, new { @class = "form-control", disabled = "disabled" })
             </div>
@@ -325,7 +325,12 @@
 
             </div>
 
-            <button id="btnEntrega" type="button" class=" btn btn-info" onclick="Editar()" style="display:none">Programar entrega</button>
+            @{
+                if (vStatus == "Programar")
+                {
+                    <button id="btnEntrega" type="button" class=" btn btn-info" onclick="Editar()" style="display:inline">Programar entrega</button>
+                }
+            }
 
         </fieldset>
 
