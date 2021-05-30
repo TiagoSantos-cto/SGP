@@ -58,10 +58,23 @@
             <div class="col-md-3 mb-3">
                 <label>Requisição:</label>
                 <br />
-                <input id="ID" type="number" class="form-control" asp-for="Id" value="@vId" style="width: 180px">
-                <br />
-                <button id="btnBuscar" type="button" class=" btn btn-info" onclick="CarregarCampos()">Buscar</button>
+
+                @{
+                    if (vId > 0)
+                    {
+                        <input id="ID" type="number" class="form-control" asp-for="Id" value="@vId" style="width: 180px">
+                        <br />
+                        <button id="btnBuscar" type="button" class=" btn btn-info" onclick="CarregarCampos()">Buscar</button>
+
+                    }
+                    else
+                    {
+                        <input id="ID" type="number" class="form-control" asp-for="Id" value="@vId" style="width: 180px" disabled>
+                    }
+                }
+
             </div>         
+
 
             <div class="col-md-3 mb-lg-5">
                 @{
