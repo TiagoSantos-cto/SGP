@@ -21,7 +21,7 @@
     {
         vIdSinistro = @ViewBag.Registro.Id.ToString();
         vIdRequisicao = @ViewBag.Registro.IdRequisicao.ToString();
-        vDataAbertura = Convert.ToDateTime(@ViewBag.Registro.DataAbertura).ToString("yyyy-MM-dd");   
+        vDataAbertura = Convert.ToDateTime(@ViewBag.Registro.DataAbertura).ToString("yyyy-MM-dd");
         vStatus = @ViewBag.Registro.Status.ToString();
         vDescricao = @ViewBag.Registro.Descricao.ToString();
         vUsuarioAtual = @ViewBag.Registro.UsuarioAtual.ToString();
@@ -48,7 +48,7 @@
 
         <div>
 
-            <input type="number" class="form-control" asp-for="Id" value="@vIdSinistro" style="width: 180px" hidden="hidden">
+            <input id="IdSinistro" type="number" class="form-control" asp-for="Id" value="@vIdSinistro" style="width: 180px" hidden="hidden">
 
             <div class="mb-3">
                 <label>Código requisição:</label>
@@ -57,8 +57,8 @@
                 <span asp-validation-for="IdRequisicao" class="text-danger"></span>
             </div>
 
-            <button id="btnBuscar" type="button" class=" btn btn-info" onclick="CarregarCampos()">Buscar dados</button>
-            <button id="btnReq" type="button" class=" btn btn-warning" onclick="AbrirRequisicao()"> Abrir requisição</button>
+            <button type="button" class="btn btn-info" onclick="CarregarCampos()">Buscar dados</button>
+            <button type="button" class="btn btn-warning" onclick="AbrirRequisicao()">Abrir requisição</button>
         </div>
 
         <br />
@@ -84,15 +84,26 @@
 
             <div class="col-md-3 mb-3">
                 <label>Data de abertura:</label>
-                <input type="date" class="form-control" asp-for="DataAbertura" value="@vDataAbertura" style="width: 180px">
+                <input type="date" class="form-control" asp-for="DataAbertura" value="@vDataAbertura" style="width: 180px" disabled>
             </div>
 
         </div>
 
         <div class="form-group">
+
+            <div>
+                @Html.TextArea("Descricao", vDescricao, new { @class = "form-control", disabled = "disabled" })
+            </div>
+            <br />
+
             <label>Descrição:</label>
-            @Html.TextArea("Descricao", vDescricao, new { @class = "form-control" })
-            <span asp-validation-for="Descricao" class="text-danger"></span>
+            <div>
+                @Html.TextArea("Descricao", new { @class = "form-control" })
+                <div class="invalid-feedback">
+                    O campo descrição é obrigatório.
+                </div>
+            </div>
+
         </div>
 
         <div class="row">
@@ -109,7 +120,7 @@
                             <option value="">Selecionar...</option>
                             <option value="Aberto">Aberto</option>
                             <option value="Em análise">Em análise</option>
-                            <option value="Finalizado">Finalizado</option>
+                            <option value="Finalizar">Finalizar</option>
                         }
                         else
                         {
@@ -168,12 +179,17 @@
         <br />
 
         <button type="submit" class="btn btn-block btn-success">Registrar</button>
-        <button id="btnEncerrar" type="button" class="btn btn-block btn-danger" onclick="Encerrar()" style="display:none">Encerrar</button>
+        <button id="btnEncerrar" type="button" class="btn btn-block btn-danger" onclick="Encerrar()" style="display:none">Finalizar</button>
 
     </form>
 </div>
 
 <script>
+
+    window.onload = function () {
+        LiberarEncerramento();
+    }
+
 
     function CarregarCampos() {
         var id = document.getElementById('IDReq').value;
@@ -188,8 +204,18 @@
         window.location.href = "../../Requisicao/Informacao/" + id;
     }
 
-     function Encerrar() {
-         window.location.href = "../Encerrar/" + @vIdSinistro;
-     }
+    function LiberarEncerramento() {
+        var select = document.getElementById('selectStatus');
+        var option = select.options[select.selectedIndex].value;
+
+        if (option == "Finalizar") {
+            document.getElementById('btnEncerrar').style.display = 'inline';
+        }
+    }
+
+    function Encerrar() {
+        var id = document.getElementById('IdSinistro').value;
+        window.location.href = "../Encerrar/" + id;
+    }
 
 </script>

@@ -17,8 +17,8 @@ namespace SGP.Models
             Aberto,
             [Description("Em análise")]
             Analise,
-            [Description("Finalizado")]
-            Finalizado
+            [Description("Finalizar")]
+            Finalizar
         }
 
         #endregion
@@ -98,7 +98,7 @@ namespace SGP.Models
                 entity.Id = dt.Rows[0]["ID"] != null ? Convert.ToInt32(dt.Rows[0]["ID"].ToString()) : 0;
                 entity.IdRequisicao = dt.Rows[0]["ID_REQUISICAO"] != null ? Convert.ToInt32(dt.Rows[0]["ID_REQUISICAO"].ToString()) : 0;
                 entity.Descricao = dt.Rows[0]["DESCRICAO"] != null ? dt.Rows[0]["DESCRICAO"].ToString() : string.Empty;
-                entity.DataAbertura = dt.Rows[0]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA_INCLUSAO"].ToString()) : DateTime.MinValue;
+                entity.DataAbertura = dt.Rows[0]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA_INCLUSAO"].ToString()) : DateTime.Now;
                 var statusBanco = dt.Rows[0]["STATUS"] != null ? Convert.ToInt32(dt.Rows[0]["STATUS"].ToString()) : 0;
                 entity.Status = ((StatusSinistro)statusBanco).GetDescription();
                 entity.NomeUsuarioResponsavel = dt.Rows[0]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[0]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty;
@@ -116,14 +116,14 @@ namespace SGP.Models
 
             if (Id == 0)
             {
-                sql = "INSERT INTO pedidosinistro (Id_Requisicao, Descricao, Status, VbFinalizado, UsuarioAtual, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao) VALUES " +
-                    $" ('{IdRequisicao}', '{Descricao}',  '{(int)Status.GetEnumValue<StatusSinistro>()}', '0','{UsuarioAtual}', '{Convert.ToDateTime(DataAbertura):yyyy/MM/dd}', '{UsuarioResponsavel}', '','' )";
+                sql = $@"INSERT INTO pedidosinistro (Id_Requisicao, Descricao, Status, VbFinalizado, UsuarioAtual, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao) VALUES 
+                         ('{IdRequisicao}', '{Descricao}',  '{(int)Status.GetEnumValue<StatusSinistro>()}', '0','{UsuarioAtual}', '{Convert.ToDateTime(DateTime.Now)}', '{UsuarioResponsavel}', '','' )";
             }
             else
             {
-                sql = $"UPDATE  pedidosinistro SET DataAlteracao = '{DateTime.Now.ToShortDateString()}', " +
-                      $"Descricao = '{Descricao}', Status = '{(int)Status.GetEnumValue<StatusSinistro>()}'," +
-                      $"UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdSinistro = '{Id}'";
+                sql = $@"UPDATE  pedidosinistro SET DataAlteracao = '{DateTime.Now}', 
+                         Descricao = '{Descricao}', Status = '{(int)Status.GetEnumValue<StatusSinistro>()}', 
+                         UsuarioAtual = '{UsuarioAtual}', UsuarioAlteracao ='{IdUsuarioLogado()}'  WHERE IdSinistro = '{Id}'";
             }
 
             dal.ExecutarComandoSQL(sql);
@@ -133,8 +133,10 @@ namespace SGP.Models
         {
             var dal = new DAL();
 
-            string sql = $"UPDATE Sinistro SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', " +
-                         $"Descricao = 'Análise de sinistro finalizada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {IdUsuarioLogado()}' ,  VbFinalizado = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdSinistro = '{id}'";
+            var idUsuarioAtual = IdUsuarioLogado();
+
+            string sql = $"UPDATE pedidosinistro SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', " +
+                         $"Descricao = 'Análise de sinistro finalizada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {idUsuarioAtual}' ,  VbFinalizado = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdSinistro = '{id}'";
 
             dal.ExecutarComandoSQL(sql);
         }

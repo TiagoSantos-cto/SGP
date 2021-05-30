@@ -20,10 +20,14 @@ namespace SGP.Controllers
             
             if (id != null)
             {
-                ViewBag.Registro = Sinistro.CarregarRegistro(id);
+                var entity = Sinistro.CarregarRegistro(id);
+                if (entity.Id > 0)
+                {
+                    ViewBag.Registro = entity;
+                }        
             }
 
-            ViewBag.ListaStatus = new List<string>(new string[] { StatusSinistro.Aberto.GetDescription(), StatusSinistro.Analise.GetDescription(), StatusSinistro.Finalizado.GetDescription()});
+            ViewBag.ListaStatus = new List<string>(new string[] { StatusSinistro.Aberto.GetDescription(), StatusSinistro.Analise.GetDescription(), StatusSinistro.Finalizar.GetDescription()});
            
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
@@ -41,7 +45,7 @@ namespace SGP.Controllers
                 return RedirectToAction("Sucesso", Sinistro);
             }
 
-            ViewBag.ListaStatus = new List<string>(new string[] { StatusSinistro.Aberto.GetDescription(), StatusSinistro.Analise.GetDescription(), StatusSinistro.Finalizado.GetDescription() });
+            ViewBag.ListaStatus = new List<string>(new string[] { StatusSinistro.Aberto.GetDescription(), StatusSinistro.Analise.GetDescription(), StatusSinistro.Finalizar.GetDescription() });
 
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
@@ -69,11 +73,18 @@ namespace SGP.Controllers
             return View();
         }
 
-        public IActionResult Sucesso(SinistroModel Sinistro)
+        [HttpGet]
+        public IActionResult Encerrar(int id)
         {
-            ViewBag.Registro = Sinistro;
+            var conta = new SinistroModel(HttpContextAccessor);
+            conta.Finalizar(id);
+            return RedirectToAction("Sucesso");
+        }
 
+        public IActionResult Sucesso()
+        {
             return View();
         }
+
     }
 }

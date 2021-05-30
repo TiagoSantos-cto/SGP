@@ -232,7 +232,7 @@
             <div>
                 @Html.TextArea("Descricao", new { @class = "form-control" })
                 <div class="invalid-feedback">
-                    O campo od escrição é obrigatório.
+                    O campo descrição é obrigatório.
                 </div>
             </div>
 
@@ -403,8 +403,7 @@
         }
 
         if (@vVbCancelada > 0 || @vVbEncerrada > 0) {
-            $("#divPrincipal").find("*").prop("disabled", true); //COLOCAR PRA FUNCIONAR
-        }
+            $("#divPrincipal").find("*").prop("disabled", true);
 
         LiberarTransporte();
 
