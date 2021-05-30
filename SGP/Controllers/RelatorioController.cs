@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PdfSharpCore.Drawing;
 using SGP.Models;
-using SGP.Util;
 using System.IO;
 
 namespace SGP.Controllers
@@ -44,17 +43,17 @@ namespace SGP.Controllers
                 var qtdPaginas = doc.PageCount;
                 textFormatter.DrawString(qtdPaginas.ToString(), new XFont("Arial", 10), corFonte, new PdfSharpCore.Drawing.XRect(578, 825, page.Width, page.Height));
 
-                // LOGO EMPRESA
-                //var logo = @"..\wwwroot\upload\porto-do-acu-logo-relatorio.png";
-                //XImage imagem = XImage.FromFile(logo);
-                //graphics.DrawImage(imagem, 20, 5, 70, 50);
-             
-                // CABEÇALHO
-                textFormatter.DrawString("Status: ", fonteDescricao, corFonte, new XRect(20, 75, page.Width, page.Height));
-                textFormatter.DrawString(entity.Status, fonteOrganzacao, corFonte, new XRect(80, 75, page.Width, page.Height));
 
-                textFormatter.DrawString("Período: ", fonteDescricao, corFonte, new XRect(20, 115, page.Width, page.Height));
-                textFormatter.DrawString(entity.Data +" até "+ entity.DataFinal , fonteOrganzacao, corFonte, new XRect(80, 115, page.Width, page.Height));
+                var fonteTitulo = new XFont("Arial", 20, XFontStyle.Bold);
+
+                // CABEÇALHO
+                textFormatter.DrawString("MOVIMENTAÇÕES DE REQUISIÇÕES", fonteTitulo, corFonte, new XRect(20, 30, page.Width, page.Height));
+
+                textFormatter.DrawString("Status: ", fonteDescricao, corFonte, new XRect(20, 70, page.Width, page.Height));
+                textFormatter.DrawString(entity.Status, fonteOrganzacao, corFonte, new XRect(55, 69, page.Width, page.Height));
+
+                textFormatter.DrawString("Período: ", fonteDescricao, corFonte, new XRect(20, 90, page.Width, page.Height));
+                textFormatter.DrawString(entity.Data +" até "+ entity.DataFinal , fonteOrganzacao, corFonte, new XRect(105, 89, page.Width, page.Height));
 
                 // DETALHE
                 var tituloDetalhes = new PdfSharpCore.Drawing.Layout.XTextFormatter(graphics);
@@ -64,7 +63,7 @@ namespace SGP.Controllers
                 var alturaTituloDetalhesY = 140;
                 var detalhes = new PdfSharpCore.Drawing.Layout.XTextFormatter(graphics);
 
-                detalhes.DrawString("Código", fonteDescricao, corFonte, new XRect(20, alturaTituloDetalhesY, page.Width, page.Height));
+                detalhes.DrawString("Número", fonteDescricao, corFonte, new XRect(20, alturaTituloDetalhesY, page.Width, page.Height));
                 
                 detalhes.DrawString("Descrição", fonteDescricao, corFonte, new XRect(60, alturaTituloDetalhesY, page.Width, page.Height));
 
@@ -76,21 +75,21 @@ namespace SGP.Controllers
 
                 detalhes.DrawString("Status", fonteDescricao, corFonte, new XRect(470, alturaTituloDetalhesY, page.Width, page.Height));
 
-                detalhes.DrawString("Usuário", fonteDescricao, corFonte, new XRect(540, alturaTituloDetalhesY, page.Width, page.Height));
+                detalhes.DrawString("Usuário", fonteDescricao, corFonte, new XRect(525, alturaTituloDetalhesY, page.Width, page.Height));
 
                 var dados = entity.ListaRequisicao();
 
-                // DADOS TESTES
+                // DADOS
                 var alturaDetalhesItens = 160;
                 foreach (var item in dados)
                 {
                     textFormatter.DrawString(item.Id.ToString(), fonteDetalhesDescricao, corFonte, new XRect(21, alturaDetalhesItens, page.Width, page.Height));
                     textFormatter.DrawString(item.Descricao, fonteDetalhesDescricao, corFonte, new XRect(61, alturaDetalhesItens, page.Width, page.Height));
                     textFormatter.DrawString(item.Tipo == "T" ? "Transbordo" : "Backload", fonteDetalhesDescricao, corFonte, new XRect(231, alturaDetalhesItens, page.Width, page.Height));
-                    textFormatter.DrawString(item.Origem, fonteDetalhesDescricao, corFonte, new XRect(281, alturaDetalhesItens, page.Width, page.Height));
-                    textFormatter.DrawString(item.Destino, fonteDetalhesDescricao, corFonte, new XRect(381, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.NomeEstacaoOrigem, fonteDetalhesDescricao, corFonte, new XRect(281, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.NomeEstacaoDestino, fonteDetalhesDescricao, corFonte, new XRect(381, alturaDetalhesItens, page.Width, page.Height));
                     textFormatter.DrawString(item.Status, fonteDetalhesDescricao, corFonte, new XRect(471, alturaDetalhesItens, page.Width, page.Height));
-                    textFormatter.DrawString(item.NomeUsuarioAtual, fonteDetalhesDescricao, corFonte, new XRect(541, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.NomeUsuarioAtual, fonteDetalhesDescricao, corFonte, new XRect(526, alturaDetalhesItens, page.Width, page.Height));
 
                     alturaDetalhesItens += 20;
                 }
@@ -109,9 +108,9 @@ namespace SGP.Controllers
             }         
         }
 
-
         public IActionResult ImprimirHistorico(RequisicaoModel entity)
         {
+       
             using (var doc = new PdfSharpCore.Pdf.PdfDocument())
             {
                 var page = doc.AddPage();
@@ -129,14 +128,14 @@ namespace SGP.Controllers
                 var qtdPaginas = doc.PageCount;
                 textFormatter.DrawString(qtdPaginas.ToString(), new XFont("Arial", 10), corFonte, new PdfSharpCore.Drawing.XRect(578, 825, page.Width, page.Height));
 
-                // LOGO EMPRESA
-                //var logo = @"..\wwwroot\upload\porto-do-acu-logo-relatorio.png";
-                //XImage imagem = XImage.FromFile(logo);
-                //graphics.DrawImage(imagem, 20, 5, 70, 50);
 
                 var cabecalho = entity.CarregarRegistro(entity.Id);
 
-                // CABEÇALHO                                                        // horizontal, vertical 
+                var fonteTitulo = new XFont("Arial", 20, XFontStyle.Bold);
+
+                // CABEÇALHO
+                textFormatter.DrawString("HISTÓRICO DE REQUISIÇÃO", fonteTitulo, corFonte, new XRect(20, 30, page.Width, page.Height));           
+                                                                                              // horizontal, vertical 
                 textFormatter.DrawString("Código requisição: ", fonteDescricao, corFonte, new XRect(20, 70, page.Width, page.Height));
                 textFormatter.DrawString(cabecalho.Id.ToString(), fonteOrganzacao, corFonte, new XRect(95, 69, page.Width, page.Height));
                 
@@ -162,7 +161,7 @@ namespace SGP.Controllers
 
                 var dados = entity.ObterHistorico(entity.Id);
 
-                // DADOS
+                //DADOS
                 var alturaDetalhesItens = 160;
                 foreach (var item in dados)
                 {

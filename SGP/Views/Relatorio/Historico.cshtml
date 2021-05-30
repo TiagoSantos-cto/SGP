@@ -18,11 +18,17 @@
 
 <div style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
     <form asp-controller="ReqHistorico" asp-action="Atendimentos">
+             
+        <div>
+            <label>Requisição:</label>
+            <input id="ID" type="number" class="form-control" asp-for="Id" style="width: 180px" required>
+            <div class="invalid-feedback">
+                O campo requisição é obrigatório.
+            </div>
+        </div>
         
-        <label>Requisição:</label>
-        <input id="ID" type="number" class="form-control" asp-for="Id" style="width: 180px">
         <br />
-        
+
         <label>Período:</label>
         <div class="row">
             <div class="col-md-6 mb-3">

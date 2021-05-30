@@ -32,7 +32,7 @@ namespace SGP.Models
         #endregion
 
         #region PROPRIEDADES
-
+        
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O campo data é obrigatório.")]
