@@ -32,7 +32,7 @@ namespace SGP.Models
         #endregion
 
         #region PROPRIEDADES
-        
+
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O campo data é obrigatório.")]
@@ -341,6 +341,7 @@ namespace SGP.Models
 
             RegistrarHistorico();
             GravarLista();
+            AtualizarQuantidadeItem(Id);
         }
 
         private int GerarSequencial()
@@ -446,7 +447,30 @@ namespace SGP.Models
             string sql = $@"UPDATE Requisicao SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', 
                             Descricao = 'Requisição encerrada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {IdUsuarioLogado()}' , VbEncerrada = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
 
-            dal.ExecutarComandoSQL(sql);
+            dal.ExecutarComandoSQL(sql);         
+        }
+
+        private void AtualizarQuantidadeItem(int id)
+        {
+            var equipamento = new EquipamentoModel();
+
+            var itemRequisicao = new ItemRequisicaoModel();
+
+            var listaItens = itemRequisicao.ObterItensPorRequisicao(id);
+
+            var dal = new DAL();
+
+            foreach (var item in listaItens)
+            {
+                var quantidadeRequisicao = item.Quantidade;
+                var equipamentoBanco = equipamento.CarregarRegistro(item.CodigoEquipamento);
+                var quantidadeAtualizada = equipamentoBanco.Quantidade - quantidadeRequisicao;
+
+                string sql = $@"UPDATE equipamento SET Quantidade = '{quantidadeAtualizada}' WHERE IdEquipamento = '{equipamentoBanco.Id}'";
+
+                dal.ExecutarComandoSQL(sql);
+            }
+
         }
 
         public void Cancelar(int id)

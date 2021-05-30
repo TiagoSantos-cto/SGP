@@ -411,16 +411,17 @@
 
         var id = document.getElementById('ID').value;
 
-        if (id != 0) {
+        if (id > 0) {
             document.getElementById('btnAdicionar').style.display = 'inline';
         }
 
         if (@vVbCancelada > 0 || @vVbEncerrada > 0) {
             $("#divPrincipal").find("*").prop("disabled", true);
 
-        LiberarTransporte();
+            LiberarTransporte();
 
-        document.getElementById("DesAnterior").disabled = true
+            document.getElementById("DesAnterior").disabled = true;
+        }
     }
 
     function addOption(id, contador) {
