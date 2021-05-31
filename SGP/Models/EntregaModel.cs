@@ -86,11 +86,25 @@ namespace SGP.Models
                     NomeEmbarcacao = dt.Rows[0]["NOME_EMBARCACAO"] != null ? dt.Rows[0]["NOME_EMBARCACAO"].ToString() : string.Empty
                 };
 
+                if (obj.Status == StatusEntrega.Processamento.ToString())
+                {
+                    obj.Status = StatusEntrega.Processamento.GetDescription();
+                }
+                else if (obj.Status == StatusEntrega.Transito.ToString())
+                {
+                    obj.Status = StatusEntrega.Transito.GetDescription();
+                }
+                else
+                {
+                    obj.Status = StatusEntrega.Encerrada.GetDescription();
+                }
+                
                 entity = obj;
             }
             else
             {
                 entity.IdRequisicao = idRequisicao != null ? (int)idRequisicao : 0;
+                entity.DataMaisTarde = DateTime.Now.ToString();
             }
 
             return entity;
@@ -104,12 +118,26 @@ namespace SGP.Models
 
             var dal = new DAL();
 
+            if (Status == StatusEntrega.Processamento.GetDescription())
+            {
+                Status = StatusEntrega.Processamento.ToString();
+            }
+            else if (Status == StatusEntrega.Transito.GetDescription())
+            {
+                Status = StatusEntrega.Transito.ToString();
+            }
+            else
+            {
+                Status = StatusEntrega.Encerrada.ToString();
+            }
+
+
             if (!Existe(IdEntrega, IdRequisicao))
             {
                 IdEntrega = GerarSequencial();
 
                 sqlEntrega = $@"INSERT INTO Entrega (IdEntrega, Status, DataMaisCedo, DataMaisTarde)
-                                VALUES('{IdEntrega}', '{Status}', '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}', '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}')";
+                                VALUES('{IdEntrega}', '{Status}', '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}', '{Convert.ToDateTime(DataMaisTarde)}')";
 
                 sqlEmbarcacaoEntrega = $@"INSERT INTO EmbarcacaoEntrega (Id_Embarcacao, Id_Entrega)
                                           VALUES('{IdEmbarcacao}', '{IdEntrega}')";
@@ -139,6 +167,8 @@ namespace SGP.Models
                 dal.ExecutarComandoSQL(sqlEntregaRequisicao);
             }
 
+            var requisicaoModel = new RequisicaoModel();
+            requisicaoModel.SincorinizarEntrega(IdRequisicao, IdEntrega);
         }
 
         private int GerarSequencial()

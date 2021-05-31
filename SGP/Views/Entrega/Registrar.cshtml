@@ -23,7 +23,6 @@
         vStatus = @ViewBag.Registro.Status.ToString();
         vIdEmbarcacao = @ViewBag.Registro.IdEmbarcacao.ToString();
         vNomeEmbarcacao = @ViewBag.Registro.NomeEmbarcacao.ToString();
-
     }
     catch { }
 }
@@ -41,12 +40,22 @@
 <br />
 
 <div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
-    <form asp-controller="Entrega" asp-action="Registrar" class="needs-validation" novalidate>
+    <form asp-controller="Entrega" asp-action="Registrar">
 
         <div class="mb-3">
             <label>Código entrega:</label>
             <br />
-            <input type="number" class="form-control" asp-for="IdEntrega" value="@vIdEntrega" style="width: 180px">
+            @{
+                if (!string.IsNullOrEmpty(vIdRequisicao))
+                {
+                    <input type="number" class="form-control" asp-for="IdEntrega" value="@vIdEntrega" style="width: 180px" readonly>
+                }
+                else
+                {
+                    <input type="number" class="form-control" asp-for="IdEntrega" value="@vIdEntrega" style="width: 180px">
+                }
+            }
+
         </div>
 
         <div class="mb-3">
@@ -105,15 +114,15 @@
             <div class="col-md-3 mb-4" style="padding-left:40px">
                 <label>Status:</label>
 
-                <select asp-for="Status" class="form-control" style="width: 180px">
+                <select asp-for="Status" class="form-control" style="width: 205px">
 
                     @{
 
                         if (string.IsNullOrEmpty(vStatus))
                         {
                             <option value="">Selecionar...</option>
-                            <option value="Processamento">Processamento</option>
-                            <option value="Transito">Transito</option>
+                            <option value="Processamento">Em processamento</option>
+                            <option value="Transito">Em trânsito</option>
                             <option value="Encerrada">Encerrada</option>
                         }
                         else

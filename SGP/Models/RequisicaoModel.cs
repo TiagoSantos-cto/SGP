@@ -522,6 +522,15 @@ namespace SGP.Models
             return lista;
         }
 
+        public void SincorinizarEntrega(int idRequisicao, int idEntrega)
+        {   
+            var sql = $@"UPDATE  Requisicao SET DataAlteracao = '{DateTime.Now}', 
+                         Descricao = 'Requisição programada para transporte. Número do transporte: {idEntrega}' WHERE IdRequisicao = '{idRequisicao}'";
+
+            var dal = new DAL();
+            dal.ExecutarComandoSQL(sql);
+        }
+
         #endregion
     }
 }

@@ -157,7 +157,7 @@ namespace SGP.Controllers
 
                 detalhes.DrawString("Descrição", fonteDescricao, corFonte, new XRect(200, alturaTituloDetalhesY, page.Width, page.Height));
             
-                detalhes.DrawString("Usuário", fonteDescricao, corFonte, new XRect(300, alturaTituloDetalhesY, page.Width, page.Height));
+                detalhes.DrawString("Usuário", fonteDescricao, corFonte, new XRect(500, alturaTituloDetalhesY, page.Width, page.Height));
 
                 var dados = entity.ObterHistorico(entity.Id);
 
@@ -167,7 +167,7 @@ namespace SGP.Controllers
                 {
                     textFormatter.DrawString(item.DataAlteracao.ToString(), fonteDetalhesDescricao, corFonte, new XRect(21, alturaDetalhesItens, page.Width, page.Height));
                     textFormatter.DrawString(item.Descricao, fonteDetalhesDescricao, corFonte, new XRect(201, alturaDetalhesItens, page.Width, page.Height));
-                    textFormatter.DrawString(item.NomeUsuario, fonteDetalhesDescricao, corFonte, new XRect(301, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.NomeUsuario, fonteDetalhesDescricao, corFonte, new XRect(501, alturaDetalhesItens, page.Width, page.Height));
 
                     alturaDetalhesItens += 20;
                 }
