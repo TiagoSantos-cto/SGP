@@ -328,18 +328,29 @@
             @{
                 if (vStatus == "Programar")
                 {
-                    <button id="btnEntrega" type="button" class=" btn btn-info" onclick="Editar()" style="display:inline">Programar entrega</button>
+                    <button id="btnEntrega" type="button" class=" btn btn-info" onclick="Editar()" style="display:inline">Transporte</button>
                 }
             }
 
         </fieldset>
 
-        <button id="btnGravar" type="submit" class="btn btn-block btn-success">Gravar</button>
+        @{
+            if (vVbEncerrada < 1 && vVbCancelada < 1)
+            {
+                <button id="btnGravar" type="submit" class="btn btn-block btn-success">Gravar</button>
+            }
+        }
         <br />
-        <br />
-        <button id="btnEncerrar" type="button" class="btn btn-block btn-danger" onclick="EncerrarRequisicao()" style="display:none">Encerrar</button>
-        <button id="btnCancelar" type="button" class="btn btn-block btn-outline-danger" onclick="CancelarRequisicao()" style="display:none">Cancelar</button>
-
+        @{
+            if (vStatus == "Encerrar" && vVbEncerrada < 1)
+            {
+                <button id="btnEncerrar" type="button" class="btn btn-block btn-danger" onclick="EncerrarRequisicao()" style="display:inline">Encerrar</button>
+            }
+            else if (vStatus == "Cancelar" && vVbCancelada < 1)
+            {
+                <button id="btnCancelar" type="button" class="btn btn-block btn-outline-danger" onclick="CancelarRequisicao()" style="display:inline">Cancelar</button>
+            }
+        }
     </form>
 </div>
 

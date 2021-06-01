@@ -43,7 +43,7 @@ namespace SGP.Controllers
                 ViewBag.ItemRequisicao = requisicao.ObterItensRequisicao(id);
             }
 
-            ViewBag.ListaStatus = new List<string>(new string[] { StatusRequisicao.Solicitar.GetDescription(), StatusRequisicao.Liberar.GetDescription(), StatusRequisicao.Coletar.GetDescription(), StatusRequisicao.Processar.GetDescription(), StatusRequisicao.Cancelar.GetDescription(), StatusRequisicao.Programar.GetDescription()});
+            ViewBag.ListaStatus = new List<string>(new string[] { StatusRequisicao.Solicitar.GetDescription(), StatusRequisicao.Liberar.GetDescription(), StatusRequisicao.Coletar.GetDescription(), StatusRequisicao.Processar.GetDescription(), StatusRequisicao.Cancelar.GetDescription(), StatusRequisicao.Programar.GetDescription(), StatusRequisicao.Encerrar.GetDescription()});
 
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();

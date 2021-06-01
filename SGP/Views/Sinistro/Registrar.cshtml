@@ -44,11 +44,11 @@
 <br />
 
 <div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
-    <form asp-controller="Sinistro" asp-action="Registrar" class="needs-validation" novalidate>
+    <form asp-controller="Sinistro" asp-action="Registrar">
 
         <div>
 
-            <input id="IdSinistro" type="number" class="form-control" asp-for="Id" value="@vIdSinistro" style="width: 180px" hidden="hidden">
+            <input id="IdSinistro" type="number" class="form-control" asp-for="Id" value="@vIdSinistro" style="width: 180px" readonly>
 
             <div class="mb-3">
                 <label>Código requisição:</label>
@@ -77,14 +77,14 @@
                     }
                     else
                     {
-                        <input type="text" class="form-control" asp-for="NomeUsuarioResponsavel" value="@vNomeUsuarioResponsavel" style="width: 180px" disabled>
+                        <input type="text" class="form-control" asp-for="NomeUsuarioResponsavel" value="@vNomeUsuarioResponsavel" style="width: 180px" readonly>
                     }
                 }
             </div>
 
             <div class="col-md-3 mb-3">
                 <label>Data de abertura:</label>
-                <input type="date" class="form-control" asp-for="DataAbertura" value="@vDataAbertura" style="width: 180px" disabled>
+                <input type="date" class="form-control" asp-for="DataAbertura" value="@vDataAbertura" style="width: 180px">
             </div>
 
         </div>

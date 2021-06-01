@@ -35,7 +35,7 @@ namespace SGP.Models
         public string NomeUsuarioResponsavel { get; set; }
 
         [Required(ErrorMessage = "O campo data é obrigatório.")]
-        public DateTime DataAbertura { get; set; }
+        public string DataAbertura { get; set; }
 
         [Required(ErrorMessage = "O campo descrição é obrigatório.")]
         public string Descricao { get; set; }
@@ -98,7 +98,7 @@ namespace SGP.Models
                 entity.Id = dt.Rows[0]["ID"] != null ? Convert.ToInt32(dt.Rows[0]["ID"].ToString()) : 0;
                 entity.IdRequisicao = dt.Rows[0]["ID_REQUISICAO"] != null ? Convert.ToInt32(dt.Rows[0]["ID_REQUISICAO"].ToString()) : 0;
                 entity.Descricao = dt.Rows[0]["DESCRICAO"] != null ? dt.Rows[0]["DESCRICAO"].ToString() : string.Empty;
-                entity.DataAbertura = dt.Rows[0]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA_INCLUSAO"].ToString()) : DateTime.Now;
+                entity.DataAbertura = dt.Rows[0]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[0]["DATA_INCLUSAO"].ToString()).ToString() : DateTime.Now.ToString();
                 var statusBanco = dt.Rows[0]["STATUS"] != null ? Convert.ToInt32(dt.Rows[0]["STATUS"].ToString()) : 0;
                 entity.Status = ((StatusSinistro)statusBanco).GetDescription();
                 entity.NomeUsuarioResponsavel = dt.Rows[0]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[0]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty;
@@ -199,7 +199,7 @@ namespace SGP.Models
                     IdRequisicao = dt.Rows[i]["ID_REQUISICAO"] != null ? Convert.ToInt32(dt.Rows[i]["ID_REQUISICAO"].ToString()) : 0,
                     Descricao = dt.Rows[i]["DESCRICAO"] != null ? dt.Rows[i]["DESCRICAO"].ToString() : string.Empty,
                     NomeUsuarioAtual = dt.Rows[i]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[i]["NOME_USUARIO_ATUAL"].ToString() : string.Empty,
-                    DataAbertura = dt.Rows[i]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[i]["DATA_INCLUSAO"].ToString()) : DateTime.MinValue,
+                    DataAbertura = dt.Rows[i]["DATA_INCLUSAO"] != null ? Convert.ToDateTime(dt.Rows[i]["DATA_INCLUSAO"].ToString()).ToString() : DateTime.MinValue.ToString(),
                     Status = dt.Rows[i]["STATUS"] != null ? dt.Rows[i]["STATUS"].ToString() : string.Empty,
                     NomeUsuarioResponsavel = dt.Rows[i]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[i]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty
                 };

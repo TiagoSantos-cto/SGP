@@ -96,6 +96,11 @@ namespace SGP.Models
             return HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado");
         }
 
+        private string NomeUsuarioLogado()
+        {
+            return HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado");
+        }
+
         public List<RequisicaoModel> ListaRequisicao()
         {
             var lista = new List<RequisicaoModel>();
@@ -442,10 +447,10 @@ namespace SGP.Models
 
         public void Encerrar(int id)
         {
-            var dal = new DAL();
-
+            var dal = new DAL();         
+           
             string sql = $@"UPDATE Requisicao SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', 
-                            Descricao = 'Requisição encerrada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {IdUsuarioLogado()}' , VbEncerrada = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
+                            Descricao = 'Requisição encerrada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário { NomeUsuarioLogado()}' , VbEncerrada = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
 
             dal.ExecutarComandoSQL(sql);         
         }
@@ -478,7 +483,7 @@ namespace SGP.Models
             var dal = new DAL();
 
             string sql = $@"UPDATE Requisicao SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', 
-                            Descricao = 'Requisição cancelada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {IdUsuarioLogado()}' , VbCancelada = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
+                            Descricao = 'Requisição cancelada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {NomeUsuarioLogado()}' , VbCancelada = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
 
             dal.ExecutarComandoSQL(sql);
         }
