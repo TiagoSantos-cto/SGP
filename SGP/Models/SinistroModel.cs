@@ -67,6 +67,11 @@ namespace SGP.Models
             return HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado");
         }
 
+        private string NomeUsuarioLogado()
+        {
+            return HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado");
+        }
+
         public SinistroModel CarregarRegistro(int? id)
         {
             var sql = $@"SELECT S.IdSinistro AS ID, 
@@ -75,6 +80,7 @@ namespace SGP.Models
                                 S.Descricao AS DESCRICAO,
                                 S.Status AS STATUS,
                                 S.UsuarioAtual AS USUARIO_ATUAL,
+                                S.VbFinalizado AS VBFINALIZADO,
                            (SELECT U.Login
                             FROM usuario U
                             WHERE U.IdUsuario = S.UsuarioAtual) AS NOME_USUARIO_ATUAL,                    
@@ -101,6 +107,7 @@ namespace SGP.Models
                 entity.NomeUsuarioResponsavel = dt.Rows[0]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[0]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty;
                 entity.NomeUsuarioAtual = dt.Rows[0]["NOME_USUARIO_ATUAL"] != null ? dt.Rows[0]["NOME_USUARIO_ATUAL"].ToString() : string.Empty;
                 entity.UsuarioAtual = dt.Rows[0]["USUARIO_ATUAL"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO_ATUAL"].ToString()) : 0;
+                entity.VbFinalizado = dt.Rows[0]["VBFINALIZADO"] != null ? Convert.ToInt32(dt.Rows[0]["VBFINALIZADO"].ToString()) : 0;
             }
 
             return entity;
@@ -133,7 +140,7 @@ namespace SGP.Models
             var idUsuarioAtual = IdUsuarioLogado();
 
             string sql = $"UPDATE pedidosinistro SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', " +
-                         $"Descricao = 'Análise de sinistro finalizada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {idUsuarioAtual}' ,  VbFinalizado = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdSinistro = '{id}'";
+                         $"Descricao = 'Análise de sinistro finalizada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {NomeUsuarioLogado()}' ,  VbFinalizado = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdSinistro = '{id}'";
 
             dal.ExecutarComandoSQL(sql);
         }
