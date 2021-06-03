@@ -165,14 +165,12 @@
                         }
                     }
 
-                </select>
-                <div class="invalid-feedback">
-                    Selecione uma estação de origem da requisição.
-                </div>
+                </select>             
             </div>
 
             <div class="col-md-3 mb-4">
                 <label>Terminal de destino:</label>
+                
                 <select asp-for="Destino" class="form-control" style="width: 180px" required>
 
                     @{
@@ -197,10 +195,7 @@
                         }
                     }
 
-                </select>
-                <div class="invalid-feedback">
-                    Selecione uma estação de destino da requisição.
-                </div>
+                </select>             
             </div>
 
         </div>
@@ -243,21 +238,19 @@
 
             <label>Descrição:</label>
             <div>
-                @Html.TextArea("Descricao", new { @class = "form-control" })
-                <div class="invalid-feedback">
-                    O campo descrição é obrigatório.
-                </div>
-            </div>
+                @Html.TextArea("Descricao", new { @class = "form-control", required = "required" })
 
+            </div>        
         </div>
 
         <fieldset class="scheduler-border">
             <legend class="scheduler-border">Encaminhar</legend>
             <div class="row">
-                <div class="form-group col-md-4 mb-3">
+                
+                <div class="col-md-3 mb-3">
                     <label>Etapa:</label>
 
-                    <select asp-for="Status" class="form-control" style="width: 180px" id="selectStatus">
+                    <select asp-for="Status" class="form-control" style="width: 180px" id="selectStatus" required>
 
                         @{
 
@@ -285,13 +278,12 @@
                             }
                         }
 
-                    </select>
-
+                    </select>                 
                 </div>
 
-                <div class="form-group col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label>Usuário:</label>
-                    <select asp-for="UsuarioAtual" class="form-control" style="width: 180px">
+                    <select asp-for="UsuarioAtual" class="form-control" style="width: 180px" required>
 
                         @{
 
@@ -317,10 +309,7 @@
                             }
                         }
 
-                    </select>
-                    <div class="invalid-feedback">
-                        Selecione um usuário para próxima etapa.
-                    </div>
+                    </select>                 
                 </div>
 
             </div>

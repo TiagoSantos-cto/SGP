@@ -41,84 +41,102 @@
 <br />
 
 <div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
-    <form asp-controller="Usuario" asp-action="NovoUsuario" class="needs-validation" novalidate>
+    <form asp-controller="Usuario" asp-action="NovoUsuario">
 
-        <div class="row">
-
-            <div class="col-md-4 mb-3">
-                <label>Funcionário:</label>
+        <div class="form-group">
+            <label>Funcionário:</label>
+            <select asp-for="IdFuncionario" class="form-control" style="width: 300px" id="selectFuncionario" onchange="CarregarTela()" required>
 
                 @{
                     if (string.IsNullOrEmpty(vId))
                     {
-                        <select asp-for="IdFuncionario" class="form-control" style="width: 300px" id="selectFuncionario" onchange="CarregarTela()">
-                            <option>Selecionar...</option>
-                            @{
-                                foreach (var item in (List<UsuarioModel>)ViewBag.ListaFuncionario)
-                                {
-                                    <option value="@item.IdFuncionario.ToString()">@item.IdFuncionario.ToString() - @item.Nome.ToString()</option>
-                                }
-                            }
-                        </select>
+                        <option value="">Selecionar...</option>
 
+                        foreach (var item in (List<UsuarioModel>)ViewBag.ListaFuncionario)
+                        {
+                            <option value="@item.IdFuncionario.ToString()">@item.IdFuncionario.ToString() - @item.Nome.ToString()</option>
+                        }
                     }
                     else
                     {
-                        <input type="text" asp-for="IdFuncionario" value="@vIdFuncionario - @vNome" disabled="disabled"/>
+                        <option value="@vId">@vIdFuncionario - @vNome</option>
+                        foreach (var item in (List<UsuarioModel>)ViewBag.ListaFuncionario)
+                        {
+                            if (item.Id.ToString() != vId)
+                            {
+                                <option value="@item.IdFuncionario.ToString()">@item.IdFuncionario.ToString() - @item.Nome.ToString()</option>
+                            }
+                        }
                     }
                 }
 
-            </div>
+            </select>
         </div>
+
 
         <div class="mb-3">
             <label for="usuario">Usuário: <span class="text-muted" /></label>
-            <input type="text" class="form-control" asp-for="Login" id="usuário" placeholder="NOME.SOBRENOME" value="@vLogin">
-            <div class="invalid-feedback">
-                O campo usuário é obrigatório.
-            </div>
+            <input type="text" class="form-control" asp-for="Login" id="usuário" placeholder="NOME.SOBRENOME" style="text-transform:uppercase;" value="@vLogin" required>
         </div>
 
         <div class="mb-3">
             <label for="pwd">Senha:<span class="text-muted" /></label>
-            <input type="password" class="form-control" asp-for="Senha" id="senha" value="@vSenha">
+             <input type="password" class="form-control" placeholder="Senha" asp-for="Senha" id="password" value="@vSenha" required>
+              <input type="password" class="form-control" placeholder="Confirme Senha" id="confirm_password" required>
         </div>
 
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <label for="funcao">Perfil de acesso:</label>
-                <select class="custom-select d-block w-100" asp-for="PerfilAcesso" id="perfil" required>
 
-                    @{
-                        if (vPerfilAcesso == "0")
-                        {
-                            <option value="0">Usuário</option>
-                            <option value="1">Administrador</option>                     
-                        }
-                        else if (vPerfilAcesso == "1")
-                        {
 
-                            <option value="1">Administrador</option>
-                            <option value="0">Usuário</option>
-                        }
-                        else
-                        {
-                            <option>Selecionar...</option>
-                            <option value="0">Usuário</option>
-                            <option value="1">Administrador</option>
-                        }
+
+        <div class="form-group">
+            <label>Perfil de acesso:</label>
+            <select class="custom-select d-block w-100" asp-for="PerfilAcesso" id="perfil" required>
+
+                @{
+                    if (vPerfilAcesso == "0")
+                    {
+                        <option value="0">Usuário</option>
+                        <option value="1">Administrador</option>
+
                     }
+                    else if (vPerfilAcesso == "1")
+                    {
 
-                </select>
-                <div class="invalid-feedback">
-                    Selecione a função no sistema.
-                </div>
-            </div>
+                        <option value="1">Administrador</option>
+                        <option value="0">Usuário</option>
+                    }
+                    else
+                    {
+                        <option value="">Selecionar..</option>
+                        <option value="0">Usuário</option>
+                        <option value="1">Administrador</option>
+                    }
+                }
+
+            </select>
         </div>
 
         <button type="submit" class="btn btn-block btn-success">Cadastrar</button>
 
     </form>
 </div>
+
+<script>
+
+    var password = document.getElementById("password");
+    var confirm_password = document.getElementById("confirm_password");
+
+    function validatePassword() {
+        if (password.value != confirm_password.value) {
+            confirm_password.setCustomValidity("Senhas diferentes!");
+        } else {
+            confirm_password.setCustomValidity('');
+        }
+    }
+
+    password.onchange = validatePassword;
+    confirm_password.onkeyup = validatePassword;
+
+</script>
 
 
