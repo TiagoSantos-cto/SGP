@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SGP.Models;
 using SGP.Util;
 using System;
@@ -37,18 +38,27 @@ namespace SGP.Controllers
         }
 
         [HttpPost]
-        public IActionResult Registrar(SinistroModel Sinistro)
-        {
+        public IActionResult Registrar(SinistroModel sinistro)
+        {          
             if (ModelState.IsValid)
             {
-                Sinistro.Gravar();
-                return RedirectToAction("Sucesso", Sinistro);
+                sinistro.HttpContextAccessor = HttpContextAccessor;
+                sinistro.Gravar();
+                return RedirectToAction("Sucesso", sinistro);
+            }
+            
+            foreach (var modelState in ViewData.ModelState.Values)
+            {
+                foreach (ModelError error in modelState.Errors)
+                {
+                    var erro = error;
+                }
             }
 
-            ViewBag.ListaStatus = new List<string>(new string[] { StatusSinistro.Aberto.GetDescription(), StatusSinistro.Analise.GetDescription(), StatusSinistro.Finalizar.GetDescription() });
+            //ViewBag.ListaStatus = new List<string>(new string[] { StatusSinistro.Aberto.GetDescription(), StatusSinistro.Analise.GetDescription(), StatusSinistro.Finalizar.GetDescription() });
 
-            var usuario = new UsuarioModel(HttpContextAccessor);
-            ViewBag.ListaUsuario = usuario.ListaUsuario();
+            //var usuario = new UsuarioModel(HttpContextAccessor);
+            //ViewBag.ListaUsuario = usuario.ListaUsuario();
 
             return View();
         }

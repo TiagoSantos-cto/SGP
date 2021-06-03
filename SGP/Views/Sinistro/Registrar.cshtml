@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 
 @{
-    var vIdSinistro = string.Empty;
+    var vIdSinistro = 0;
     var vIdRequisicao = string.Empty;
     var vDataAbertura = DateTime.Now.ToString("yyyy-MM-dd");
     var vStatus = string.Empty;
@@ -19,7 +19,7 @@
 
     try
     {
-        vIdSinistro = @ViewBag.Registro.Id.ToString();
+        vIdSinistro = Convert.ToInt32(@ViewBag.Registro.Id);
         vIdRequisicao = @ViewBag.Registro.IdRequisicao.ToString();
         vDataAbertura = Convert.ToDateTime(@ViewBag.Registro.DataAbertura).ToString("yyyy-MM-dd");
         vStatus = @ViewBag.Registro.Status.ToString();
@@ -34,13 +34,14 @@
 
 <div class="row text-left" style="padding-left: 30px;">
     <div>
-        <h2>Sinistro</h2>
-        <h6>Análise de sinistro</h6>
+        <h2>Pedido de sinistro</h2>
+        <h6>Pedido de análise de sinistro</h6>
     </div>
     <div style="padding-left: 30px;">
         <img src="~/images/search-icon.png" width="63" height="63" />
     </div>
 </div>
+
 <br />
 
 <div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
@@ -53,12 +54,12 @@
             <div class="mb-3">
                 <label>Código requisição:</label>
                 <br />
-                <input id="IDReq" type="number" class="form-control" asp-for="IdRequisicao" value="@vIdRequisicao" style="width: 262px">
-                <span asp-validation-for="IdRequisicao" class="text-danger"></span>
+                <input id="IDReq" type="number" class="form-control" asp-for="IdRequisicao" value="@vIdRequisicao" style="width: 262px" required>               
             </div>
 
             <button type="button" class="btn btn-info" onclick="CarregarCampos()">Buscar dados</button>
             <button type="button" class="btn btn-warning" onclick="AbrirRequisicao()">Abrir requisição</button>
+
         </div>
 
         <br />
@@ -73,7 +74,7 @@
                         @using Microsoft.AspNetCore.Http;
                         @inject IHttpContextAccessor HttpContextAccessor
                         <input type="hidden" asp-for="UsuarioResponsavel" value="@HttpContextAccessor.HttpContext.Session.GetString("IdUsuarioLogado")" />
-                        <input type="text" asp-for="NomeUsuarioResponsavel" class="form-control" value="@HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado")" style="width: 180px" disabled>
+                        <input type="text" asp-for="NomeUsuarioResponsavel" class="form-control" value="@HttpContextAccessor.HttpContext.Session.GetString("NomeUsuarioLogado")" style="width: 180px" readonly>
                     }
                     else
                     {
@@ -81,9 +82,10 @@
                     }
                 }
             </div>
-
-            <div class="col-md-3 mb-3">
+       
+            <div class="mb-3">
                 <label>Data de abertura:</label>
+                <br />
                 <input type="date" class="form-control" asp-for="DataAbertura" value="@vDataAbertura" style="width: 180px">
             </div>
 
@@ -94,14 +96,12 @@
             <div>
                 @Html.TextArea("Descricao", vDescricao, new { @class = "form-control", disabled = "disabled" })
             </div>
+           
             <br />
 
             <label>Descrição:</label>
             <div>
-                @Html.TextArea("Descricao", new { @class = "form-control" })
-                <div class="invalid-feedback">
-                    O campo descrição é obrigatório.
-                </div>
+                @Html.TextArea("Descricao", new { @class = "form-control", required = "required" })             
             </div>
 
         </div>
@@ -111,7 +111,7 @@
             <div class="form-group col-md-4 mb-3">
                 <label>Etapa:</label>
 
-                <select asp-for="Status" class="form-control" style="width: 180px" id="selectStatus">
+                <select asp-for="Status" class="form-control" style="width: 180px" id="selectStatus" required>
 
                     @{
 
@@ -142,7 +142,7 @@
 
             <div class="form-group col-md-4 mb-3">
                 <label>Usuário:</label>
-                <select asp-for="UsuarioAtual" class="form-control" style="width: 180px">
+                <select asp-for="UsuarioAtual" class="form-control" style="width: 180px" required>
 
                     @{
 
@@ -168,12 +168,8 @@
                         }
                     }
 
-                </select>
-                <div class="invalid-feedback">
-                    Selecione um usuário para próxima etapa.
-                </div>
+                </select>             
             </div>
-
         </div>
 
         <br />
@@ -189,7 +185,6 @@
     window.onload = function () {
         LiberarEncerramento();
     }
-
 
     function CarregarCampos() {
         var id = document.getElementById('IDReq').value;

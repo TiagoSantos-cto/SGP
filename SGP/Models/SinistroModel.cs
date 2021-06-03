@@ -27,17 +27,14 @@ namespace SGP.Models
 
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "O código da requisição é obrigatório.")]
         public int IdRequisicao { get; set; }
 
         public int UsuarioResponsavel { get; set; }
 
         public string NomeUsuarioResponsavel { get; set; }
 
-        [Required(ErrorMessage = "O campo data é obrigatório.")]
         public string DataAbertura { get; set; }
 
-        [Required(ErrorMessage = "O campo descrição é obrigatório.")]
         public string Descricao { get; set; }
 
         public int VbFinalizado { get; set; }
@@ -117,7 +114,7 @@ namespace SGP.Models
             if (Id == 0)
             {
                 sql = $@"INSERT INTO pedidosinistro (Id_Requisicao, Descricao, Status, VbFinalizado, UsuarioAtual, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao) VALUES 
-                         ('{IdRequisicao}', '{Descricao}',  '{(int)Status.GetEnumValue<StatusSinistro>()}', '0','{UsuarioAtual}', '{Convert.ToDateTime(DateTime.Now)}', '{UsuarioResponsavel}', '','' )";
+                         ('{IdRequisicao}', '{Descricao}',  '{(int)Status.GetEnumValue<StatusSinistro>()}', '0','{UsuarioAtual}', '{DataAbertura}', '{UsuarioResponsavel}', '','' )";
             }
             else
             {

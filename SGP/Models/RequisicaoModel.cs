@@ -35,12 +35,10 @@ namespace SGP.Models
 
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "O campo data é obrigatório.")]
         public string Data { get; set; }
 
         public string DataFinal { get; set; }
 
-        [Required(ErrorMessage = "O campo descrição é obrigatório.")]
         public string Descricao { get; set; }
 
         public string Tipo { get; set; }
