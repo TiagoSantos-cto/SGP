@@ -46,20 +46,6 @@ namespace SGP.Controllers
                 sinistro.Gravar();
                 return RedirectToAction("Sucesso", sinistro);
             }
-            
-            foreach (var modelState in ViewData.ModelState.Values)
-            {
-                foreach (ModelError error in modelState.Errors)
-                {
-                    var erro = error;
-                }
-            }
-
-            //ViewBag.ListaStatus = new List<string>(new string[] { StatusSinistro.Aberto.GetDescription(), StatusSinistro.Analise.GetDescription(), StatusSinistro.Finalizar.GetDescription() });
-
-            //var usuario = new UsuarioModel(HttpContextAccessor);
-            //ViewBag.ListaUsuario = usuario.ListaUsuario();
-
             return View();
         }
 
