@@ -39,45 +39,30 @@
 <br />
 
 <div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
-    <form asp-controller="Embarcacao" asp-action="Registrar" class="needs-validation" novalidate>
+    <form asp-controller="Embarcacao" asp-action="Registrar">
 
         <div class="mb-3">
             <label for="Id">Código</label>
-            <input type="text" class="form-control" asp-for="Id" value="@vId" required>
-            <div class="invalid-feedback">
-                O campo Código é obrigatório.
-            </div>
+            <input type="text" class="form-control" asp-for="Id" value="@vId" required>           
         </div>
 
         <div class="mb-3">
             <label for="Nome">Nome</label>
-            <input type="text" class="form-control" asp-for="Nome" value="@vNome" required>
-            <div class="invalid-feedback">
-                O campo Nome é obrigatório.
-            </div>
+            <input type="text" class="form-control" asp-for="Nome" value="@vNome" required>         
         </div>
         <div class="mb-3">
             <label for="Capacidade">Capacidade Máxima (t):</label>
-            <input type="number" class="form-control" asp-for="Capacidade" value="@vCapacidade" required>
-            <div class="invalid-feedback">
-                O campo Capacidade Máxima é obrigatório.
-            </div>
+            <input type="number" class="form-control" asp-for="Capacidade" value="@vCapacidade" required>          
         </div>
 
         <div class="mb-3">
             <label for="AreaCarga">Área de Carga Livre (m²):</label>
-            <input type="number" class="form-control" asp-for="AreaCarga" value="@vAreaCarga" required>
-            <div class="invalid-feedback">
-                O campo Área de Carga Livre é obrigatório.
-            </div>
+            <input type="number" class="form-control" asp-for="AreaCarga" value="@vAreaCarga" required>           
         </div>
 
         <div class="mb-3">
             <label for="Acomodacao">Acomodação Total:</label>
-            <input type="number" class="form-control" asp-for="Acomodacao" value="@vAcomodacao" required>
-            <div class="invalid-feedback">
-                O campo Acomodação Total é obrigatório.
-            </div>
+            <input type="number" class="form-control" asp-for="Acomodacao" value="@vAcomodacao" required>         
         </div>
 
         <div class="mb-3">
@@ -89,10 +74,7 @@
                 <option value="P">P - Transporte de passageiros</option>
                 <option value="UT">UT – Embarcação de caráter geral</option>
 
-            </select>
-            <div class="invalid-feedback">
-                Selecione uma categoria.
-            </div>
+            </select>         
         </div>
 
         <button type="submit" class="btn btn-block btn-success"> Cadastrar </button>

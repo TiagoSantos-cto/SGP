@@ -36,22 +36,16 @@
 <br />
 
 <div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
-    <form asp-controller="Equipamento" asp-action="Registrar" enctype="multipart/form-data" class="needs-validation" novalidate>
+    <form asp-controller="Equipamento" asp-action="Registrar">
 
         <div class="mb-3">
             <label for="Id">Código</label>
-            <input type="text" class="form-control" asp-for="Id" value="@vId" required>
-            <div class="invalid-feedback">
-                O campo Código é obrigatório.
-            </div>
+            <input type="text" class="form-control" asp-for="Id" value="@vId" required>          
         </div>
 
         <div class="mb-3">
             <label>Descrição do item</label>
-            <input type="text" class="form-control" asp-for="Descricao "value="@vDescricao" required>
-            <div class="invalid-feedback">
-                O campo Descrição é obrigatório.
-            </div>
+            <input type="text" class="form-control" asp-for="Descricao "value="@vDescricao" required>         
         </div>
 
         <div class="row" style="padding-left: 20px;">
@@ -76,7 +70,7 @@
 
             <div style="padding-left: 50px;">
                 <label>Quantidade:</label>
-                <input id="qtd" type="number" class="form-control" asp-for="Quantidade" value="@vQuantidade">
+                <input id="qtd" type="number" class="form-control" asp-for="Quantidade" value="@vQuantidade" required>
             </div>
 
         </div>
@@ -87,16 +81,17 @@
             <div class="form-group col-md-6 mb-3">
                 <label>Terminal de origem:</label>
                 <select asp-for="Estacao" class="form-control" style="width: 180px" required>
+                    
+                    <option value="">Selecionar...</option>
+                    
                     @{
                         foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
                         {
                             <option value="@item.Id.ToString()">@item.Nome.ToString()</option>
                         }
                     }
-                </select>
-                <div class="invalid-feedback">
-                    Selecione uma estação de origem do item.
-                </div>
+
+                </select>              
             </div>
             @{
                 if (string.IsNullOrEmpty(vImagemPath))
