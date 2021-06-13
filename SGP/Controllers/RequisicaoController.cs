@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SGP.Models;
 using SGP.Util;
+using System;
 using System.Collections.Generic;
 using static SGP.Models.RequisicaoModel;
 
@@ -128,6 +129,30 @@ namespace SGP.Controllers
 
             var usuario = new UsuarioModel(HttpContextAccessor);
             ViewBag.ListaUsuario = usuario.ListaUsuario();
+
+            return View();
+        }
+       
+        public IActionResult Dashboard()
+        {
+            var lista = new Dashboard(HttpContextAccessor).RetornarDadosGraficoPie();
+
+            var valores = string.Empty;
+            var labels = string.Empty;
+            var cores = string.Empty;
+
+            var random = new Random();
+
+            for (int i = 0; i < lista.Count; i++)
+            {
+                valores += lista[i].Total.ToString() + " ,";
+                labels += "'" + lista[i].Status.ToString() + "',";
+                cores += "'" + string.Format("#{0:X6}", random.Next(0x1000000)) + "',";
+            }
+
+            ViewBag.Cores = cores;
+            ViewBag.Labels = labels;
+            ViewBag.Valores = valores;
 
             return View();
         }
