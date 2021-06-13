@@ -164,12 +164,12 @@
                         }
                     }
 
-                </select>             
+                </select>
             </div>
 
             <div class="col-md-3 mb-4">
                 <label>Terminal de destino:</label>
-                
+
                 <select asp-for="Destino" class="form-control" style="width: 180px" required>
 
                     @{
@@ -194,7 +194,7 @@
                         }
                     }
 
-                </select>             
+                </select>
             </div>
 
         </div>
@@ -224,7 +224,9 @@
             </div>
 
             <!-- Botão para acionar modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado" id="btnAdicionar" style="display:none"> Adicionar item </button>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado" id="btnAdicionar" style=" display:none">
+                Adicionar item
+            </button>
 
         </fieldset>
 
@@ -239,13 +241,13 @@
             <div>
                 @Html.TextArea("Descricao", new { @class = "form-control", required = "required" })
 
-            </div>        
+            </div>
         </div>
 
         <fieldset class="scheduler-border">
             <legend class="scheduler-border">Encaminhar</legend>
             <div class="row">
-                
+
                 <div class="col-md-3 mb-3">
                     <label>Etapa:</label>
 
@@ -277,7 +279,7 @@
                             }
                         }
 
-                    </select>                 
+                    </select>
                 </div>
 
                 <div class="col-md-3 mb-3">
@@ -308,7 +310,7 @@
                             }
                         }
 
-                    </select>                 
+                    </select>
                 </div>
 
             </div>
@@ -362,7 +364,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div style="background-color: ghostwhite; border-radius: 10px; padding:20px; width:800px">
+                <div style="background-color: ghostwhite; border-radius: 10px; padding:20px; width:630px">
 
                     <table class="table table-striped">
                         <thead>
