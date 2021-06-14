@@ -36,7 +36,7 @@
 <br />
 
 <div class="col-md-8 order-md-1" style="background-color: ghostwhite; border-radius: 10px;  padding:20px;">
-    <form asp-controller="Equipamento" asp-action="Registrar">
+    <form asp-controller="Equipamento"  enctype="multipart/form-data" asp-action="Registrar">
 
         <div class="mb-3">
             <label for="Id">Código</label>
@@ -97,13 +97,13 @@
                 if (string.IsNullOrEmpty(vImagemPath))
                 {
                     <div style="padding-left: 100px">
-                        <img id="img" src="~/upload/default-image.png" width="200" height="127" />
+                        <img id="img" src="~/upload/default-image.png" width="200" height="127" asp-append-version="true"/>
                     </div>
                 }
                 else
                 {
                     <div style="padding-left: 100px">
-                        <img id="img" src="@vImagemPath" width="200" height="127" />
+                        <img id="img" src="@vImagemPath" width="200" height="127" asp-append-version="true"/>
                     </div>
                 }
             }

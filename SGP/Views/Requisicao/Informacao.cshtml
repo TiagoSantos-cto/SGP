@@ -258,12 +258,7 @@
                             if (string.IsNullOrEmpty(vStatus))
                             {
                                 <option value="">Selecionar...</option>
-                                <option value="Solicitar">Solicitar</option>
-                                <option value="Liberar">Liberar</option>
-                                <option value="Coletar">Coletar</option>
-                                <option value="Processar">Processar</option>
-                                <option value="Cancelar">Cancelar</option>
-                                <option value="Programar">Programar</option>
+                                <option value="Solicitar">Solicitar</option>                               
                             }
                             else
                             {
@@ -293,7 +288,10 @@
                                 <option value="">Selecionar...</option>
                                 foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
                                 {
-                                    <option value="@item.Id.ToString()">@item.Login.ToString()</option>
+                                    if (@item.PerfilAcesso > 0 )
+                                    {
+                                        <option value="@item.Id.ToString()">@item.Login.ToString()</option>
+                                    }
                                 }
                             }
                             else
@@ -502,6 +500,7 @@
 
         }
     }
+   
 </script>
 
 <style>
