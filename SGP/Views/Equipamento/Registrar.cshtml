@@ -9,6 +9,7 @@
     var vDescricao = string.Empty;
     var vStatus = string.Empty;
     var vEstacao = string.Empty;
+    var vNomeEstacao = string.Empty;
     var vImagemPath = string.Empty;
     var vQuantidade = string.Empty;
 
@@ -18,6 +19,7 @@
         vDescricao = @ViewBag.Registro.Descricao.ToString();
         vStatus = @ViewBag.Registro.Status.ToString();
         vEstacao = @ViewBag.Registro.Estacao.ToString();
+        vNomeEstacao = @ViewBag.Registro.NomeEstacao.ToString();
         vImagemPath = @ViewBag.Registro.ImagemPath.ToString();
         vQuantidade = @ViewBag.Registro.Quantidade.ToString();
     }
@@ -81,13 +83,27 @@
             <div class="form-group col-md-6 mb-3">
                 <label>Terminal de origem:</label>
                 <select asp-for="Estacao" class="form-control" style="width: 180px" required>
-                    
-                    <option value="">Selecionar...</option>
-                    
+
                     @{
-                        foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                        if (string.IsNullOrEmpty(vEstacao))
                         {
-                            <option value="@item.Id.ToString()">@item.Nome.ToString()</option>
+                            <option value="">Selecionar...</option>
+                            foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                            {
+                                <option value="@item.Id.ToString()">@item.Nome.ToString()</option>
+                            }
+                        }
+                        else
+                        {
+                            <option value="@vEstacao">@vNomeEstacao</option>
+                           
+                            foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+                            {
+                                if (item.Id.ToString() != vEstacao)
+                                {
+                                    <option value="@item.Id.ToString()">@item.Nome</option>
+                                }
+                            }
                         }
                     }
 

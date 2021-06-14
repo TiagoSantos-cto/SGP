@@ -40,7 +40,7 @@ namespace SGP.Controllers
         {
             if (ModelState.IsValid)
             {
-                GravarImagem(equipamento);
+                GravarImagem(equipamento);        
                 equipamento.GravarEquipamento();
                 return RedirectToAction("Sucesso");
             }
