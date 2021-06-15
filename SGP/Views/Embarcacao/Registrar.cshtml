@@ -5,9 +5,8 @@
 }
 
 @{
-    var vId = string.Empty; ;
+    var vId = string.Empty;
     var vNome = string.Empty;
-    var vTipo = string.Empty;
     var vCapacidade = string.Empty;
     var vAreaCarga = string.Empty;
     var vAcomodacao = string.Empty;
@@ -15,13 +14,12 @@
 
     try
     {
-        vId = @ViewBag.Registro.Id.toString();
-        vNome = @ViewBag.Registro.Id.toString();
-        vTipo = @ViewBag.Registro.Tipo.ToString();
-        vCapacidade = @ViewBag.Registro.Capacidade.toString();
-        vAreaCarga = @ViewBag.Registro.AreaCarga.toString();
-        vAcomodacao = @ViewBag.Registro.Acomodacao.toString();
-        vCategoria = @ViewBag.Registro.Categoria.toString();
+        vId = @ViewBag.Registro.Id.ToString();
+        vNome = @ViewBag.Registro.Nome.ToString();
+        vCapacidade = @ViewBag.Registro.Capacidade.ToString();
+        vAreaCarga = @ViewBag.Registro.AreaCarga.ToString();
+        vAcomodacao = @ViewBag.Registro.Acomodacao.ToString();
+        vCategoria = @ViewBag.Registro.Categoria.ToString();
     }
     catch { }
 }
@@ -67,14 +65,35 @@
 
         <div class="mb-3">
             <label for="Categoria">Categoria:</label>
-            <select asp-for="Categoria" class="custom-select d-block w-100" id="Categoria" required>
-                <option value="">Selecionar...</option>
-                <option value="PSV">PSV – navio de apoio a plataformas</option>
-                <option value="AHTS">AHTS – navio de suprimento, reboque e manejo de âncoras</option>
-                <option value="P">P - Transporte de passageiros</option>
-                <option value="UT">UT – Embarcação de caráter geral</option>
 
-            </select>         
+            <select asp-for="Categoria" class="custom-select d-block w-100" id="Categoria" required>
+
+
+                @{
+                    if (string.IsNullOrEmpty(vCategoria))
+                    {
+                        <option value="">Selecionar...</option>
+                        <option value="PSV">PSV – Navio de apoio a plataformas</option>
+                        <option value="AHTS">AHTS – Navio de suprimento, reboque e manejo de âncoras</option>
+                        <option value="P">P - Transporte de passageiros</option>
+                        <option value="UT">UT – Embarcação de caráter geral</option>
+                    }
+                    else
+                    {
+                        <option value="@vCategoria">@vCategoria</option>
+
+                        foreach (var item in (List<string>)ViewBag.ListaCategoria)
+                        {
+                            if (vCategoria != item)
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        }
+                    }
+                }
+
+            </select>    
+            
         </div>
 
         <button type="submit" class="btn btn-block btn-success"> Cadastrar </button>

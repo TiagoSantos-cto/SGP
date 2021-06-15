@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SGP.Models;
+using SGP.Util;
+using System.Collections.Generic;
+using static SGP.Models.EmbarcacaoModel;
+
 
 namespace SGP.Controllers
 {
@@ -17,8 +21,15 @@ namespace SGP.Controllers
         }
 
         [HttpGet]
-        public IActionResult Registrar()
+        public IActionResult Registrar(string id)
         {
+            if (!string.IsNullOrEmpty(id))
+            {
+                var embarcacao = new EmbarcacaoModel(HttpContextAccessor);
+                ViewBag.Registro = embarcacao.CarregarRegistro(id);
+                ViewBag.ListaCategoria = new List<string>(new string[] { EnumCategoria.PSV.GetDescription(), EnumCategoria.AHTS.GetDescription(), EnumCategoria.P.GetDescription(), EnumCategoria.UT.GetDescription() });
+            }
+
             return View();
         }
 

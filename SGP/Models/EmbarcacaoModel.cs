@@ -2,13 +2,32 @@
 using SGP.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace SGP.Models
 {
     public class EmbarcacaoModel
     {
+
+        #region ENUM
+
+        public enum EnumCategoria
+        {
+            [Description("PSV")]
+            PSV,
+            [Description("AHTS")]
+            AHTS,
+            [Description("P")]
+            P,
+            [Description("UT")]
+            UT
+        }
+
+        #endregion
+
+
         #region PROPRIEDADES
-       
+
         public string Id { get; set; }
         public string Nome { get; set; }
         public double Capacidade { get; set; }
@@ -89,6 +108,34 @@ namespace SGP.Models
             var dt = dal.RetDataTable(sql);
 
             return dt.Rows.Count > 0;
+        }
+
+
+        public EmbarcacaoModel CarregarRegistro(string id)
+        {
+            var sql = $@"SELECT IdEmbarcacao,
+                                Nome,
+                                Acomodacao,
+                                AreaCarga,
+                                Capacidade,
+                                Categoria
+                         FROM Embarcacao
+                         WHERE IdEmbarcacao = '{id}'";
+
+            var dal = new DAL();
+            var dt = dal.RetDataTable(sql);
+
+            var entity = new EmbarcacaoModel
+            {
+                Id = dt.Rows[0]["IdEmbarcacao"] != null ? dt.Rows[0]["IdEmbarcacao"].ToString() : string.Empty,
+                Nome = dt.Rows[0]["Nome"] != null ? dt.Rows[0]["Nome"].ToString() : string.Empty,
+                Acomodacao = dt.Rows[0]["Acomodacao"] != null ? Convert.ToInt32(dt.Rows[0]["Acomodacao"].ToString()) : 0,
+                AreaCarga = dt.Rows[0]["AreaCarga"] != null ? Convert.ToDouble(dt.Rows[0]["AreaCarga"].ToString()) : 0,
+                Capacidade = dt.Rows[0]["Capacidade"] != null ? Convert.ToDouble(dt.Rows[0]["Capacidade"].ToString()) : 0,
+                Categoria = dt.Rows[0]["Categoria"] != null ? dt.Rows[0]["Categoria"].ToString() : string.Empty
+            };
+
+            return entity;
         }
 
         #endregion
