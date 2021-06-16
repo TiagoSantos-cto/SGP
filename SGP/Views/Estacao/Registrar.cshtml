@@ -8,12 +8,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
 
 @{
-    var vDescricao = string.Empty;
+    var vNome = string.Empty;
     var vTipo = string.Empty;
 
     try
     {
-        vDescricao = @ViewBag.Registro.Descricao;
+        vNome = @ViewBag.Registro.Nome;
         vTipo = @ViewBag.Registro.Tipo.ToString();
     }
     catch { }
@@ -37,7 +37,7 @@
 
         <div class="mb-3">
             <label for="Descricao">Descrição da estação:</label>
-            <input type="text" class="form-control" asp-for="Nome" required>         
+            <input type="text" class="form-control" asp-for="Nome" value="@vNome" required>         
         </div>
 
 

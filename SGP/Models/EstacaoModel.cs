@@ -31,29 +31,27 @@ namespace SGP.Models
 
         public void GravarEstacao()
         {
-            Id = GerarSequencial();
-
             string sqlEstacao = string.Empty;
             string sqlTipo = string.Empty;
 
             if (Tipo == 0)
             {
-                if (!Existe(Nome))
+                if (!ExisteArmazem(Id))
                 {
                     sqlEstacao = $@"INSERT INTO EstacaoTrabalho (IdEstacao, Tipo)
                                     VALUES ('{Id}', '{Tipo}')";
-                    
+
                     sqlTipo = $@"INSERT INTO Armazem (Nome, Id_Estacao)
                                  VALUES ('{Nome}', '{Id}')";
                 }
             }
             else
             {
-                if (!Existe(Nome))
+                if (!ExisteUnidade(Id))
                 {
                     sqlEstacao = $@"INSERT INTO EstacaoTrabalho (IdEstacao, Tipo)
                                     VALUES('{Id}', '{Tipo}')";
-                    
+
                     sqlTipo = $@"INSERT INTO UnidadeMaritima (Nome, Id_Estacao) 
                                  VALUES ('{Nome}', '{Id}')";
                 }
@@ -68,46 +66,64 @@ namespace SGP.Models
             }
         }
 
-        private bool Existe(string nome)
+        private bool ExisteArmazem(int id)
         {
-            var sql = $@"SELECT *
-                         FROM Armazem A,
-                              UnidadeMaritima UM
-                         WHERE A.Nome = '{nome}'
-                           OR UM.Nome = '{nome}'";
+            var sqlArmazem = $@"SELECT A.IdArmazem
+                                  FROM Armazem A,
+                                       estacaotrabalho e
+                                  WHERE e.IdEstacao = A.Id_Estacao
+                                    AND e.IdEstacao = '{id}'";
 
             var dal = new DAL();
-            var dt = dal.RetDataTable(sql);
+            var dtArmazem = dal.RetDataTable(sqlArmazem);
 
-            return dt.Rows.Count > 0;
+            return dtArmazem.Rows.Count > 0;
         }
 
-        private int GerarSequencial()
+        private bool ExisteUnidade(int id)
         {
-            var estacoes = ListaEstacao();
 
-            var listaID = new List<int>();
+            var sqlUnidade = $@"SELECT u.IdUnidade
+                                  FROM unidademaritima u,
+                                       estacaotrabalho e
+                                  WHERE e.IdEstacao = u.Id_Estacao
+                                    AND e.IdEstacao = '{id}'";
 
-            foreach (var item in estacoes)
-            {
-                listaID.Add(item.Id);
-            };
+            var dal = new DAL();
+            var dtUnidade = dal.RetDataTable(sqlUnidade);
 
-            listaID.Sort();
-
-            var sequencial = listaID[listaID.Count - 1];
-
-            return sequencial + 1;
+            return dtUnidade.Rows.Count > 0;
         }
 
         public void ExcluirEstacao(int id)
         {
-            string sql = $@"DELETE
-                            FROM EstacaoTrabalho
-                            WHERE IdEstacao = '{id}'";
+            string sqlEstacao = string.Empty;
+            string sqlTipo = string.Empty;
+
+            if (ExisteArmazem(id))
+            {
+                sqlTipo = $@"DELETE FROM Armazem WHERE Id_Estacao ='{id}'";
+
+                sqlEstacao = $@"DELETE
+                                    FROM EstacaoTrabalho
+                                    WHERE IdEstacao = '{id}'";
+            }
+            else if (ExisteUnidade(id))
+            {
+                sqlTipo = $@"DELETE FROM UnidadeMaritima WHERE Id_Estacao = '{id}'";
+
+                sqlEstacao = $@"DELETE
+                                    FROM EstacaoTrabalho
+                                    WHERE IdEstacao = '{id}'";
+            }
 
             var dal = new DAL();
-            dal.ExecutarComandoSQL(sql);
+
+            if (!string.IsNullOrEmpty(sqlEstacao) && !string.IsNullOrEmpty(sqlTipo))
+            {
+                dal.ExecutarComandoSQL(sqlTipo);
+                dal.ExecutarComandoSQL(sqlEstacao);
+            }
         }
 
         public List<EstacaoModel> ListaEstacao()
@@ -161,6 +177,38 @@ namespace SGP.Models
             }
 
             return lista;
+        }
+
+        public EstacaoModel CarregarRegistro(string id)
+        {
+            var sql = $@"SELECT IdEstacao,
+                            (SELECT CASE e.Tipo
+                                        WHEN 0 THEN
+                                               (SELECT a.Nome
+                                                FROM armazem a
+                                                WHERE a.Id_Estacao = '{id}')
+                                        WHEN 1 THEN
+                                               (SELECT u.Nome
+                                                FROM unidademaritima u
+                                                WHERE u.Id_Estacao = '{id}')
+                                        ELSE ('')
+                                    END) Nome,
+                                 e.Tipo
+                          FROM estacaotrabalho e
+                          WHERE e.IdEstacao = '{id}'";
+
+            var dal = new DAL();
+            var dt = dal.RetDataTable(sql);
+
+            var entity = new EstacaoModel
+            {
+                Id = dt.Rows[0]["IdEstacao"] != null ? Convert.ToInt32(dt.Rows[0]["IdEstacao"].ToString()) : 0,
+                Nome = dt.Rows[0]["Nome"] != null ? dt.Rows[0]["Nome"].ToString() : string.Empty,
+                Tipo = dt.Rows[0]["Tipo"] != null ? Convert.ToInt32(dt.Rows[0]["Tipo"].ToString()) : 0
+
+            };
+
+            return entity;
         }
 
         #endregion

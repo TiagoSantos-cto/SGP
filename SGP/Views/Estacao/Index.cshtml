@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Estações";
+}
+
+<div class="row text-left" style="padding-left: 30px;">
+    <div>
+        <h2>Estações</h2>
+        <h6>Todos os Estações cadastradas</h6>
+    </div>
+    <div style="padding-left: 30px;">
+        <img src="~/images/Estacao-icon.png" width="63" height="63" />
+    </div>
+</div>
+<br />
+
+<div style="background-color: ghostwhite; border-radius: 10px; padding:20px;">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th> </th>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Tipo</th>
+            </tr>
+        </thead>
+
+        @{
+            foreach (var item in (List<EstacaoModel>)ViewBag.ListaEstacao)
+            {
+                <tbody>
+                    <tr>
+                        <td><button type="button" class=" btn btn-danger" onclick="Excluir(@item.Id.ToString())">Excluir</button></td>
+                        <td><button type="button" class=" btn btn-primary" onclick="Editar('@item.Id.ToString()')">Atualizar</button></td>
+                        <td>@item.Id.ToString()</td>
+                        <td>@item.Nome.ToString()</td>
+                        <td style="color:firebrick">@item.Tipo.ToString().Replace("0", "OnShore").Replace("1", "OffShore")</td>
+                    </tr>
+                </tbody>
+            }
+        }
+
+    </table>
+</div>
+<br />
+
+<button type="button" class="btn btn-block btn-success" onclick="Registrar()">Novo Estacao</button>
+
+
+<script>
+    function Registrar() {
+        window.location.href = "../Estacao/Registrar";
+    }
+
+    function Excluir(id) {
+        window.location.href = "../Estacao/Excluir/" + id;
+    }
+
+    function Editar(id) {
+        window.location.href = "../Estacao/Registrar/" + id;
+    }
+</script>
+
+
+

@@ -10,10 +10,22 @@ namespace SGP.Controllers
         IHttpContextAccessor HttpContextAccessor;
         public EstacaoController(IHttpContextAccessor httpContextAccessor) { HttpContextAccessor = httpContextAccessor; }
 
-       
-        [HttpGet]
-        public IActionResult Registrar()
+        public IActionResult Index()
         {
+            var estacao = new EstacaoModel(HttpContextAccessor);
+            ViewBag.ListaEstacao = estacao.ListaEstacao();
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Registrar(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                var estacao = new EstacaoModel(HttpContextAccessor);
+                ViewBag.Registro = estacao.CarregarRegistro(id);
+            }
+            
             return View();
         }
 
