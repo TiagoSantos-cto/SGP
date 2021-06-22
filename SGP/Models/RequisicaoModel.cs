@@ -61,9 +61,9 @@ namespace SGP.Models
 
         public string NomeEstacaoDestino { get; set; }
 
-        public int VbCancelada { get; set; }
+        public int VbCancelado { get; set; }
 
-        public int VbEncerrada { get; set; }
+        public int VbEncerrado { get; set; }
 
         public IList<ItemRequisicaoModel> ItensRequisicao { get; set; }
 
@@ -177,8 +177,9 @@ namespace SGP.Models
                               usuario U
                           WHERE U.IdUsuario = R.UsuarioAtual
                            AND U.Id_Funcionario = F.IdFuncionario
-                           AND R.VbCancelada = 0
-                           AND R.VbEncerrada = 0
+                           AND R.VbCancelado = 0
+                           AND R.VbEncerrado = 0
+                           AND R.VbEncerrado = 0
                           {filtro}
                          ORDER BY DATA DESC
                          LIMIT 10";
@@ -240,8 +241,8 @@ namespace SGP.Models
                             FROM estacaotrabalho e
                             WHERE e.IdEstacao = R.Origem) AS NOME_ESTACAO_ORIGEM,
                                 R.Destino AS DESTINO,  
-                                R.VbCancelada AS VBCANCELADA,
-                                R.VbEncerrada AS VBENCERRADA,
+                                R.VbCancelado AS VbCancelado,
+                                R.VbEncerrado AS VbEncerrado,
                            (SELECT CASE e.Tipo
                                        WHEN 0 THEN
                                               (SELECT a.Nome
@@ -282,8 +283,8 @@ namespace SGP.Models
                 entity.NomeEstacaoDestino = dt.Rows[0]["NOME_ESTACAO_DESTINO"] != null ? dt.Rows[0]["NOME_ESTACAO_DESTINO"].ToString() : string.Empty;
                 entity.UsuarioResponsavel = dt.Rows[0]["USUARIO_INCLUSAO"] != null ? Convert.ToInt32(dt.Rows[0]["USUARIO_INCLUSAO"].ToString()) : 0;
                 entity.NomeUsuarioResponsavel = dt.Rows[0]["NOME_USUARIO_INCLUSAO"] != null ? dt.Rows[0]["NOME_USUARIO_INCLUSAO"].ToString() : string.Empty;
-                entity.VbCancelada = dt.Rows[0]["VBCANCELADA"] != null ? Convert.ToInt32(dt.Rows[0]["VBCANCELADA"].ToString()) : 0;
-                entity.VbEncerrada = dt.Rows[0]["VBENCERRADA"] != null ? Convert.ToInt32(dt.Rows[0]["VBENCERRADA"].ToString()) : 0;
+                entity.VbCancelado = dt.Rows[0]["VbCancelado"] != null ? Convert.ToInt32(dt.Rows[0]["VbCancelado"].ToString()) : 0;
+                entity.VbEncerrado = dt.Rows[0]["VbEncerrado"] != null ? Convert.ToInt32(dt.Rows[0]["VbEncerrado"].ToString()) : 0;
             }
 
             return entity;
@@ -297,10 +298,7 @@ namespace SGP.Models
 
         public IList<ItemRequisicaoModel> ObterItensRequisicao(int? id)
         {
-            var sql = $@"SELECT Id_Equipamento,
-                                Quantidade
-                         FROM itemrequisicao
-                         WHERE Id_Requisicao = '{id}'";
+            var sql = $@"SELECT Id_Equipamento, Quantidade from Requsicao_item where Id_Requisicao = '{id}'";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -330,8 +328,8 @@ namespace SGP.Models
             {
                 Id = GerarSequencial();
 
-                sql = $@"INSERT INTO Requisicao (IdRequisicao, Descricao, Tipo, Origem, Status, Destino, UsuarioAtual, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao) 
-                         VALUES ('{Id}', '{Descricao}', '{Tipo}' ,'{Origem}', '{Status}', '{Destino}', '{UsuarioAtual}','{Convert.ToDateTime(Data):yyyy/MM/dd}', '{IdUsuarioLogado()}', '', '')";
+                sql = $@"INSERT INTO Requisicao (IdRequisicao, Descricao, Tipo, Origem, Status, Destino, UsuarioAtual, DataInclusao, UsuarioInclusao, DataAlteracao, UsuarioAlteracao, VbCancelado, VbEncerrado) 
+                         VALUES ('{Id}', '{Descricao}', '{Tipo}' ,'{Origem}', '{Status}', '{Destino}', '{UsuarioAtual}','{Convert.ToDateTime(Data):yyyy/MM/dd}', '{IdUsuarioLogado()}', '', '','0','0')";
             }
             else
             {
@@ -405,7 +403,7 @@ namespace SGP.Models
 
             foreach (var item in listaGravacao)
             {
-                sqlListaItens = $@"INSERT INTO itemrequisicao (Quantidade, Id_Equipamento, Id_Requisicao) 
+                sqlListaItens = $@"INSERT INTO Requsicao_item (Quantidade, Id_Equipamento, Id_Requisicao) 
                                    VALUES ('{item.Quantidade}', '{item.CodigoEquipamento}', '{item.CodigoRequisicao}')";
 
                 dal.ExecutarComandoSQL(sqlListaItens);
@@ -414,14 +412,14 @@ namespace SGP.Models
 
         private void ExcluirListaItens(DAL dal, int id)
         {
-            string deletaLista = $"DELETE FROM itemrequisicao WHERE Id_Requisicao = '{id}'";
-            dal.ExecutarComandoSQL(deletaLista);
+            string deletaRelacionamentos = $"DELETE FROM Requsicao_item WHERE Id_Requisicao = '{id}'";           
+            dal.ExecutarComandoSQL(deletaRelacionamentos);
         }
 
         private bool Existe(int id)
         {
             var sql = $@"SELECT Id_Requisicao
-                         FROM itemrequisicao
+                         FROM requsicao_item
                          WHERE Id_Requisicao = '{id}'";
 
             var dal = new DAL();
@@ -448,7 +446,7 @@ namespace SGP.Models
             var dal = new DAL();         
            
             string sql = $@"UPDATE Requisicao SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', 
-                            Descricao = 'Requisição encerrada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {NomeUsuarioLogado()}' , VbEncerrada = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
+                            Descricao = 'Requisição encerrada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {NomeUsuarioLogado()}' , VbEncerrado = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
 
             dal.ExecutarComandoSQL(sql);         
         }
@@ -481,7 +479,7 @@ namespace SGP.Models
             var dal = new DAL();
 
             string sql = $@"UPDATE Requisicao SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', 
-                            Descricao = 'Requisição cancelada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {NomeUsuarioLogado()}' , VbCancelada = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
+                            Descricao = 'Requisição cancelada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {NomeUsuarioLogado()}' , VbCancelado = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdRequisicao = '{id}'";
 
             dal.ExecutarComandoSQL(sql);
         }

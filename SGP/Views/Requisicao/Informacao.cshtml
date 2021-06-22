@@ -17,8 +17,8 @@
     var vNomeEstacaoDestino = string.Empty;
     var vUsuarioAtual = string.Empty;
     var vNomeUsuarioAtual = string.Empty;
-    var vVbCancelada = 0;
-    var vVbEncerrada = 0;
+    var vVbCancelado = 0;
+    var vVbEncerrado = 0;
 
     try
     {
@@ -34,8 +34,8 @@
         vNomeEstacaoDestino = @ViewBag.Registro.NomeEstacaoDestino.ToString();
         vUsuarioAtual = @ViewBag.Registro.UsuarioAtual.ToString();
         vNomeUsuarioAtual = @ViewBag.Registro.NomeUsuarioAtual.ToString();
-        vVbCancelada = Convert.ToInt32(@ViewBag.Registro.VbCancelada);
-        vVbEncerrada = Convert.ToInt32(@ViewBag.Registro.VbEncerrada);
+        vVbCancelado = Convert.ToInt32(@ViewBag.Registro.VbCancelado);
+        vVbEncerrado = Convert.ToInt32(@ViewBag.Registro.VbEncerrado);
     }
     catch { }
 }
@@ -78,11 +78,11 @@
 
             <div class="col-md-3 mb-lg-5">
                 @{
-                    if (vVbCancelada > 0)
+                    if (vVbCancelado > 0)
                     {
                         <label style="color:red;font:700;padding-left: 700px">CANCELADA</label>
                     }
-                    else if (vVbEncerrada > 0)
+                    else if (vVbEncerrado > 0)
                     {
                         <label style="color:red;font:700;padding-left: 700px">ENCERRADA</label>
                     }
@@ -323,18 +323,18 @@
         </fieldset>
 
         @{
-            if (vVbEncerrada < 1 && vVbCancelada < 1)
+            if (vVbEncerrado < 1 && vVbCancelado < 1)
             {
                 <button id="btnGravar" type="submit" class="btn btn-block btn-success">Gravar</button>
             }
         }
         <br />
         @{
-            if (vStatus == "Encerrar" && vVbEncerrada < 1)
+            if (vStatus == "Encerrar" && vVbEncerrado < 1)
             {
                 <button id="btnEncerrar" type="button" class="btn btn-block btn-danger" onclick="EncerrarRequisicao()" style="display:inline">Encerrar</button>
             }
-            else if (vStatus == "Cancelar" && vVbCancelada < 1)
+            else if (vStatus == "Cancelar" && vVbCancelado < 1)
             {
                 <button id="btnCancelar" type="button" class="btn btn-block btn-outline-danger" onclick="CancelarRequisicao()" style="display:inline">Cancelar</button>
             }
@@ -387,7 +387,7 @@
 
                                     <tbody>
                                         <tr>
-                                            <td>@item.Descricao.ToString()</td>
+                                            <td>@item.Nome.ToString()</td>
                                             <td><img src="@item.ImagemPath.ToString()" width="50" height="50" /></td>
                                             <td class="text-center" id="qtdAtual">@item.Quantidade.ToString()</td>
                                             <td class="text-center"><input type="number" id="@identificador" style="width:60px" min='0' max="@item.Quantidade.ToString()"></td>
@@ -419,7 +419,7 @@
             document.getElementById('btnAdicionar').style.display = 'inline';
         }
 
-        if (@vVbCancelada > 0 || @vVbEncerrada > 0) {
+        if (@vVbCancelado > 0 || @vVbEncerrado > 0) {
             $("#divPrincipal").find("*").prop("disabled", true);
 
             LiberarTransporte();

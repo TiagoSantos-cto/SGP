@@ -10,7 +10,7 @@ namespace SGP.Models
         #region PROPRIEDADES
 
         public string  Id { get; set; }
-        public string Descricao { get; set; }
+        public string Nome { get; set; }
         public string Status { get; set; }
         public int Estacao { get; set; }
         public string NomeEstacao { get; set; }
@@ -38,15 +38,15 @@ namespace SGP.Models
 
             if (!Existe(Id))
             {
-                sql = $@"INSERT INTO Equipamento (IdEquipamento, Tipo, Descricao, Preco, Quantidade, Status, Estacao, ImagemPath)
-                         VALUES ('{Id}','DEFAULT', '{Descricao}', '0.00', '{Quantidade}', '{Status}', '{Estacao}', '{ImagemPath}')";
+                sql = $@"INSERT INTO Equipamento (IdEquipamento, Tipo, Nome, Preco, Quantidade, Status, Estacao, ImagemPath)
+                         VALUES ('{Id}','DEFAULT', '{Nome}', '0.00', '{Quantidade}', '{Status}', '{Estacao}', '{ImagemPath}')";
             }
             else
             {
                 UpdateImagemPath(Id);
 
                 sql = $@"UPDATE Equipamento
-                         SET Descricao = '{Descricao}',
+                         SET Nome = '{Nome}',
                              Status = '{Status}',
                              Estacao = '{Estacao}',
                              Quantidade = '{Quantidade}',
@@ -86,7 +86,7 @@ namespace SGP.Models
         public EquipamentoModel CarregarRegistro(string id)
         {
             var sql = $@"SELECT IdEquipamento,
-                                Descricao,
+                                Nome,
                                 Status,
                                 Quantidade,
                                 Estacao,
@@ -113,7 +113,7 @@ namespace SGP.Models
             var entity = new EquipamentoModel
             {
                 Id = dt.Rows[0]["IdEquipamento"] != null ? dt.Rows[0]["IdEquipamento"].ToString() : string.Empty,
-                Descricao = dt.Rows[0]["Descricao"] != null ? dt.Rows[0]["Descricao"].ToString() : string.Empty,
+                Nome = dt.Rows[0]["Nome"] != null ? dt.Rows[0]["Nome"].ToString() : string.Empty,
                 Estacao = dt.Rows[0]["Estacao"] != null ? Convert.ToInt32(dt.Rows[0]["Estacao"].ToString()) : 0,
                 NomeEstacao = dt.Rows[0]["Nome_Estacao"] != null ? dt.Rows[0]["Nome_Estacao"].ToString() : string.Empty,
                 Status = dt.Rows[0]["Status"] != null ? dt.Rows[0]["Status"].ToString() : string.Empty,
@@ -129,7 +129,7 @@ namespace SGP.Models
             var lista = new List<EquipamentoModel>();
 
             var sql = $@"SELECT IdEquipamento,
-                                Descricao,
+                                Nome,
                                 Status,
                                 Quantidade,
                                 Estacao,
@@ -144,7 +144,7 @@ namespace SGP.Models
                 var item = new EquipamentoModel
                 {
                     Id = dt.Rows[i]["IdEquipamento"].ToString(),
-                    Descricao = dt.Rows[i]["Descricao"].ToString(),
+                    Nome = dt.Rows[i]["Nome"].ToString(),
                     Status = dt.Rows[i]["Status"].ToString(),
                     Estacao = Convert.ToInt32(dt.Rows[i]["Estacao"].ToString()),
                     Quantidade = Convert.ToInt32(dt.Rows[i]["Quantidade"].ToString()),

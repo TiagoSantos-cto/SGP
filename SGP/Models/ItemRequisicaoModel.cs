@@ -14,7 +14,7 @@ namespace SGP.Models
         {
             var sql = $@"SELECT Id_Equipamento, 
                                 Quantidade                            
-                           FROM itemrequisicao
+                           FROM Requsicao_item
                          WHERE Id_Requisicao = '{id}'";
 
             var lista = new List<ItemRequisicaoModel>();

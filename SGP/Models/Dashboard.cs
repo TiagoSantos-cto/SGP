@@ -28,8 +28,8 @@ namespace SGP.Models
             var sql = @$"SELECT count(R.Status) AS TOTAL,
                                 R.STATUS AS STATUS
                          FROM requisicao R
-                         WHERE R.VbEncerrada = '0'
-                           AND R.VbCancelada = '0'
+                         WHERE R.VbEncerrado = '0'
+                           AND R.VbCancelado = '0'
                          GROUP BY R.STATUS";
 
             var dal = new DAL();

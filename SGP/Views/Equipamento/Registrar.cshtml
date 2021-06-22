@@ -6,7 +6,7 @@
 
 @{
     var vId = string.Empty;
-    var vDescricao = string.Empty;
+    var vNome = string.Empty;
     var vStatus = string.Empty;
     var vEstacao = string.Empty;
     var vNomeEstacao = string.Empty;
@@ -16,7 +16,7 @@
     try
     {
         vId = @ViewBag.Registro.Id.ToString();
-        vDescricao = @ViewBag.Registro.Descricao.ToString();
+        vNome = @ViewBag.Registro.Nome.ToString();
         vStatus = @ViewBag.Registro.Status.ToString();
         vEstacao = @ViewBag.Registro.Estacao.ToString();
         vNomeEstacao = @ViewBag.Registro.NomeEstacao.ToString();
@@ -47,7 +47,7 @@
 
         <div class="mb-3">
             <label>Descrição do item</label>
-            <input type="text" class="form-control" asp-for="Descricao "value="@vDescricao" required>         
+            <input type="text" class="form-control" asp-for="Nome "value="@vNome" required>         
         </div>
 
         <div class="row" style="padding-left: 20px;">
