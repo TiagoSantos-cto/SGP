@@ -53,20 +53,18 @@ namespace SGP.Models
             var id = idRequisicao != null ? idRequisicao.ToString() : string.Empty;
 
             var sql = @$"SELECT E.IdEntrega AS ID,
-                                E.DataMaisCedo AS DTCEDO,
                                 E.DataMaisTarde AS DTTARDE,
                                 E.Status AS STATUS,
                                 ER.Id_Requisicao AS ID_REQUISICAO,
-                                EE.Id_Embarcacao AS ID_EMBARCACAO,
+                                EB.IdEmbarcacao AS ID_EMBARCACAO,
                                 EB.Nome AS NOME_EMBARCACAO
                          FROM entrega E,
-                              entregarequisicao ER,
-                              embarcacaoentrega EE,
+                              requisicao_entrega ER,
+                              requisicao r,
                               embarcacao EB
                          WHERE E.IdEntrega = ER.Id_Entrega
-                           AND EE.Id_Entrega = E.IdEntrega
-                           AND EB.IdEmbarcacao = EE.Id_Embarcacao
-                           AND ER.Id_Requisicao  = '{id}'";
+                           AND ER.Id_Entrega = R.IdRequisicao
+                           AND ER.Id_Requisicao  = '1'";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -79,7 +77,7 @@ namespace SGP.Models
                 {
                     IdEntrega = dt.Rows[0]["ID"] != null ? Convert.ToInt32(dt.Rows[0]["ID"].ToString()) : 0,
                     IdRequisicao = dt.Rows[0]["ID_REQUISICAO"] != null ? Convert.ToInt32(dt.Rows[0]["ID_REQUISICAO"].ToString()) : (int)idRequisicao,
-                    DataMaisCedo = dt.Rows[0]["DTCEDO"] != null ? Convert.ToDateTime(dt.Rows[0]["DTCEDO"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
+                    DataMaisCedo = string.Empty,
                     DataMaisTarde = dt.Rows[0]["DTTARDE"] != null ? Convert.ToDateTime(dt.Rows[0]["DTTARDE"].ToString()).ToString("dd/MM/yyyy") : string.Empty,
                     Status = dt.Rows[0]["STATUS"] != null ? dt.Rows[0]["STATUS"].ToString() : string.Empty,
                     IdEmbarcacao = dt.Rows[0]["ID_EMBARCACAO"] != null ? Convert.ToInt32(dt.Rows[0]["ID_EMBARCACAO"].ToString()) : 0,
@@ -136,31 +134,30 @@ namespace SGP.Models
             {
                 IdEntrega = GerarSequencial();
 
-                sqlEntrega = $@"INSERT INTO Entrega (IdEntrega, Status, DataMaisCedo, DataMaisTarde)
-                                VALUES('{IdEntrega}', '{Status}', '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}', '{Convert.ToDateTime(DataMaisTarde)}')";
+                sqlEntrega = $@"INSERT INTO Entrega (IdEntrega, Status, DataMaisTarde, Id_Embarcacao)
+                                VALUES('{IdEntrega}', '{Status}', '{Convert.ToDateTime(DataMaisTarde)}', '{IdEmbarcacao}')";
 
-                sqlEmbarcacaoEntrega = $@"INSERT INTO EmbarcacaoEntrega (Id_Embarcacao, Id_Entrega)
-                                          VALUES('{IdEmbarcacao}', '{IdEntrega}')";
+                //sqlEmbarcacaoEntrega = $@"INSERT INTO EmbarcacaoEntrega (Id_Embarcacao, Id_Entrega)
+                //                          VALUES('{IdEmbarcacao}', '{IdEntrega}')";
 
-                sqlEntregaRequisicao = $@"INSERT INTO EntregaRequisicao (Id_Entrega, Id_Requisicao)
+                sqlEntregaRequisicao = $@"INSERT INTO requisicao_entrega (Id_Entrega, Id_Requisicao)
                                           VALUES('{IdEntrega}', '{IdRequisicao}')";
 
             }
             else
             {
                 sqlEntrega = $@"UPDATE Entrega
-                                SET Status = '{Status}',
-                                    DataMaisCedo = '{Convert.ToDateTime(DataMaisCedo):yyyy/MM/dd}',
+                                SET Status = '{Status}',                                   
                                     DataMaisTarde = '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}'
                                 WHERE IdEntrega = '{IdEntrega}'";
 
-                sqlEmbarcacaoEntrega = $@"UPDATE embarcacaoentrega
-                                          SET Id_Embarcacao = '{IdEmbarcacao}'
-                                          WHERE Id_Entrega = '{IdEntrega}'";
+                //sqlEmbarcacaoEntrega = $@"UPDATE embarcacaoentrega
+                //                          SET Id_Embarcacao = '{IdEmbarcacao}'
+                //                          WHERE Id_Entrega = '{IdEntrega}'";
             }
 
             dal.ExecutarComandoSQL(sqlEntrega);
-            dal.ExecutarComandoSQL(sqlEmbarcacaoEntrega);
+            //dal.ExecutarComandoSQL(sqlEmbarcacaoEntrega);
 
             if (!string.IsNullOrEmpty(sqlEntregaRequisicao))
             {
@@ -219,7 +216,7 @@ namespace SGP.Models
         public bool Existe(int idEntrega, int idRequisicao)
         {
             var sql = $@"SELECT *
-                         FROM EntregaRequisicao
+                         FROM requisicao_entrega
                          WHERE Id_Entrega = '{idEntrega}'
                            AND Id_Requisicao = '{idRequisicao}'";
 
