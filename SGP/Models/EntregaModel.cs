@@ -64,7 +64,7 @@ namespace SGP.Models
                               embarcacao EB
                          WHERE E.IdEntrega = ER.Id_Entrega
                            AND ER.Id_Entrega = R.IdRequisicao
-                           AND ER.Id_Requisicao  = '1'";
+                           AND ER.Id_Requisicao  = '{id}'";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -165,7 +165,7 @@ namespace SGP.Models
             }
 
             var requisicaoModel = new RequisicaoModel();
-            requisicaoModel.SincorinizarEntrega(IdRequisicao, IdEntrega);
+            requisicaoModel.SincorinizarEntrega(IdRequisicao, IdEntrega, Status);
         }
 
         private int GerarSequencial()

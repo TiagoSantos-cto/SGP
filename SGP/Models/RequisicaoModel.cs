@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using static SGP.Models.EntregaModel;
 
 namespace SGP.Models
 {
@@ -523,10 +524,25 @@ namespace SGP.Models
             return lista;
         }
 
-        public void SincorinizarEntrega(int idRequisicao, int idEntrega)
-        {   
-            var sql = $@"UPDATE  Requisicao SET DataAlteracao = '{DateTime.Now}', 
-                         Descricao = 'Requisição programada para transporte. Número do transporte: {idEntrega}' WHERE IdRequisicao = '{idRequisicao}'";
+        public void SincorinizarEntrega(int idRequisicao, int idEntrega, string etapa)
+        {
+            string sql;
+
+            if (etapa == StatusEntrega.Processamento.ToString())
+            {
+                sql = $@"UPDATE  Requisicao SET DataAlteracao = '{DateTime.Now}', 
+                         Descricao = ' Requisição programada para transporte. Número do transporte: {idEntrega} ' WHERE IdRequisicao = '{idRequisicao}'";
+            }
+            else if (etapa == StatusEntrega.Transito.ToString())
+            {
+                sql = $@"UPDATE  Requisicao SET DataAlteracao = '{DateTime.Now}', 
+                         Descricao = ' Requisição com entrega em trânsito. Número do transporte: {idEntrega} ' WHERE IdRequisicao = '{idRequisicao}'";
+            }
+            else
+            {
+                sql = $@"UPDATE  Requisicao SET DataAlteracao = '{DateTime.Now}', 
+                         Descricao = ' Entrega realizada. Número do transporte: {idEntrega} ' WHERE IdRequisicao = '{idRequisicao}'";
+            }         
 
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);
