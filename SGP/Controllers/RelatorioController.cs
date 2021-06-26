@@ -29,16 +29,16 @@ namespace SGP.Controllers
             using (var doc = new PdfSharpCore.Pdf.PdfDocument())
             {
                 var page = doc.AddPage();
-                page.Size = PdfSharpCore.PageSize.A4;
+                page.Size = PdfSharpCore.PageSize.Crown;
                 page.Orientation = PdfSharpCore.PageOrientation.Portrait;
                 var graphics = XGraphics.FromPdfPage(page);
                 var corFonte = XBrushes.Black;
 
                 var textFormatter = new PdfSharpCore.Drawing.Layout.XTextFormatter(graphics);
-                var fonteOrganzacao = new XFont("Arial", 10);
-                var fonteDescricao = new XFont("Arial", 8, XFontStyle.BoldItalic);
-                var titulodetalhes = new XFont("Arial", 14, XFontStyle.Bold);
-                var fonteDetalhesDescricao = new XFont("Arial", 7);
+                var fonteOrganzacao = new XFont("Arial", 16);
+                var fonteDescricao = new XFont("Arial", 16, XFontStyle.BoldItalic);
+                var titulodetalhes = new XFont("Arial", 28, XFontStyle.Bold);
+                var fonteDetalhesDescricao = new XFont("Arial", 14);
 
                 var qtdPaginas = doc.PageCount;
                 textFormatter.DrawString(qtdPaginas.ToString(), new XFont("Arial", 10), corFonte, new PdfSharpCore.Drawing.XRect(578, 825, page.Width, page.Height));
@@ -50,7 +50,7 @@ namespace SGP.Controllers
                 textFormatter.DrawString("MOVIMENTAÇÕES DE REQUISIÇÕES", fonteTitulo, corFonte, new XRect(20, 30, page.Width, page.Height));
 
                 textFormatter.DrawString("Status: ", fonteDescricao, corFonte, new XRect(20, 70, page.Width, page.Height));
-                textFormatter.DrawString(entity.Status, fonteOrganzacao, corFonte, new XRect(55, 69, page.Width, page.Height));
+                textFormatter.DrawString(entity.Status, fonteOrganzacao, corFonte, new XRect(85, 69, page.Width, page.Height));
 
                 textFormatter.DrawString("Período: ", fonteDescricao, corFonte, new XRect(20, 90, page.Width, page.Height));
                 textFormatter.DrawString(entity.Data +" até "+ entity.DataFinal , fonteOrganzacao, corFonte, new XRect(105, 89, page.Width, page.Height));
@@ -65,17 +65,17 @@ namespace SGP.Controllers
 
                 detalhes.DrawString("Número", fonteDescricao, corFonte, new XRect(20, alturaTituloDetalhesY, page.Width, page.Height));
                 
-                detalhes.DrawString("Descrição", fonteDescricao, corFonte, new XRect(60, alturaTituloDetalhesY, page.Width, page.Height));
+                detalhes.DrawString("Descrição", fonteDescricao, corFonte, new XRect(100, alturaTituloDetalhesY, page.Width, page.Height));
 
-                detalhes.DrawString("Tipo", fonteDescricao, corFonte, new XRect(230, alturaTituloDetalhesY, page.Width, page.Height));
+                detalhes.DrawString("Tipo", fonteDescricao, corFonte, new XRect(630, alturaTituloDetalhesY, page.Width, page.Height));
 
-                detalhes.DrawString("Origem", fonteDescricao, corFonte, new XRect(280, alturaTituloDetalhesY, page.Width, page.Height));
+                detalhes.DrawString("Origem", fonteDescricao, corFonte, new XRect(710, alturaTituloDetalhesY, page.Width, page.Height));
 
-                detalhes.DrawString("Destino", fonteDescricao, corFonte, new XRect(380, alturaTituloDetalhesY, page.Width, page.Height));
+                detalhes.DrawString("Destino", fonteDescricao, corFonte, new XRect(850, alturaTituloDetalhesY, page.Width, page.Height));
 
-                detalhes.DrawString("Status", fonteDescricao, corFonte, new XRect(470, alturaTituloDetalhesY, page.Width, page.Height));
+                detalhes.DrawString("Status", fonteDescricao, corFonte, new XRect(1020, alturaTituloDetalhesY, page.Width, page.Height));
 
-                detalhes.DrawString("Usuário", fonteDescricao, corFonte, new XRect(525, alturaTituloDetalhesY, page.Width, page.Height));
+                detalhes.DrawString("Usuário", fonteDescricao, corFonte, new XRect(1200, alturaTituloDetalhesY, page.Width, page.Height));
 
                 var dados = entity.ListaRequisicao();
 
@@ -84,12 +84,12 @@ namespace SGP.Controllers
                 foreach (var item in dados)
                 {
                     textFormatter.DrawString(item.Id.ToString(), fonteDetalhesDescricao, corFonte, new XRect(21, alturaDetalhesItens, page.Width, page.Height));
-                    textFormatter.DrawString(item.Descricao, fonteDetalhesDescricao, corFonte, new XRect(61, alturaDetalhesItens, page.Width, page.Height));
-                    textFormatter.DrawString(item.Tipo == "T" ? "Transbordo" : "Backload", fonteDetalhesDescricao, corFonte, new XRect(231, alturaDetalhesItens, page.Width, page.Height));
-                    textFormatter.DrawString(item.NomeEstacaoOrigem, fonteDetalhesDescricao, corFonte, new XRect(281, alturaDetalhesItens, page.Width, page.Height));
-                    textFormatter.DrawString(item.NomeEstacaoDestino, fonteDetalhesDescricao, corFonte, new XRect(381, alturaDetalhesItens, page.Width, page.Height));
-                    textFormatter.DrawString(item.Status, fonteDetalhesDescricao, corFonte, new XRect(471, alturaDetalhesItens, page.Width, page.Height));
-                    textFormatter.DrawString(item.NomeUsuarioAtual, fonteDetalhesDescricao, corFonte, new XRect(526, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.Descricao, fonteDetalhesDescricao, corFonte, new XRect(101, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.Tipo == "T" ? "Transbordo" : "Backload", fonteDetalhesDescricao, corFonte, new XRect(631, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.NomeEstacaoOrigem, fonteDetalhesDescricao, corFonte, new XRect(710, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.NomeEstacaoDestino, fonteDetalhesDescricao, corFonte, new XRect(850, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.Status, fonteDetalhesDescricao, corFonte, new XRect(1021, alturaDetalhesItens, page.Width, page.Height));
+                    textFormatter.DrawString(item.NomeUsuarioAtual, fonteDetalhesDescricao, corFonte, new XRect(1200, alturaDetalhesItens, page.Width, page.Height));
 
                     alturaDetalhesItens += 20;
                 }

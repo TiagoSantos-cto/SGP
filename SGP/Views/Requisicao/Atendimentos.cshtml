@@ -42,6 +42,7 @@
                     <option value="Processar">Em processamento</option>
                     <option value="Cancelar">Cancelado</option>
                     <option value="Programar">Programado</option>
+                    <option value="Encerrar">Encerrado</option>
                 </select>
             </div>
 
@@ -110,17 +111,31 @@
             foreach (var item in (List<RequisicaoModel>)ViewBag.ListaRequisicao)
             {
                 <tbody>
-                    <tr>
-                        <td>@item.Id.ToString()</td>
-                        <td>@item.Data.ToString()</td>
-                        <td>@item.Status.ToString()</td>
-                        <td style="color:firebrick">@item.Tipo.ToString().Replace("B", "Backload").Replace("T", "Transbordo")</td>
-                        <td>@item.Descricao.ToString()</td>
-                        <td>@item.Origem.ToString()</td>
-                        <td>@item.Destino.ToString()</td>
-                        <td>@item.NomeUsuarioAtual.ToString()</td>
-                        <td><button type="button" class=" btn btn-primary" onclick="Editar(@item.Id.ToString())">Abrir</button></td>
-                    </tr>
+                            <tr>
+                                <td>@item.Id.ToString()</td>
+                                <td>@item.Data.ToString()</td>
+
+                                @{
+                                    if (@item.Status.ToString() == "Encerrar")
+                                    {
+                                        <td style="color:red">@item.Status.ToString()</td>
+
+                                    }
+                                    else
+                                    {
+                                        <td>@item.Status.ToString()</td>
+                                    }
+                                }
+
+
+                                <td style="color:darkcyan">@item.Tipo.ToString().Replace("B", "Backload").Replace("T", "Transbordo")</td>
+
+                                <td>@item.Descricao.ToString()</td>
+                                <td>@item.NomeEstacaoOrigem.ToString()</td>
+                                <td>@item.NomeEstacaoDestino.ToString()</td>
+                                <td>@item.NomeUsuarioAtual.ToString()</td>
+                                <td><button type="button" class=" btn btn-primary" onclick="Editar(@item.Id.ToString())">Abrir</button></td>
+                            </tr>
                 </tbody>
             }
         }

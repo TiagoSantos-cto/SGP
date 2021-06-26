@@ -34,8 +34,14 @@ namespace SGP.Models
             string sqlEstacao = string.Empty;
             string sqlTipo = string.Empty;
 
-            if (Tipo == 0)
+
+            if (Id == 0)
             {
+                Id = GerarSequencial();
+            }
+
+            if (Tipo == 0)
+            {             
                 if (!ExisteArmazem(Id))
                 {
                     sqlEstacao = $@"INSERT INTO EstacaoTrabalho (IdEstacao, Tipo)
@@ -210,6 +216,32 @@ namespace SGP.Models
 
             return entity;
         }
+
+
+        private int GerarSequencial()
+        {
+            var sequencial = 0;
+
+            var entacoes = ListaEstacao();
+
+            var listaID = new List<int>();
+
+            if (entacoes.Count > 0)
+            {
+                foreach (var item in entacoes)
+                {
+                    listaID.Add(item.Id);
+                };
+
+                listaID.Sort();
+
+                sequencial = listaID[listaID.Count - 1];
+            }
+
+            return sequencial + 1;
+        }
+
+    
 
         #endregion
     }
