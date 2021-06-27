@@ -339,8 +339,12 @@ namespace SGP.Models
             dal.ExecutarComandoSQL(sql);
 
             RegistrarHistorico();
-            GravarLista();
-            AtualizarQuantidadeItem(Id);
+            
+            if (Status == StatusRequisicao.Liberar.GetDescription() || Status == StatusRequisicao.Liberar.ToString())
+            {
+                GravarLista();
+                AtualizarQuantidadeItem(Id);
+            }                 
         }
 
         private int GerarSequencial()

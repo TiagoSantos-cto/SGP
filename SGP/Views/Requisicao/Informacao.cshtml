@@ -4,6 +4,10 @@
     ViewData["Title"] = "Gravar / alterar";
 }
 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+
+
 @{
     var vId = 0;
     var vDescricao = string.Empty;
@@ -205,9 +209,6 @@
             <div class="form-group" style="background-color: ghostwhite;">
 
                 <select asp-for="ItensRequisicaoTela" class="custom-select" style="width:250px" id="mySelect" multiple>
-
-                    <optgroup label="Código   -   Quantidade"></optgroup>
-
                     @{
                         var lista = (List<ItemRequisicaoModel>)ViewBag.ItemRequisicao;
 
@@ -215,7 +216,7 @@
                         {
                             foreach (var equipamento in lista)
                             {
-                                <option value="@equipamento.CodigoEquipamento.ToString();@equipamento.Quantidade.ToString()" selected="selected">@equipamento.CodigoEquipamento.ToString()  -  @equipamento.Quantidade.ToString()</option>
+                                <option value="@equipamento.CodigoEquipamento.ToString();@equipamento.Quantidade.ToString()" selected="selected">Item: @equipamento.CodigoEquipamento.ToString()   Quantidade: @equipamento.Quantidade.ToString()</option>
                             }
                         }
                     }
@@ -227,6 +228,8 @@
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ExemploModalCentralizado" id="btnAdicionar" style=" display:none">
                 Adicionar item
             </button>
+
+            <button class="btn btn-danger" onclick="deletarItem()" id="btnLimpar" style=" display:none">Remover item</button>
 
         </fieldset>
 
@@ -258,7 +261,8 @@
                             if (string.IsNullOrEmpty(vStatus))
                             {
                                 <option value="">Selecionar...</option>
-                                <option value="Solicitar">Solicitar</option>                               
+                                <option value="Solicitar">Solicitar</option>
+
                             }
                             else
                             {
@@ -288,7 +292,7 @@
                                 <option value="">Selecionar...</option>
                                 foreach (var item in (List<UsuarioModel>)ViewBag.ListaUsuario)
                                 {
-                                    if (@item.PerfilAcesso > 0 )
+                                    if (@item.PerfilAcesso > 0)
                                     {
                                         <option value="@item.Id.ToString()">@item.Login.ToString()</option>
                                     }
@@ -414,9 +418,12 @@
     window.onload = function () {
 
         var id = document.getElementById('ID').value;
+        var select = document.getElementById('selectStatus');
+        var option = select.options[select.selectedIndex].value;
 
-        if (id > 0) {
+        if (id > 0 && option == "Solicitar") {
             document.getElementById('btnAdicionar').style.display = 'inline';
+            document.getElementById('btnLimpar').style.display = 'inline';
         }
 
         if (@vVbCancelado > 0 || @vVbEncerrado > 0) {
@@ -434,7 +441,7 @@
 
         var quantidade = document.getElementById(identificador);
 
-        var text = id + ' - ' + quantidade.value;
+        var text = 'Item: '+ id + '     Quantidade: ' + quantidade.value;
 
         var valor = id + ';' + quantidade.value;
 
@@ -445,11 +452,9 @@
         select.add(option);
     }
 
-    function removeLinha(linha) {
-
-        var i = linha.parentNode.parentNode.rowIndex;
-        document.getElementById('TabelaItens').deleteRow(i);
-
+    function deletarItem() {
+        var x = document.getElementById("mySelect");
+        x.remove(x.selectedIndex);
     }
 
     function Editar() {
@@ -500,7 +505,7 @@
 
         }
     }
-   
+
 </script>
 
 <style>

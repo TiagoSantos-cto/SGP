@@ -58,13 +58,14 @@ namespace SGP.Models
                                 ER.Id_Requisicao AS ID_REQUISICAO,
                                 EB.IdEmbarcacao AS ID_EMBARCACAO,
                                 EB.Nome AS NOME_EMBARCACAO
-                         FROM entrega E,
-                              requisicao_entrega ER,
-                              requisicao r,
-                              embarcacao EB
-                         WHERE E.IdEntrega = ER.Id_Entrega
-                           AND ER.Id_Entrega = R.IdRequisicao
-                           AND ER.Id_Requisicao  = '{id}'";
+                           FROM entrega E,
+                         	    requisicao_entrega ER,
+                         	    requisicao r,
+                         	    embarcacao EB
+                          WHERE E.IdEntrega = ER.Id_Entrega
+                            AND ER.Id_Requisicao = R.IdRequisicao
+                            AND ER.Id_Requisicao  = '{id}'
+                            AND E.Id_Embarcacao = EB.IdEmbarcacao";
 
             var dal = new DAL();
             var dt = dal.RetDataTable(sql);
@@ -92,7 +93,7 @@ namespace SGP.Models
                 {
                     obj.Status = StatusEntrega.Transito.GetDescription();
                 }
-                else
+                else if (obj.Status == StatusEntrega.Encerrada.ToString())
                 {
                     obj.Status = StatusEntrega.Encerrada.GetDescription();
                 }
@@ -110,8 +111,7 @@ namespace SGP.Models
 
         public void GravarEntrega()
         {
-            string sqlEntrega = string.Empty;
-            string sqlEmbarcacaoEntrega = string.Empty;
+            string sqlEntrega;
             string sqlEntregaRequisicao = string.Empty;
 
             var dal = new DAL();
@@ -124,22 +124,18 @@ namespace SGP.Models
             {
                 Status = StatusEntrega.Transito.ToString();
             }
-            else
+            else if (Status == StatusEntrega.Encerrada.GetDescription())
             {
                 Status = StatusEntrega.Encerrada.ToString();
             }
-
 
             if (!Existe(IdEntrega, IdRequisicao))
             {
                 IdEntrega = GerarSequencial();
 
                 sqlEntrega = $@"INSERT INTO Entrega (IdEntrega, Status, DataMaisTarde, Id_Embarcacao)
-                                VALUES('{IdEntrega}', '{Status}', '{Convert.ToDateTime(DataMaisTarde)}', '{IdEmbarcacao}')";
-
-                //sqlEmbarcacaoEntrega = $@"INSERT INTO EmbarcacaoEntrega (Id_Embarcacao, Id_Entrega)
-                //                          VALUES('{IdEmbarcacao}', '{IdEntrega}')";
-
+                                VALUES('{IdEntrega}', '{Status}', '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}', '{IdEmbarcacao}')";
+       
                 sqlEntregaRequisicao = $@"INSERT INTO requisicao_entrega (Id_Entrega, Id_Requisicao)
                                           VALUES('{IdEntrega}', '{IdRequisicao}')";
 
@@ -150,14 +146,9 @@ namespace SGP.Models
                                 SET Status = '{Status}',                                   
                                     DataMaisTarde = '{Convert.ToDateTime(DataMaisTarde):yyyy/MM/dd}'
                                 WHERE IdEntrega = '{IdEntrega}'";
-
-                //sqlEmbarcacaoEntrega = $@"UPDATE embarcacaoentrega
-                //                          SET Id_Embarcacao = '{IdEmbarcacao}'
-                //                          WHERE Id_Entrega = '{IdEntrega}'";
             }
 
             dal.ExecutarComandoSQL(sqlEntrega);
-            //dal.ExecutarComandoSQL(sqlEmbarcacaoEntrega);
 
             if (!string.IsNullOrEmpty(sqlEntregaRequisicao))
             {
