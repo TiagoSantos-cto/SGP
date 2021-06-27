@@ -96,5 +96,24 @@ namespace SGP.Controllers
         {
             return View();
         }
+
+
+        [HttpGet]
+        public IActionResult SegurancaUsuario()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult SegurancaUsuario(UsuarioModel usuario)
+        {
+            if (ModelState.IsValid)
+            {
+                usuario.HttpContextAccessor = HttpContextAccessor;
+                usuario.GravarSenha();
+                return RedirectToAction("Sucesso");
+            }
+            return View();
+        }
     }
 }

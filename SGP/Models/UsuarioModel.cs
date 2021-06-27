@@ -121,6 +121,15 @@ namespace SGP.Models
             return usuario;
         }
 
+        internal void GravarSenha()
+        {
+            var senhaCriptografada = CriptografarSenha(Senha);
+            var sql = $"UPDATE  Usuario SET  Senha = '{senhaCriptografada}' WHERE Login = '{Login}'";
+
+            var dal = new DAL();
+            dal.ExecutarComandoSQL(sql);
+        }
+
         public List<UsuarioModel> ListaUsuario()
         {
             var lista = new List<UsuarioModel>();

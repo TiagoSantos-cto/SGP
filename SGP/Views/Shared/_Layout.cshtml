@@ -46,18 +46,30 @@
                             <div class="dropdown-menu" aria-labelledby="dropdown03">
                                 <a class="dropdown-item" href="../Relatorio/Movimentacoes">Movimentações</a>
                                 <a class="dropdown-item" href="../Relatorio/Historico">Histórico</a>
-                                <a class="dropdown-item" href="../Requisicao/Dashboard">Gráficos</a>
+                                <a class="dropdown-item" href="../Requisicao/Dashboard">Gráfico</a>
                             </div>
                         </li>
                     </ul>
-
                 </div>
 
                 @using Microsoft.AspNetCore.Http;
                 @inject IHttpContextAccessor HttpContextAccessor
                 <div id="Nome" style="padding-right:30px" />
             </div>
-            <div id="Sair" />
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="~/images/cadeado.png" alt="Alternate Text" width="30" /></a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown03">
+                        <a class="dropdown-item" href="../Usuario/SegurancaUsuario">Segurança do usuário</a>
+                        <div id="Sair" style="padding-left:150px" />
+                    </div>
+                </li>
+            </ul>
+
+
+
+            
         </nav>
 
     </header>
@@ -97,7 +109,7 @@
             divSair.innerHTML = "<a href='../Usuario/Login/0'> Sair </a>";
 
             if (perfilAcesso == '1') {
-                document.getElementById("menuCadastro").style.display = "inline";               
+                document.getElementById("menuCadastro").style.display = "inline";
             } else {
                 document.getElementById("IconsCadastros").style.display = "none";
             }
