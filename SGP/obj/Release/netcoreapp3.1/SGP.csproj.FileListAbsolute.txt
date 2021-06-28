@@ -394,3 +394,4 @@ C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\SG
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\SGP.dll
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\SGP.pdb
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\SGP.genruntimeconfig.cache
+C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\Razor\Views\Usuario\SegurancaUsuario.cshtml.g.cs

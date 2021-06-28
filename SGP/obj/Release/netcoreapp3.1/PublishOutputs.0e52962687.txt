@@ -2,6 +2,7 @@ C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\Pu
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\css\site.css
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\favicon.ico
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\images\background.jpg
+C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\images\cadeado.png
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\images\dashboard-icon.png
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\images\EmblemaPNG.png
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\images\equipamento-icon.png
@@ -60,8 +61,10 @@ C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\Pu
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\upload\cinta-elevacao.jpg
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\upload\default-image.png
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\upload\monitor.jpg
+C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\upload\patesca.jpg
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\upload\porto-do-acu-logo-relatorio.png
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\upload\sapatilhos.jpg
+C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\wwwroot\upload\talha-manual.jpg
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\appsettings.Development.json
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\appsettings.json
 C:\Users\Tiago\source\repos\TiagoSantos-cto\SGP\SGP\obj\Release\netcoreapp3.1\PubTmp\Out\refs\Microsoft.AspNetCore.Antiforgery.dll

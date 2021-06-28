@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using static SGP.Models.EntregaModel;
+using static SGP.Models.SinistroModel;
 
 namespace SGP.Models
 {
@@ -532,18 +533,42 @@ namespace SGP.Models
             if (etapa == StatusEntrega.Processamento.ToString())
             {
                 sql = $@"UPDATE  Requisicao SET DataAlteracao = '{DateTime.Now}', 
-                         Descricao = ' Requisição programada para transporte. Número do transporte: {idEntrega} ' WHERE IdRequisicao = '{idRequisicao}'";
+                         Descricao = 'Requisição programada para transporte. Número do transporte: {idEntrega} ' WHERE IdRequisicao = '{idRequisicao}'";
             }
             else if (etapa == StatusEntrega.Transito.ToString())
             {
                 sql = $@"UPDATE  Requisicao SET DataAlteracao = '{DateTime.Now}', 
-                         Descricao = ' Requisição com entrega em trânsito. Número do transporte: {idEntrega} ' WHERE IdRequisicao = '{idRequisicao}'";
+                         Descricao = 'Requisição com entrega em trânsito. Número do transporte: {idEntrega} ' WHERE IdRequisicao = '{idRequisicao}'";
             }
             else
             {
                 sql = $@"UPDATE  Requisicao SET DataAlteracao = '{DateTime.Now}', 
-                         Descricao = ' Entrega realizada. Número do transporte: {idEntrega} ' WHERE IdRequisicao = '{idRequisicao}'";
+                         Descricao = 'Entrega realizada. Número do transporte: {idEntrega} ' WHERE IdRequisicao = '{idRequisicao}'";
             }         
+
+            var dal = new DAL();
+            dal.ExecutarComandoSQL(sql);
+        }
+
+        public void SincorinizarSinistro(int idRequisicao, int idSinistro, string etapa)
+        {
+            string sql = string.Empty;
+
+            if (etapa == StatusSinistro.Aberto.ToString())
+            {
+                sql = $@"UPDATE  Requisicao SET DataAlteracao = '{DateTime.Now}', 
+                         Descricao = 'Requisição vinculada a pedido de sinistro.' WHERE IdRequisicao = '{idRequisicao}'";
+            }
+            else if (etapa == StatusSinistro.Analise.ToString())
+            {
+                sql = $@"UPDATE  Requisicao SET DataAlteracao = '{DateTime.Now}', 
+                         Descricao = 'Requisição com sinistro em análise.' WHERE IdRequisicao = '{idRequisicao}'";
+            }
+            else if (etapa == StatusSinistro.Finalizar.ToString())
+            {
+                sql = $@"UPDATE  Requisicao SET DataAlteracao = '{DateTime.Now}', 
+                         Descricao = 'Pedido de sinistro finalizado.' WHERE IdRequisicao = '{idRequisicao}'";
+            }
 
             var dal = new DAL();
             dal.ExecutarComandoSQL(sql);

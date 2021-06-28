@@ -131,16 +131,17 @@ namespace SGP.Models
             }
 
             dal.ExecutarComandoSQL(sql);
+
+            var requisicaoModel = new RequisicaoModel();
+            requisicaoModel.SincorinizarSinistro(IdRequisicao, Id, Status);
         }
 
         public void Finalizar(int id)
         {
             var dal = new DAL();
 
-            var idUsuarioAtual = IdUsuarioLogado();
-
             string sql = $"UPDATE pedidosinistro SET DataAlteracao = '{Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}', " +
-                         $"Descricao = 'Análise de sinistro finalizada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy} pelo usuário {NomeUsuarioLogado()}' ,  VbFinalizado = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdSinistro = '{id}'";
+                         $"Descricao = 'Análise de sinistro finalizada em {Convert.ToDateTime(DateTime.Now):dd/MM/yyyy}' ,  VbFinalizado = '1', UsuarioAlteracao ='{IdUsuarioLogado()}' WHERE IdSinistro = '{id}'";
 
             dal.ExecutarComandoSQL(sql);
         }
